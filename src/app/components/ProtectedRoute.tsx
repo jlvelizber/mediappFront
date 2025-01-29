@@ -12,7 +12,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   useEffect(() => {
     if (!user) {
-      router.push("/login");
+      router.push("auth/login");
     }
   }, [user, router]);
 

@@ -1,24 +1,31 @@
 'use client'
 
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import { useAuth } from "@/app/context";
 import apiClient from "@/app/services/api";
+import { useCSFR } from "@/app/hooks";
 
-const Index: React.FC = () => {
+export default function Login() {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const { login } = useAuth();
+    const { getCSRFToken } = useCSFR();
     const routePostLogin = "/auth/login";
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         try {
             const response = await apiClient.post(routePostLogin, { email, password });
-            login(response.data.user); // Guarda al usuario autenticado
+            console.log("Respuesta del login:", response.data);
+            // login(response.data.token); // Guarda al usuario autenticado
         } catch (error) {
             console.error("Error en el login:", error);
         }
     };
+
+    useEffect(() => {
+        getCSRFToken();
+    }, []);
 
     return (
         <div className="flex justify-center items-center min-h-screen">
@@ -57,5 +64,3 @@ const Index: React.FC = () => {
         </div>
     );
 };
-
-export default Index;
