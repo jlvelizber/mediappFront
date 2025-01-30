@@ -1,12 +1,15 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { UserInterface } from "../intefaces";
+import apiClient from "../services/api";
+import { routeNames } from "../routes";
+import { useRouter } from "next/router";
 
 // Define las propiedades del contexto
 interface AuthContextProps {
     user: UserInterface | null;
-    login: (userData: UserInterface) => void;
+    login: (email: string, password: string) => void;
     logout: () => void;
 }
 
@@ -20,13 +23,32 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps): ReactNode => {
 
     const [user, setUser] = useState<UserInterface | null>(null);
+    const router = useRouter();
 
-    const login = (userData: UserInterface) => {
-        setUser(userData);
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        const storeUser = localStorage.getItem("user");
+
+        if (token && storeUser) {
+            setUser(JSON.parse(storeUser));
+        }
+    }, []);
+
+    const login = async (email: string, password: string) => {
+        const { data } = await apiClient.post(routeNames.login, { email, password });
+        setUser(data.user);
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        apiClient.defaults.headers.Authorization = `Bearer ${data.token}`;
     };
 
     const logout = () => {
         setUser(null);
+        localStorage.removeItem('token');
+        localStorage.removeItem('role');
+        delete apiClient.defaults.headers.Authorization;
+        router.push(routeNames.login);
     };
 
     return (<AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>);

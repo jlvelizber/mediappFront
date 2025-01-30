@@ -2,30 +2,38 @@
 
 import { useState, FormEvent, useEffect } from "react";
 import { useAuth } from "@/app/context";
-import apiClient from "@/app/services/api";
 import { useCSFR } from "@/app/hooks";
+import { useRouter } from "next/router";
+import { routeNames } from "@/app/routes";
 
 export default function Login() {
+    const router = useRouter();
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const { login } = useAuth();
+    const { login, user } = useAuth();
     const { getCSRFToken } = useCSFR();
-    const routePostLogin = "/auth/login";
+
+    useEffect(() => {
+        getCSRFToken();
+    }, [getCSRFToken]);
+
+
+    useEffect(() => {
+        if (user) {
+            router.push(routeNames.dashboard);
+        }
+    }, [user, router]);
+
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         try {
-            const response = await apiClient.post(routePostLogin, { email, password });
-            console.log("Respuesta del login:", response.data);
-            // login(response.data.token); // Guarda al usuario autenticado
+            login(email, password);
         } catch (error) {
             console.error("Error en el login:", error);
         }
     };
 
-    useEffect(() => {
-        getCSRFToken();
-    }, []);
 
     return (
         <div className="flex justify-center items-center min-h-screen">

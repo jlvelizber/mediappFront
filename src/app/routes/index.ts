@@ -1,0 +1,1 @@
+export {routeNames} from './routes';
