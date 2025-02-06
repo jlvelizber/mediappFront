@@ -20,7 +20,7 @@ export default function Login() {
 
     useEffect(() => {
         if (user) {
-            router.push(routeNames.dashboard);
+            router.push(`/${user.role}/${routeNames.dashboard}`);
         }
     }, [user, router]);
 

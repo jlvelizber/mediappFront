@@ -5,22 +5,20 @@ import { routeNames } from "../routes";
 
 interface ProtectedRouteProps {
   children: ReactNode;
-  allowedRoles?: string[];
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles }) => {
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { user } = useAuth();
   const router = useRouter();
+
 
   useEffect(() => {
     if (!user) {
       router.push(routeNames.login);
-    }else if (allowedRoles && !allowedRoles.includes(user.role as string)) {
-      router.push(routeNames.notAllowed); // Página de acceso denegado
     }
-  }, [user, router, allowedRoles]);
+  }, [user, router]);
 
-  return <>{user && (!allowedRoles || allowedRoles.includes(user.role!)) ? children : null}</>;
+  if (!user) return <p>Cargando...</p>;
+
+  return <>{user ? children : null}</>;
 };
-
-export default ProtectedRoute;

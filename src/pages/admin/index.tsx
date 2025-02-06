@@ -1,4 +1,4 @@
-import ProtectedRoute from "@/app/components/ProtectedRoute";
+import { AdminDashboard, DashboardLayout } from "@/app/components";
 import { useAuth } from "@/app/context";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -15,8 +15,9 @@ export default function Admin() {
     }, [router, user]);
 
     return (
-        <ProtectedRoute allowedRoles={['admin']}>
+        <DashboardLayout>
             <div>¡Bienvenido al panel de administración!</div>
-        </ProtectedRoute>
+            <AdminDashboard />
+        </DashboardLayout>
     );
 }

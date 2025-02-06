@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }: AuthProviderProps): ReactNode => {
     const logout = () => {
         setUser(null);
         localStorage.removeItem('token');
-        localStorage.removeItem('role');
+        localStorage.removeItem('user');
         delete apiClient.defaults.headers.Authorization;
         router.push(routeNames.login);
     };
