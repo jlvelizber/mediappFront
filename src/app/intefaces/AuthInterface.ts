@@ -6,3 +6,7 @@ export interface UserInterface {
     role: string;
   }
   
+export interface AuthInterface { 
+    user: UserInterface | null;
+    token: string | null;
+}

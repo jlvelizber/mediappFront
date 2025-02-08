@@ -1,1 +1,1 @@
-export type { UserInterface } from "./UserInterface";
+export type { UserInterface, AuthInterface } from "./AuthInterface";
