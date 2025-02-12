@@ -39,6 +39,13 @@ export const AuthProvider = ({ children }: AuthProviderProps): ReactNode => {
         return
     }, []);
 
+
+    useEffect(() => {
+        if (!user) {
+            router.push(routeNames.login);
+        }
+    }, [user]);
+
     const login = async (email: string, password: string) => {
         const data: AuthInterface = await AuthService.login(email, password);
         setUser(data.user);
