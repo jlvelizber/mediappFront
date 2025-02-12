@@ -6,10 +6,10 @@ import { UserRoleEnum } from "./Enums";
 export function middleware(req: NextRequest) {
   const token = req.cookies.get("XSRF-TOKEN"); // Laravel maneja CSRF tokens
   const userRole = req.cookies.get("role")?.value;
-
+  const tokenWeb = localStorage.getItem("token");
   const url = req.nextUrl.clone();
 
-  if (!token) {
+  if (!token || !tokenWeb) {
     return NextResponse.redirect(new URL(routeNames.login, req.url));
   }
 
