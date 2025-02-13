@@ -1,6 +1,6 @@
 import React from 'react'
 
-export function AdminDashboard() {
+export function DoctorDashboard() {
   return (
     <div>AdminDashboard</div>
   )
