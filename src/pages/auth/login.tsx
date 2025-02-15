@@ -4,31 +4,24 @@ import { useState, FormEvent, useEffect } from "react";
 import { useAuth } from "@/app/context";
 import { useCSFR } from "@/app/hooks";
 import { useRouter } from "next/router";
-import { routeNames } from "@/app/routes";
 
 export default function Login() {
-    const router = useRouter();
+    const router = useRouter()
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const { login, user } = useAuth();
+    const { login } = useAuth();
     const { getCSRFToken } = useCSFR();
 
     useEffect(() => {
         getCSRFToken();
-    }, [getCSRFToken]);
-
-
-    useEffect(() => {
-        if (user) {
-            router.push(`/${user.role}/${routeNames.dashboard}`);
-        }
-    }, [user, router]);
+    }, []);
 
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         try {
-            login(email, password);
+            const wasSuccess: boolean = await login(email, password);
+            if (wasSuccess) router.push("/")
         } catch (error) {
             console.error("Error en el login:", error);
         }

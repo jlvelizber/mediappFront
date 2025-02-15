@@ -10,7 +10,7 @@ import { AuthService } from "../services";
 // Define las propiedades del contexto
 interface AuthContextProps {
     user: UserInterface | null;
-    login: (email: string, password: string) => void;
+    login: (email: string, password: string) => Promise<boolean>;
     logout: () => void;
 }
 
@@ -39,31 +39,30 @@ export const AuthProvider = ({ children }: AuthProviderProps): ReactNode => {
         return
     }, []);
 
-
-    useEffect(() => {
-        if (!user) {
-            router.push(routeNames.login);
+ const login = async (email: string, password: string) : Promise<boolean> => {
+        try {
+            const data: AuthInterface = await AuthService.login(email, password);
+            setUser(data.user);
+            if (data?.token) {
+                localStorage.setItem('token', data.token);
+            }
+            localStorage.setItem('user', JSON.stringify(data.user));
+            ApiClient.apiClient.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+            return true;
+        } catch (error) {
+            console.log(`error while login` +  error);
+            return false;
         }
-    }, [user]);
-
-    const login = async (email: string, password: string) => {
-        const data: AuthInterface = await AuthService.login(email, password);
-        setUser(data.user);
-        if (data?.token) {
-            localStorage.setItem('token', data.token);
-        }
-        localStorage.setItem('user', JSON.stringify(data.user));
-        ApiClient.apiClient.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
     };
 
     const logout = async () => {
+        router.push(routeNames.login);
         setUser(null);
         await AuthService.logout();
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         delete  ApiClient.apiClient.defaults.headers.Authorization;
         document.cookie = "role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        router.push(routeNames.login);
     };
 
     return (<AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>);
