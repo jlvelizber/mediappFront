@@ -19,7 +19,7 @@ export const Navigation: React.FC<NavigationProps> = ({ role }) => {
   return (
     <ul>
       {options.map((item: NavigationOption, index: number) => (
-        <li key={index}>🔹  <Link href={item.route}> {item.label}</Link> </li>
+        <li key={index}><Link href={item.route}> {item.label}</Link> </li>
       ))}
     </ul>
   )
