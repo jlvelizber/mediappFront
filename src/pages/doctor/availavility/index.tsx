@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { AvailabilityService } from '@/app/services';
-import { DashboardLayout } from '@/app/components'
+import { AvailabilityList, DashboardLayout } from '@/app/components'
 import { DateUtil } from '@/app/utils';
 import type { DoctorAvailabilityInterface } from '@/app/intefaces';
 
@@ -12,7 +12,7 @@ export default function DoctorAvailability() {
     const { register, handleSubmit, reset } = useForm();
     const [availabilities, setAvailabilities] = useState<DoctorAvailabilityInterface[]>([]);
     const daysOfWeek = DateUtil.getDaysOfWeekAsObject();
-     
+
 
     useEffect(() => {
         fetchAvailabilities();
@@ -29,14 +29,22 @@ export default function DoctorAvailability() {
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
         try {
-            console.log(data);
-            await AvailabilityService.saveAvailability(data as DoctorAvailabilityInterface);
+            await AvailabilityService.saveMyAvailability(data as DoctorAvailabilityInterface);
             reset();
             fetchAvailabilities();
         } catch (error) {
             console.error("Error saving availability", error);
         }
     };
+
+    const handleRemoveAvailability = async (itemId: number) => {
+        try {
+            await AvailabilityService.removeAvailability(itemId);
+            fetchAvailabilities()
+        } catch (error) {
+            console.log('error removing', error)
+        }
+    }
 
     return (
         <DashboardLayout>
@@ -52,13 +60,7 @@ export default function DoctorAvailability() {
                     <input type="time" {...register("end_time")} required className="border p-2 rounded mr-2" />
                     <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">Guardar</button>
                 </form>
-                <ul>
-                    {availabilities.map((availability: DoctorAvailabilityInterface) => (
-                        <li key={availability.id} className="border p-2 mb-2 rounded">
-                            {availability.day_of_week} - {availability.start_time} to {availability.end_time}
-                        </li>
-                    ))}
-                </ul>
+                <AvailabilityList items={availabilities} onRemove={handleRemoveAvailability} />
             </div>
 
         </DashboardLayout>
