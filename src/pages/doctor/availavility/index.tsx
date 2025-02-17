@@ -4,18 +4,21 @@ import { AvailabilityService } from '@/app/services';
 import { AvailabilityList, DashboardLayout } from '@/app/components'
 import { DateUtil } from '@/app/utils';
 import type { DoctorAvailabilityInterface } from '@/app/intefaces';
+import { useLayout } from '@/app/context';
 
 
 
 
 export default function DoctorAvailability() {
     const { register, handleSubmit, reset } = useForm();
+    const { setTitlePage } = useLayout();
     const [availabilities, setAvailabilities] = useState<DoctorAvailabilityInterface[]>([]);
     const daysOfWeek = DateUtil.getDaysOfWeekAsObject();
-
+    const TITLE_PAGE = "Disponibilidades"
 
     useEffect(() => {
         fetchAvailabilities();
+        setTitlePage(TITLE_PAGE)
     }, []);
 
     const fetchAvailabilities = async () => {

@@ -1,7 +1,8 @@
+import { DashboardLayout } from '@/app/components'
 import React from 'react'
 
 export default function DoctorProfile() {
   return (
-    <div>Doctor Profile</div>
+    <DashboardLayout>Doctor Profile</DashboardLayout>
   )
 }
