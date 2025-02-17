@@ -1,3 +1,4 @@
+import { BrowserIcon, CalendarIcon, FeedHeartIcon, PeopleIcon, PersonIcon, TrackedByClosedCompletedIcon } from "@primer/octicons-react";
 import { UserRoleEnum } from "../Enums";
 import { Navigation } from "../intefaces";
 
@@ -21,11 +22,11 @@ export const routeNames = {
 export const navigation: Navigation[] = [{
     role: UserRoleEnum.Doctor,
     options: [
-        { label: 'Escritorio', route: routeNames.doctors },
-        { label: 'Perfil', route: `${routeNames.doctors}${routeNames.profile}` },
-        { label: 'Pacientes', route: `${routeNames.doctors}${routeNames.patients}` },
-        { label: 'Agenda', route: `${routeNames.doctors}${routeNames.appointments}` },
-        { label: 'Fichas medicas', route: `${routeNames.doctors}${routeNames.medicalHistory}` },
-        { label: 'Disponibilidad', route: `${routeNames.doctors}${routeNames.availavility}` }
+        { label: 'Escritorio', route: routeNames.doctors, icon: BrowserIcon },
+        { label: 'Perfil', route: `${routeNames.doctors}${routeNames.profile}`, icon: PersonIcon },
+        { label: 'Pacientes', route: `${routeNames.doctors}${routeNames.patients}`, icon: PeopleIcon },
+        { label: 'Agenda', route: `${routeNames.doctors}${routeNames.appointments}`, icon: CalendarIcon },
+        { label: 'Fichas medicas', route: `${routeNames.doctors}${routeNames.medicalHistory}`, icon: FeedHeartIcon },
+        { label: 'Disponibilidad', route: `${routeNames.doctors}${routeNames.availavility}`, icon: TrackedByClosedCompletedIcon }
     ]
 }]

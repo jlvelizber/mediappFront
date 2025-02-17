@@ -17,9 +17,13 @@ export const Navigation: React.FC<NavigationProps> = ({ role }) => {
   const { options } = menuRole
 
   return (
-    <ul>
-      {options.map((item: NavigationOption, index: number) => (
-        <li key={index}><Link href={item.route}> {item.label}</Link> </li>
+    <ul className="space-y-4">
+      {options.map(({ label, route, icon : Icon }: NavigationOption, index: number) => (
+        <li key={index}>
+          <Link className="flex items-center space-x-3 px-2 py-1 rounded-lg transition-all hover:bg-white/20 focus:bg-white/30" href={route}>
+            {Icon && <Icon className='mr-1'/>} {label}
+          </Link>
+        </li>
       ))}
     </ul>
   )
