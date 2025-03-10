@@ -16,6 +16,7 @@ export default function DoctorAvailability() {
     const daysOfWeek = DateUtil.getDaysOfWeekAsObject();
     const TITLE_PAGE = "Disponibilidades"
     const [loading, setLoading] = useState<boolean>(true);
+    const [messageOnloading, setMessageOnloading] = useState<string>("Cargando disponibilidades");
 
     useEffect(() => {
         fetchAvailabilities();
@@ -24,6 +25,7 @@ export default function DoctorAvailability() {
 
     const fetchAvailabilities = async () => {
         try {
+            setLoading(true);
             const response = await AvailabilityService.getMyAvailability();
             setAvailabilities(response);
         } catch (error) {
@@ -35,6 +37,8 @@ export default function DoctorAvailability() {
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
         try {
+            setLoading(true);
+            setMessageOnloading("Guardando disponibilidad");
             await AvailabilityService.saveMyAvailability(data as DoctorAvailabilityInterface);
             reset();
             fetchAvailabilities();
@@ -53,7 +57,7 @@ export default function DoctorAvailability() {
     }
 
     if (loading) {
-        return <Loader message='Cargando disponibilidades' />
+        return <Loader message={messageOnloading} />
     }
 
     return (
