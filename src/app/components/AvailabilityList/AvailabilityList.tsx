@@ -17,7 +17,7 @@ export const AvailabilityList: FC<AvailabilityListInterface> = ({ items, onRemov
                 {items.map((availability: DoctorAvailabilityInterface) => (
                     <tr key={availability.id}>
                         <td>
-                            {availability.day_of_week} - {availability.start_time} to {availability.end_time}
+                            {availability.day_of_week} - {availability.start_time} hasta {availability.end_time}
                         </td>
                         <td> <button className="bg-red-500 text-white px-4 py-2 rounded" onClick={() => availability.id !== undefined && onRemove(availability.id)}> Eliminar</button></td>
                     </tr>
