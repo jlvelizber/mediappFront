@@ -49,6 +49,8 @@ export default function DoctorAvailability() {
 
     const handleRemoveAvailability = async (itemId: number) => {
         try {
+            setLoading(true);
+            setMessageOnloading("Eliminando disponibilidad");
             await AvailabilityService.removeAvailability(itemId);
             fetchAvailabilities()
         } catch (error) {
