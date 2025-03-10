@@ -1,4 +1,5 @@
 'use client'
+import { Loader } from "@/app/components";
 import { useAuth, useLayout } from "@/app/context";
 import { useCSFR } from "@/app/hooks";
 import { EyeClosedIcon, EyeIcon } from '@primer/octicons-react';
@@ -8,12 +9,13 @@ const APP_NAME = process.env.NEXT_PUBLIC_TITLE || "Mediapp"; // Ajusta según tu
 
 export default function Login() {
     const router = useRouter()
-    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const { setTitlePage } = useLayout();
+    const { login } = useAuth();
+    const { getCSRFToken } = useCSFR();
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const { login } = useAuth();
-    const { setTitlePage } = useLayout();
-    const { getCSRFToken } = useCSFR();
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
         setTitlePage("");
@@ -24,12 +26,15 @@ export default function Login() {
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         try {
+            setIsLoading(true);
             const wasSuccess: boolean = await login(email, password);
             if (wasSuccess) router.push("/")
         } catch (error) {
             console.error("Error en el login:", error);
         }
     };
+
+    if (isLoading) return <Loader message="Iniciando sesión" />
 
 
     return (
