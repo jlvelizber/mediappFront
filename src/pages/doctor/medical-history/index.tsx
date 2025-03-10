@@ -1,7 +1,8 @@
-import React from 'react'
+import { DashboardLayout } from "@/app/components";
 
-export const MedicalHistory = () => {
+export default function MedicalHistory() {
   return (
-    <div>index</div>
+    <DashboardLayout>
+      <PageWrapper>Medical history</PageWrapper></DashboardLayout>
   )
 }
