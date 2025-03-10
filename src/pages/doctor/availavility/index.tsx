@@ -1,4 +1,4 @@
-import { AvailabilityList, DashboardLayout, PageWrapper } from '@/app/components';
+import { AvailabilityList, DashboardLayout, EmptyState, Loader, PageWrapper } from '@/app/components';
 import { useLayout } from '@/app/context';
 import type { DoctorAvailabilityInterface } from '@/app/intefaces';
 import { AvailabilityService } from '@/app/services';
@@ -15,6 +15,7 @@ export default function DoctorAvailability() {
     const [availabilities, setAvailabilities] = useState<DoctorAvailabilityInterface[]>([]);
     const daysOfWeek = DateUtil.getDaysOfWeekAsObject();
     const TITLE_PAGE = "Disponibilidades"
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         fetchAvailabilities();
@@ -27,6 +28,8 @@ export default function DoctorAvailability() {
             setAvailabilities(response);
         } catch (error) {
             console.error("Error fetching availability", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -49,6 +52,10 @@ export default function DoctorAvailability() {
         }
     }
 
+    if (loading) {
+        return <Loader message='Cargando disponibilidades' />
+    }
+
     return (
         <DashboardLayout>
             <PageWrapper>
@@ -64,7 +71,11 @@ export default function DoctorAvailability() {
                         <input type="time" {...register("end_time")} required className="border p-2 rounded mr-2" />
                         <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">Guardar</button>
                     </form>
-                    <AvailabilityList items={availabilities} onRemove={handleRemoveAvailability} />
+                    {availabilities.length > 0 ?
+                        <AvailabilityList items={availabilities} onRemove={handleRemoveAvailability} />
+                        :
+                        <EmptyState />
+                    }
                 </div>
             </PageWrapper>
         </DashboardLayout>
