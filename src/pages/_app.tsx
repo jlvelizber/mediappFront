@@ -4,10 +4,10 @@ import type { AppProps } from "next/app";
 
 export default function Page({ Component, pageProps }: AppProps) {
   return (
-    <AuthProvider>
-      <LayoutProvider>
+    <LayoutProvider>
+      <AuthProvider>
         <Component {...pageProps} />
-      </LayoutProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </LayoutProvider>
   );
 };

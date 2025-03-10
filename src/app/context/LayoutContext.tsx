@@ -1,4 +1,5 @@
-import { createContext, Dispatch, ReactNode, useContext, useState } from "react";
+import { createContext, Dispatch, ReactNode, useContext, useEffect, useState } from "react";
+const APP_NAME = process.env.NEXT_PUBLIC_TITLE || "Mediapp"; // Ajusta según tu backend.
 
 interface LayoutContextInterface {
     titlePage: string;
@@ -15,6 +16,17 @@ const LayoutContext = createContext<LayoutContextInterface | undefined>(undefine
 
 export const LayoutProvider = ({ children }: LayoutProviderProps): ReactNode => {
     const [titlePage, setTitlePage] = useState<string>("");
+
+    useEffect(() => {
+
+        if (titlePage === "") {
+            document.title = APP_NAME;
+        }
+        else {
+            document.title = `${titlePage} | ${APP_NAME}`;
+        }
+
+    }, [titlePage])
 
     return (<LayoutContext.Provider value={{ titlePage, setTitlePage }}>{children}</LayoutContext.Provider>);
 }

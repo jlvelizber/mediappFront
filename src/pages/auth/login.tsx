@@ -1,18 +1,20 @@
 'use client'
 
-import { useState, FormEvent, useEffect } from "react";
-import { useAuth } from "@/app/context";
+import { useAuth, useLayout } from "@/app/context";
 import { useCSFR } from "@/app/hooks";
 import { useRouter } from "next/router";
+import { FormEvent, useEffect, useState } from "react";
 
 export default function Login() {
     const router = useRouter()
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const { login } = useAuth();
+    const { setTitlePage } = useLayout();
     const { getCSRFToken } = useCSFR();
 
     useEffect(() => {
+        setTitlePage("");
         getCSRFToken();
     }, []);
 
