@@ -1,13 +1,12 @@
 import { AuthInterface } from "../intefaces";
-import { apiClient } from "./api"
+import { apiClient } from "./api";
 
 
 
 
 const login = async (email: string, password: string): Promise<AuthInterface> => {
-
     const responese = await apiClient.post("/auth/login", { email, password });
-    return responese.data;
+    return responese.data.data;
 
 }
 

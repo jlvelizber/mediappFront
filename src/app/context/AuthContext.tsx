@@ -1,11 +1,11 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
-import { AuthInterface, UserInterface } from "../intefaces";
-import * as ApiClient from "../services/api";
-import { routeNames } from "../routes";
 import { useRouter } from "next/router";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { AuthInterface, UserInterface } from "../intefaces";
+import { routeNames } from "../routes";
 import { AuthService } from "../services";
+import * as ApiClient from "../services/api";
 
 // Define las propiedades del contexto
 interface AuthContextProps {
@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }: AuthProviderProps): ReactNode => {
         return
     }, []);
 
- const login = async (email: string, password: string) : Promise<boolean> => {
+    const login = async (email: string, password: string): Promise<boolean> => {
         try {
             const data: AuthInterface = await AuthService.login(email, password);
             setUser(data.user);
@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }: AuthProviderProps): ReactNode => {
             ApiClient.apiClient.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
             return true;
         } catch (error) {
-            console.log(`error while login` +  error);
+            console.log(`error while login` + error);
             return false;
         }
     };
@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }: AuthProviderProps): ReactNode => {
         await AuthService.logout();
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-        delete  ApiClient.apiClient.defaults.headers.Authorization;
+        delete ApiClient.apiClient.defaults.headers.Authorization;
         document.cookie = "role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     };
 
