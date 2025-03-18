@@ -1,3 +1,4 @@
+import { PageWrapper } from "@/app/components";
 import { DashboardLayout } from "@/app/components/Layouts";
 import { useAuth } from "@/app/context/AuthContext";
 
@@ -8,5 +9,9 @@ export default function AppointmentsPage() {
     if (!user) {
         return <p>Cargando...</p>;
     }
-    return <DashboardLayout>Bienvenido {user.name}, aquí están tus citas</DashboardLayout>;
+    return (<DashboardLayout>
+        <PageWrapper>
+            Bienvenido {user.name}, aquí están tus citas
+        </PageWrapper>
+    </DashboardLayout>)
 }
