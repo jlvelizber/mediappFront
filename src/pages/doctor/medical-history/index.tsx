@@ -1,4 +1,4 @@
-import { DashboardLayout } from "@/app/components";
+import { DashboardLayout, PageWrapper } from "@/app/components";
 
 export default function MedicalHistory() {
   return (

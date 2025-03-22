@@ -1,7 +1,9 @@
 import { Table } from '@/app/components'
 import { DoctorAvailabilityInterface } from '@/app/intefaces'
+import { TrashIcon } from '@primer/octicons-react'
 import { FC } from 'react'
 import { AvailabilityListInterface } from './AvailabilityListInterface'
+
 
 export const AvailabilityList: FC<AvailabilityListInterface> = ({ items, onRemove }) => {
 
@@ -13,7 +15,7 @@ export const AvailabilityList: FC<AvailabilityListInterface> = ({ items, onRemov
                         <span className="font-medium"> {availability.day_of_week} </span> - {availability.start_time} hasta {availability.end_time}
                     </td>
                     <td className="px-6 py-2 w-full flex mx-auto">
-                        <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow-sm transition" onClick={() => availability.id !== undefined && onRemove(availability.id)}> Eliminar</button>
+                        <button className="btn-danger" onClick={() => availability.id !== undefined && onRemove(availability.id)} title='Eliminar' aria-label='Eliminar'> <TrashIcon /></button>
                     </td>
                 </tr>
             ))}
