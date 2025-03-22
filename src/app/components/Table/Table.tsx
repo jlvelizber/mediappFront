@@ -4,11 +4,12 @@ interface TableProps {
     headers: string[];
     children: ReactNode;
     shadow?: boolean;
+    headExtraClasses?: string
 }
 
-export default function Table({ headers, children, shadow = false }: TableProps) {
+export default function Table({ headers, children, shadow = false, headExtraClasses }: TableProps) {
     return (
-        <div className={`w-full border-collapse rounded-lg shadow-md overflow-hidden  ${shadow ? 'shadow-md' : ''}`}>
+        <div className={`w-full border-collapse rounded-lg shadow-md overflow-hidden  ${shadow ? 'shadow-md' : ''}  ${headExtraClasses && headExtraClasses}`}>
             <table className="w-full">
                 <thead className="bg-primary text-white">
                     <tr>
