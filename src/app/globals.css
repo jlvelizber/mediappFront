@@ -5,3 +5,16 @@
 body {
   @apply bg-background text-text font-sans;
 }
+
+.btn-primary {
+  @apply flex items-center bg-primary hover:bg-[#0077C9] text-white px-4 py-2 rounded-lg shadow-md transition;
+}
+
+.btn-danger{
+  @apply bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow-sm transition;
+}
+
+/* Estilos reutilizables */
+.btn-secondary {
+  @apply border border-gray-500 text-gray-700 py-2 px-4 rounded-lg transition hover:bg-gray-100 hover:border-gray-700;
+}
