@@ -1,5 +1,5 @@
 import { DashboardLayout, EmptyState, Loader, PageWrapper, Paginator, PatientList } from "@/app/components";
-import { useLayout } from "@/app/context";
+import { useAuth, useLayout } from "@/app/context";
 import { PatientInterface } from "@/app/intefaces";
 import { Meta } from "@/app/intefaces/PaginatorInterface";
 import { PatientService } from "@/app/services";
@@ -19,6 +19,7 @@ export default function Patients() {
   const [findWassSuccess, setFindWassSuccess] = useState<boolean>(true);
   const [patients, setPatients] = useState<PatientInterface[]>([]);
   const [meta, setMeta] = useState<Meta>();
+  const { user } = useAuth()
 
 
   useEffect(() => {
@@ -108,7 +109,7 @@ export default function Patients() {
             <h1 className="text-2xl font-bold mb-4">Pacientes</h1>
 
             {/* 🔹 Botón SIEMPRE visible */}
-            <Link href="/patients/create">
+            <Link href={`/${user?.role}/patients/create`}>
               <button className="btn-primary">
                 <PlusIcon className="w-5 h-5 mr-2" />
                 Agregar Paciente

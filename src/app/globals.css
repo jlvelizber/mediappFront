@@ -6,6 +6,11 @@ body {
   @apply bg-background text-text font-sans;
 }
 
+.input-field {
+  @apply w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary uppercase;
+}
+
+
 .btn-primary {
   @apply flex items-center bg-primary hover:bg-[#0077C9] text-white px-4 py-2 rounded-lg shadow-md transition;
 }
