@@ -1,5 +1,6 @@
 import { DashboardLayout, Loader, PageWrapper, PatientForm } from "@/app/components";
 import { useAuth } from "@/app/context";
+import { routeNames } from "@/app/routes";
 import { usePatientStore } from "@/app/store";
 import { useRouter } from "next/router";
 
@@ -11,12 +12,18 @@ export default function CreatePatient() {
     const { addPatient, isLoading } = usePatientStore();
 
     const goToList = () => {
-        router.push(`/${user?.role}/patients`);
+        router.push(`/${user?.role}/${routeNames.patients}`);
+    }
+
+    const goEdit = (id: string) => {
+        router.push(`/${user?.role}/${routeNames.patients}/edit/${id}`);
     }
 
     const handleSubmit = async (formData: FormData) => {
-        debugger
-        await addPatient(formData);
+        const patientId = await addPatient(formData);
+        if (patientId) {
+            goEdit(patientId as unknown as string);
+        }
     }
 
     if (isLoading) return <Loader message={messageOnloading} />

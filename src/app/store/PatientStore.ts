@@ -11,7 +11,7 @@ export interface PatientStoreInterface {
     isLoading: boolean;
     // campos formulario tiene campos y errores
     formManagePatient: PatientFormDataInterface;
-    addPatient: (patient: FormData) => Promise<void>;
+    addPatient: (patient: FormData) => Promise<number>;
 };
 
 
@@ -51,19 +51,22 @@ export const createPatientSlice = (set: any) => ({
         error: "",
     },
     messagePatientWasCreatedOrModified: "",
-    addPatient: async (patient: FormData): Promise<void> => {
+    addPatient: async (patient: FormData): Promise<number> => {
         set({ isLoading: true }, false, "app:patient/addPatient");
         const response = await createPatient({} as PatientFormDataInterface, patient);
+        debugger
         if (response) {
             // Verifica si el response tiene el formato esperado
             if ("patient" in response && response.success) {
                 set({ patient: response.patient }, false, "app:patient/addPatient");
+                return response.patient?.id ?? 0; // Retorna el ID del paciente creado o 0 si es undefined
             } else {
                 console.error("Unexpected response format", response);
                 set({ formManagePatient: { ...response as PatientFormDataInterface } }, false, "app:patient/addPatient");
             }
             set({ isLoading: false }, false, "app:patient/addPatient");
         }
+        return 0;
     },
 });
 

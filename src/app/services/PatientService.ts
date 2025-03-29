@@ -1,3 +1,4 @@
+import { AxiosResponse } from "axios";
 import { DefaultMessageResourceRemoved, PatientInterface, PatientPaginationInterface } from "../intefaces";
 import { apiClient } from "./api";
 
@@ -36,8 +37,9 @@ export const PatientService = {
      * @returns 
      */
     createPatient: async (data: PatientInterface): Promise<PatientInterface> => {
-        const response = await apiClient.post(`${PatientService.route}`, data);
-        return await response.data;
+        const response = await apiClient.post<AxiosResponse<PatientInterface>>(`${PatientService.route}`, data);
+        const patient: PatientInterface = response.data.data
+        return patient;
     },
 
     /**
