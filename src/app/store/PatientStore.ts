@@ -52,21 +52,21 @@ export const createPatientSlice = (set: any) => ({
     },
     messagePatientWasCreatedOrModified: "",
     addPatient: async (patient: FormData): Promise<number> => {
-        set({ isLoading: true }, false, "app:patient/addPatient");
+        set({ isLoading: true }, false, "app:patient/loadingAddPatient");
         const response = await createPatient({} as PatientFormDataInterface, patient);
-        debugger
+        let patientId = 0;
         if (response) {
             // Verifica si el response tiene el formato esperado
             if ("patient" in response && response.success) {
                 set({ patient: response.patient }, false, "app:patient/addPatient");
-                return response.patient?.id ?? 0; // Retorna el ID del paciente creado o 0 si es undefined
+                patientId = response.patient?.id ?? 0; // Retorna el ID del paciente creado o 0 si es undefined
             } else {
                 console.error("Unexpected response format", response);
-                set({ formManagePatient: { ...response as PatientFormDataInterface } }, false, "app:patient/addPatient");
+                set({ formManagePatient: { ...response as PatientFormDataInterface } }, false, "app:patient/errorAddPatient");
             }
-            set({ isLoading: false }, false, "app:patient/addPatient");
         }
-        return 0;
+        set({ isLoading: false }, false, "app:patient/loadingAddPatient");
+        return patientId;
     },
 });
 
