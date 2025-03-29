@@ -11,5 +11,6 @@ export * from "./PatientForm";
 export * from "./PatientList";
 export * from "./Sidebar";
 export * from "./Table";
+export * from "./Toasts";
 export * from "./UserMenu";
 

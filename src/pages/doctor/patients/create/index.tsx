@@ -1,32 +1,35 @@
 import { DashboardLayout, Loader, PageWrapper, PatientForm } from "@/app/components";
+import { messages } from "@/app/config";
 import { useAuth } from "@/app/context";
 import { routeNames } from "@/app/routes";
-import { usePatientStore } from "@/app/store";
+import { usePatientStore, useToastStore } from "@/app/store";
 import { useRouter } from "next/router";
 
 export default function CreatePatient() {
+    const { created, loading: { creating } } = messages.patient;
     const TITLE_PAGE = "Crear Paciente";
     const { user } = useAuth();
     const router = useRouter();
-    const messageOnloading = "Guardando paciente...";
     const { addPatient, isLoading } = usePatientStore();
+    const { addToast } = useToastStore();
 
     const goToList = () => {
-        router.push(`/${user?.role}/${routeNames.patients}`);
+        router.replace(`/${user?.role}${routeNames.patients}`);
     }
 
     const goEdit = (id: string) => {
-        router.push(`/${user?.role}/${routeNames.patients}/edit/${id}`);
+        router.replace(`/${user?.role}${routeNames.patients}/edit/${id}`);
     }
 
     const handleSubmit = async (formData: FormData) => {
         const patientId = await addPatient(formData);
         if (patientId) {
             goEdit(patientId as unknown as string);
+            addToast(created, "success");
         }
     }
 
-    if (isLoading) return <Loader message={messageOnloading} />
+    if (isLoading) return <Loader message={creating} />
 
 
     return (
