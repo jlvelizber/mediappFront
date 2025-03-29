@@ -1,26 +1,25 @@
 import { DashboardLayout, Loader, PageWrapper, PatientForm } from "@/app/components";
 import { useAuth } from "@/app/context";
+import { usePatientStore } from "@/app/store";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-
 
 export default function CreatePatient() {
     const TITLE_PAGE = "Crear Paciente";
-    const messageOnloading = "Guardando paciente";
-    const [loading, setIsLoading] = useState<boolean>(false);
     const { user } = useAuth();
     const router = useRouter();
-
-    useEffect(() => {
-        // console.log(loading)
-    }, [loading])
-
+    const messageOnloading = "Guardando paciente...";
+    const { addPatient, isLoading } = usePatientStore();
 
     const goToList = () => {
         router.push(`/${user?.role}/patients`);
     }
 
-    if (loading) return <Loader message={messageOnloading} />
+    const handleSubmit = async (formData: FormData) => {
+        debugger
+        await addPatient(formData);
+    }
+
+    if (isLoading) return <Loader message={messageOnloading} />
 
 
     return (
@@ -30,7 +29,7 @@ export default function CreatePatient() {
                     <div className="flex justify-between items-center mb-4">
                         <h1 className="text-2xl font-bold mb-4">Pacientes - {TITLE_PAGE}</h1>
                     </div>
-                    <PatientForm handleIsPending={(isPending: boolean) => setIsLoading(isPending)} handleCancel={goToList} />
+                    <PatientForm handleSubmit={handleSubmit} handleCancel={goToList} />
                 </div>
             </PageWrapper>
         </DashboardLayout>

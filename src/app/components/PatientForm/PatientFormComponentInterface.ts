@@ -2,7 +2,8 @@ import { PatientInterface } from "@/app/intefaces";
 import { MouseEvent } from "react";
 
 export interface PatientFormComponentInterface {
-    handleIsPending: (isPending: boolean) => void,
+    initialData?: PatientFormDataInterface,
+    handleSubmit: (data: FormData) => void,
     handleCancel: (e: MouseEvent<HTMLButtonElement>) => void
 }
 
