@@ -5,8 +5,8 @@ import { createToastSlice } from "./ToastStore";
 
 
 export const useAppStore = create()(
-    devtools((set) => ({
-        ...createPatientSlice(set),
+    devtools((set, get) => ({
+        ...createPatientSlice(set, get),
         ...createToastSlice(set),
     })),
 );

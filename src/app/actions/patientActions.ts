@@ -28,3 +28,15 @@ export async function createPatient(prevState: PatientFormDataInterface, formDat
         return prevState;
     }
 }
+
+
+// 📌 Server Action para obtener un paciente
+export async function getPatient(id: number): Promise<PatientInterface | null> {
+    try {
+        const patient = await PatientService.getPatient(id);
+        return patient;
+    } catch (error) {
+        console.error("Error al obtener el paciente:", error);
+        return null;
+    }
+}

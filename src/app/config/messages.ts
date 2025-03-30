@@ -13,6 +13,7 @@ export const messages = {
             creating: "Creando paciente...",
             updating: "Actualizando paciente...",
             deleting: "Eliminando paciente...",
+            fetching: "Cargando paciente...",
         },
     }
 };

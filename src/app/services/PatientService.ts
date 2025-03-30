@@ -50,6 +50,20 @@ export const PatientService = {
     removePatient: async (id: number): Promise<DefaultMessageResourceRemoved> => {
         const response = await apiClient.delete(`${PatientService.route}/${id}`);
         return await response.data;
-    }
+    },
+
+
+    /**
+     * Get Patient
+     * @param id 
+     * @returns 
+     */
+    getPatient: async (id: string): Promise<PatientInterface> => {
+        const response = await apiClient.get<AxiosResponse<PatientInterface>>(`${PatientService.route}/${id}`);
+        const patient: PatientInterface = response.data.data
+        return patient;
+    },
+
+
 
 }

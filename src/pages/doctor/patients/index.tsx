@@ -2,9 +2,11 @@ import { DashboardLayout, EmptyState, Loader, PageWrapper, Paginator, PatientLis
 import { useAuth, useLayout } from "@/app/context";
 import { PatientInterface } from "@/app/intefaces";
 import { Meta } from "@/app/intefaces/PaginatorInterface";
+import { routeNames } from "@/app/routes";
 import { PatientService } from "@/app/services";
 import { PlusIcon } from "@primer/octicons-react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { MouseEvent, useEffect, useState } from "react";
 
 export default function Patients() {
@@ -20,6 +22,7 @@ export default function Patients() {
   const [patients, setPatients] = useState<PatientInterface[]>([]);
   const [meta, setMeta] = useState<Meta>();
   const { user } = useAuth()
+  const router = useRouter();
 
 
   useEffect(() => {
@@ -91,7 +94,8 @@ export default function Patients() {
 
 
   const handleEdit = (e: MouseEvent<HTMLButtonElement>, patientId: number) => {
-    console.log(patientId)
+    e.preventDefault()
+    router.push(`/${user?.role}${routeNames.patients}/edit/${patientId}`)
   }
 
   const handleRemove = (e: MouseEvent<HTMLButtonElement>, patientId: number) => {

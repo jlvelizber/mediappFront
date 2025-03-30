@@ -1,12 +1,12 @@
 "use client"; // 📌 Necesario para usar Server Actions en el frontend
 
 import { usePatientStore } from "@/app/store";
-import { FormEvent } from "react";
+import { FormEvent, MouseEvent } from "react";
 import { PatientFormComponentInterface } from "./PatientFormComponentInterface";
 
 
 
-export default function PatientForm({ initialData, handleCancel, handleSubmit }: PatientFormComponentInterface) {
+export default function PatientForm({ initialData, handleCancel, handleSubmit, handleDelete }: PatientFormComponentInterface) {
 
     const { formManagePatient } = usePatientStore();
 
@@ -86,14 +86,29 @@ export default function PatientForm({ initialData, handleCancel, handleSubmit }:
                 </div>
 
                 {/* Botones */}
-                <div className="md:col-span-2 flex justify-between mt-4">
-                    <button type="button" onClick={handleCancel} className="btn-secondary">
-                        Cancelar
-                    </button>
+                <div className="md:col-span-2 flex justify-between items-center mt-4">
+                    <div className="flex gap-2">
+                        <button type="button" onClick={handleCancel} className="btn-secondary">
+                            Cancelar
+                        </button>
+                        {/* Botón de eliminar SOLO si el paciente ya existe */}
+                        {fields?.id && (
+                            <button
+                                type="button"
+                                onClick={(e: MouseEvent<HTMLButtonElement>) => fields?.id !== undefined && handleDelete?.(e, fields.id)}
+                                className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md shadow-md"
+                            >
+                                Eliminar Paciente
+                            </button>
+
+                        )}
+                    </div>
                     <button type="submit" className="btn-primary">
-                        Crear Paciente
+                        {fields?.id ? "Actualizar" : "Crear"} Paciente
                     </button>
                 </div>
+
+
             </form>
         </>
     );

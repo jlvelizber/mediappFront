@@ -25,8 +25,8 @@ export default function PatientList({ items, fetching, actions: { onRemove, onEd
                         {patient.email}
                     </td>
                     <td className="px-6 py-2 flex justify-between mx-auto">
-                        <button className="btn-secondary" aria-label="Editar" title={`Editar paciente ${patient.name}`} onClick={(e) => onEdit(e, patient.id)}> <PencilIcon /></button>
-                        <button className="btn-danger" aria-label="Eliminar" title={`Eliminar paciente ${patient.name}`} onClick={(e) => onRemove(e, patient.id)}> <TrashIcon /></button>
+                        <button className="btn-secondary" aria-label="Editar" title={`Editar paciente ${patient.name}`} onClick={(e) => patient.id !== undefined && onEdit(e, patient.id)}> <PencilIcon /></button>
+                        <button className="btn-danger" aria-label="Eliminar" title={`Eliminar paciente ${patient.name}`} onClick={(e) => patient.id !== undefined && onRemove(e, patient.id)}> <TrashIcon /></button>
                     </td>
                 </tr>
             ))}

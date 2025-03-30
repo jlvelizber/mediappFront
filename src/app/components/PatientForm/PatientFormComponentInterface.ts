@@ -4,7 +4,8 @@ import { MouseEvent } from "react";
 export interface PatientFormComponentInterface {
     initialData?: PatientFormDataInterface,
     handleSubmit: (data: FormData) => void,
-    handleCancel: (e: MouseEvent<HTMLButtonElement>) => void
+    handleCancel: (e: MouseEvent<HTMLButtonElement>) => void;
+    handleDelete?: (e: MouseEvent<HTMLButtonElement>, patientId: number) => void;
 }
 
 export interface PatientFormDataInterface {

@@ -1,33 +1,43 @@
+"use client";
+
 import { DashboardLayout, Loader, PageWrapper, PatientForm } from "@/app/components";
+import { messages } from "@/app/config";
 import { useAuth } from "@/app/context";
 import { routeNames } from "@/app/routes";
-import { usePatientStore } from "@/app/store";
+import { usePatientStore, useToastStore } from "@/app/store";
+import { useParams } from "next/navigation";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export default function EditPatient() {
     const TITLE_PAGE = "Editar Paciente";
     const { user } = useAuth();
     const router = useRouter();
-    const messageOnloading = "Actualizando paciente...";
-    const { addPatient, isLoading } = usePatientStore();
+    const { isLoading, getPatientForEdit, updatePatient } = usePatientStore();
+    const { addToast } = useToastStore();
+    const { loading: { fetching }, updated } = messages.patient
+    const params = useParams<{ id: string }>();
+
+    useEffect(() => {
+        if (params) {
+            // Aquí puedes realizar la lógica para obtener el paciente por ID
+            // Por ejemplo, podrías llamar a una función de tu store o hacer una solicitud a la API
+            getPatientForEdit(params.id as unknown as number);
+        }
+    }, [params])
 
     const goToList = () => {
-        router.push(`/${user?.role}/${routeNames.patients}`);
+        router.replace(`/${user?.role}${routeNames.patients}`);
     }
 
-    const goEdit = (id: string) => {
-        router.push(`/${user?.role}/${routeNames.patients}/edit/${id}`);
-    }
 
     const handleSubmit = async (formData: FormData) => {
-        const patientId = await addPatient(formData);
-        debugger
-        if (patientId) {
-            goEdit(patientId as unknown as string);
-        }
+        updatePatient(formData);
+        addToast(updated, "success");
     }
 
-    if (isLoading) return <Loader message={messageOnloading} />
+
+    if (isLoading) return <Loader message={fetching} />
 
 
     return (
