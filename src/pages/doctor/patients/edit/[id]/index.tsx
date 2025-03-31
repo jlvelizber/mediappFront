@@ -31,8 +31,8 @@ export default function EditPatient() {
     }
 
     const handleCancel = () => {
-        resetFormDataPatient();
         goToList();
+        resetFormDataPatient();
     }
 
 

@@ -18,8 +18,8 @@ export default function CreatePatient() {
     }
 
     const handleCancel = () => {
-        resetFormDataPatient();
         goToList();
+        resetFormDataPatient();
     }
 
     const goEdit = (id: string) => {
