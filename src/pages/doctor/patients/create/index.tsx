@@ -4,7 +4,6 @@ import { useAuth } from "@/app/context";
 import { routeNames } from "@/app/routes";
 import { usePatientStore, useToastStore } from "@/app/store";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 
 export default function CreatePatient() {
     const { created, loading: { creating } } = messages.patient;
@@ -14,10 +13,13 @@ export default function CreatePatient() {
     const { addPatient, isLoading, resetFormDataPatient } = usePatientStore();
     const { addToast } = useToastStore();
 
-    useEffect(() => resetFormDataPatient(), [])
-
     const goToList = () => {
         router.replace(`/${user?.role}${routeNames.patients}`);
+    }
+
+    const handleCancel = () => {
+        resetFormDataPatient();
+        goToList();
     }
 
     const goEdit = (id: string) => {
@@ -42,7 +44,7 @@ export default function CreatePatient() {
                     <div className="flex justify-between items-center mb-4">
                         <h1 className="text-2xl font-bold mb-4">Pacientes - {TITLE_PAGE}</h1>
                     </div>
-                    <PatientForm handleSubmit={handleSubmit} handleCancel={goToList} />
+                    <PatientForm handleSubmit={handleSubmit} handleCancel={handleCancel} />
                 </div>
             </PageWrapper>
         </DashboardLayout>

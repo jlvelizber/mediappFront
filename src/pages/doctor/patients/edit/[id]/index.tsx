@@ -13,7 +13,7 @@ export default function EditPatient() {
     const TITLE_PAGE = "Editar Paciente";
     const { user } = useAuth();
     const router = useRouter();
-    const { isLoading, getPatientForEdit, updatePatient } = usePatientStore();
+    const { isLoading, getPatientForEdit, updatePatient, resetFormDataPatient } = usePatientStore();
     const { addToast } = useToastStore();
     const { loading: { fetching }, updated } = messages.patient
     const params = useParams<{ id: string }>();
@@ -28,6 +28,11 @@ export default function EditPatient() {
 
     const goToList = () => {
         router.replace(`/${user?.role}${routeNames.patients}`);
+    }
+
+    const handleCancel = () => {
+        resetFormDataPatient();
+        goToList();
     }
 
 
@@ -47,7 +52,7 @@ export default function EditPatient() {
                     <div className="flex justify-between items-center mb-4">
                         <h1 className="text-2xl font-bold mb-4">Pacientes - {TITLE_PAGE}</h1>
                     </div>
-                    <PatientForm handleSubmit={handleSubmit} handleCancel={goToList} />
+                    <PatientForm handleSubmit={handleSubmit} handleCancel={handleCancel} />
                 </div>
             </PageWrapper>
         </DashboardLayout>
