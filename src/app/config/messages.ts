@@ -14,6 +14,7 @@ export const messages = {
             updating: "Actualizando paciente...",
             deleting: "Eliminando paciente...",
             fetching: "Cargando paciente...",
+            fetchingList: "Cargando lista de pacientes...",
         },
     }
 };

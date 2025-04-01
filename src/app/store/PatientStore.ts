@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-import { createPatient, getPatient, updatePatient } from "../actions";
+import { createPatient, getPatient, removePatient, updatePatient } from "../actions";
 import { PatientFormDataInterface } from "../components";
 import { PatientInterface } from "../intefaces";
 
@@ -13,6 +13,7 @@ export interface PatientStoreInterface {
     getPatient: (id: number) => Promise<PatientInterface | null>;
     updatePatient: (id: number, patient: FormData) => Promise<number>;
     getPatientForEdit: (id: number) => Promise<PatientFormDataInterface | null>;
+    removePatient: (id: number) => Promise<boolean>;
     resetFormDataPatient: () => void;
 };
 
@@ -127,6 +128,13 @@ export const createPatientSlice = (set: any, get: any) => ({
         }
         set({ isLoading: false }, false, "app:patient/loadingUpdatePatient");
         return patientId;
+    },
+    removePatient: async (id: number): Promise<boolean> => {
+        set({ isLoading: true }, false, "app:patient/loadingRemovePatient");
+        const response = await removePatient(id);
+        set({ isLoading: false }, false, "app:patient/loadingRemovePatient");
+        if (!response) return false;
+        return true;
     },
     resetFormDataPatient: () => {
         set({ formManagePatient: { ...initialState } }, false, "app:patient/resetFormData")

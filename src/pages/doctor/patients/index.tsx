@@ -1,9 +1,11 @@
-import { DashboardLayout, EmptyState, Loader, PageWrapper, Paginator, PatientList } from "@/app/components";
+import { DashboardLayout, DeleteConfirmation, EmptyState, Loader, PageWrapper, Paginator, PatientList } from "@/app/components";
+import { messages } from "@/app/config";
 import { useAuth, useLayout } from "@/app/context";
 import { PatientInterface } from "@/app/intefaces";
 import { Meta } from "@/app/intefaces/PaginatorInterface";
 import { routeNames } from "@/app/routes";
 import { PatientService } from "@/app/services";
+import { usePatientStore } from "@/app/store";
 import { PlusIcon } from "@primer/octicons-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -12,7 +14,7 @@ import { MouseEvent, useEffect, useState } from "react";
 export default function Patients() {
   const TITLE_PAGE = "Pacientes";
   const DEFAULT_NUM_PAGE = 1;
-  const messageOnloading = "Cargando pacientes";
+  const { loading: { fetchingList, deleting } } = messages.patient
   const { setTitlePage } = useLayout();
   const [search, setSearch] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
@@ -20,9 +22,16 @@ export default function Patients() {
   const [hasDataInFirstFetch, setHasDataInFirstFetch] = useState<boolean>(true);
   const [findWassSuccess, setFindWassSuccess] = useState<boolean>(true);
   const [patients, setPatients] = useState<PatientInterface[]>([]);
+  const [flowDeletePatient, setFlowDeletePatient] = useState<{ isOpenDeleteConfirmation: boolean, patientId: number }>({
+    isOpenDeleteConfirmation: false,
+    patientId: 0
+  })
+  const [messageOnLoader, setMessageOnLoader] = useState<string>(fetchingList);
+
   const [meta, setMeta] = useState<Meta>();
   const { user } = useAuth()
   const router = useRouter();
+  const { removePatient, isLoading } = usePatientStore()
 
 
   useEffect(() => {
@@ -98,50 +107,77 @@ export default function Patients() {
     router.push(`/${user?.role}${routeNames.patients}/edit/${patientId}`)
   }
 
+
+  /**
+   * HANDLE REMOVE PATIENT 
+   */
+
   const handleRemove = (e: MouseEvent<HTMLButtonElement>, patientId: number) => {
-    console.log(patientId)
+    e.preventDefault()
+    setFlowDeletePatient({
+      isOpenDeleteConfirmation: true,
+      patientId
+    });
   }
 
+  const handleCloseDeleteConfirmation = () => {
+    setFlowDeletePatient({
+      isOpenDeleteConfirmation: false,
+      patientId: 0
+    });
+  }
 
-  if (loading) return <Loader message={messageOnloading} />
+  const handleConfirmDelete = async () => {
+    const { patientId } = flowDeletePatient;
+    setMessageOnLoader(deleting);
+    handleCloseDeleteConfirmation();
+    await removePatient(patientId);
+    await loadPatients(DEFAULT_NUM_PAGE, true);
+  };
+
+
+  if (loading || isLoading) return <Loader message={messageOnLoader} />
 
   return (
-    <DashboardLayout>
-      <PageWrapper>
-        <div className="container mx-auto p-4">
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="text-2xl font-bold mb-4">Pacientes</h1>
+    <>
+      <DeleteConfirmation entityName="Paciente" isOpen={flowDeletePatient.isOpenDeleteConfirmation} onClose={handleCloseDeleteConfirmation} onConfirm={handleConfirmDelete} />
+      <DashboardLayout>
+        <PageWrapper>
+          <div className="container mx-auto p-4">
+            <div className="flex justify-between items-center mb-4">
+              <h1 className="text-2xl font-bold mb-4">Pacientes</h1>
 
-            {/* 🔹 Botón SIEMPRE visible */}
-            <Link href={`/${user?.role}/patients/create`}>
-              <button className="btn-primary">
-                <PlusIcon className="w-5 h-5 mr-2" />
-                Agregar Paciente
-              </button>
-            </Link>
+              {/* 🔹 Botón SIEMPRE visible */}
+              <Link href={`/${user?.role}/patients/create`}>
+                <button className="btn-primary">
+                  <PlusIcon className="w-5 h-5 mr-2" />
+                  Agregar Paciente
+                </button>
+              </Link>
+            </div>
+
+            {!hasDataInFirstFetch ? (
+              <EmptyState />
+            ) : (
+              <>
+                <input
+                  type="text"
+                  placeholder="Buscar paciente..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="mb-4 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary"
+                />
+                <PatientList items={patients} fetching={fetchingOnTable} actions={{ onEdit: handleEdit, onRemove: handleRemove }} />
+                {meta && <Paginator meta={meta} onPageChange={paginatePatientsOnTable} />}
+              </>
+            )}
+
+
+
           </div>
 
-          {!hasDataInFirstFetch ? (
-            <EmptyState />
-          ) : (
-            <>
-              <input
-                type="text"
-                placeholder="Buscar paciente..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="mb-4 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary"
-              />
-              <PatientList items={patients} fetching={fetchingOnTable} actions={{ onEdit: handleEdit, onRemove: handleRemove }} />
-              {meta && <Paginator meta={meta} onPageChange={paginatePatientsOnTable} />}
-            </>
-          )}
-
-
-
-        </div>
-
-      </PageWrapper>
-    </DashboardLayout >
+        </PageWrapper>
+      </DashboardLayout >
+    </>
   )
 }

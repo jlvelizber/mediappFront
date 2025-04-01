@@ -2,7 +2,7 @@
 
 import { AxiosError } from "axios";
 import { PatientFormDataInterface } from "../components";
-import { PatientInterface } from "../intefaces";
+import { DefaultMessageResourceRemoved, PatientInterface } from "../intefaces";
 import { PatientService } from "../services";
 
 
@@ -58,5 +58,19 @@ export async function updatePatient(prevState: PatientFormDataInterface, id: num
         // @ts-expect-error: axiosError.response may be undefined or not have a data property
         prevState.errors = axiosError.response?.data?.errors
         return prevState;
+    }
+}
+/**
+ * 
+ * @param id 
+ * @returns 
+ */
+export async function removePatient(id: number): Promise<DefaultMessageResourceRemoved | null> {
+    try {
+        const response: DefaultMessageResourceRemoved = await PatientService.removePatient(id);
+        return response;
+    } catch (error) {
+        console.error("Error al eliminar el paciente:", error);
+        return null;
     }
 }
