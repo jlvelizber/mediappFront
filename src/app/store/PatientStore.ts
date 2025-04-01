@@ -115,6 +115,7 @@ export const createPatientSlice = (set: any, get: any) => ({
             // Verifica si el response tiene el formato esperado
             if ("patient" in response && response.success) {
                 set({ patient: response.patient }, false, "app:patient/updatePatient");
+                await get().getPatientForEdit(id); // Actualiza el paciente en el estado para edicion
                 patientId = response.patient?.id ?? 0; // Retorna el ID del paciente creado o 0 si es undefined
             } else {
                 console.error("Unexpected response format", response);
