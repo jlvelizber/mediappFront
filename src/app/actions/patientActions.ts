@@ -33,10 +33,30 @@ export async function createPatient(prevState: PatientFormDataInterface, formDat
 // 📌 Server Action para obtener un paciente
 export async function getPatient(id: number): Promise<PatientInterface | null> {
     try {
-        const patient = await PatientService.getPatient(id);
+        const patient = await PatientService.getPatient(id.toString());
         return patient;
     } catch (error) {
         console.error("Error al obtener el paciente:", error);
         return null;
+    }
+}
+
+
+export async function updatePatient(prevState: PatientFormDataInterface, id: number, formData: FormData): Promise<PatientFormDataInterface | { success: boolean; patient: PatientInterface }> {
+    // Convertir FormData a un objeto
+    const data = Object.fromEntries(formData.entries()) as unknown as PatientInterface;
+    try {
+        // 📌 Aquí iría la lógica para guardar en la base de datos
+        console.log("actualizando Paciente: ", data.name);
+        const patient = await PatientService.updatePatient(id, data);
+        return { success: true, patient };
+    } catch (error: unknown) {
+        prevState.fields = data;
+        const axiosError = error as AxiosError;
+        // @ts-expect-error: axiosError.response may be undefined or not have a data property
+        prevState.error = "Error al guardar el paciente. " + axiosError.response?.data?.message
+        // @ts-expect-error: axiosError.response may be undefined or not have a data property
+        prevState.errors = axiosError.response?.data?.errors
+        return prevState;
     }
 }

@@ -65,5 +65,14 @@ export const PatientService = {
     },
 
 
+    /**
+     * Update Patient
+     */
+    updatePatient: async (id: number, data: PatientInterface): Promise<PatientInterface> => {
+        const response = await apiClient.put(`${PatientService.route}/${id}`, data);
+        return await response.data;
+    }
+
+
 
 }

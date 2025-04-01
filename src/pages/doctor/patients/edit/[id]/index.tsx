@@ -7,7 +7,7 @@ import { routeNames } from "@/app/routes";
 import { usePatientStore, useToastStore } from "@/app/store";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function EditPatient() {
     const TITLE_PAGE = "Editar Paciente";
@@ -15,8 +15,9 @@ export default function EditPatient() {
     const router = useRouter();
     const { isLoading, getPatientForEdit, updatePatient, resetFormDataPatient } = usePatientStore();
     const { addToast } = useToastStore();
-    const { loading: { fetching }, updated } = messages.patient
+    const { loading: { fetching, updating }, updated, } = messages.patient
     const params = useParams<{ id: string }>();
+    const [messageOnLoader, setMessageOnLoader] = useState<string>(fetching);
 
     useEffect(() => {
         if (params) {
@@ -37,12 +38,20 @@ export default function EditPatient() {
 
 
     const handleSubmit = async (formData: FormData) => {
-        updatePatient(formData);
-        addToast(updated, "success");
+        if (!params) {
+            addToast("Error: Invalid patient ID", "error");
+            return;
+        }
+        setMessageOnLoader(updating);
+        const id = params.id as unknown as number;
+        const patientId = await updatePatient(id, formData);
+        if (patientId) {
+            addToast(updated, "success");
+        }
     }
 
 
-    if (isLoading) return <Loader message={fetching} />
+    if (isLoading) return <Loader message={messageOnLoader} />
 
 
     return (

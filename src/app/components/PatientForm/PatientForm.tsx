@@ -1,6 +1,7 @@
 "use client"; // 📌 Necesario para usar Server Actions en el frontend
 
 import { usePatientStore } from "@/app/store";
+import { getGenders } from "@/app/utils";
 import { FormEvent, MouseEvent } from "react";
 import { PatientFormComponentInterface } from "./PatientFormComponentInterface";
 
@@ -78,9 +79,9 @@ export default function PatientForm({ initialData, handleCancel, handleSubmit, h
                     <label className="block text-sm font-medium text-gray-700">Género</label>
                     <select name="gender" className={`input-field ${errors?.gender?.length ? '!border-red-500' : ''}`} defaultValue={fields?.gender}>
                         <option value="">Seleccione una opción</option>
-                        <option value="male">Masculino</option>
-                        <option value="female">Femenino</option>
-                        <option value="other">Otro</option>
+                        {
+                            getGenders().map(({ value, label }, index) => (<option selected={fields?.gender === value} key={index} value={value}>{label}</option>))
+                        }
                     </select>
                     {errors?.gender && <p className="text-red-500 text-sm">{errors.gender.join(',')}</p>}
                 </div>

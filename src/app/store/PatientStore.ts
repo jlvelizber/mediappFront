@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-import { createPatient, getPatient } from "../actions";
+import { createPatient, getPatient, updatePatient } from "../actions";
 import { PatientFormDataInterface } from "../components";
 import { PatientInterface } from "../intefaces";
 
@@ -11,7 +11,7 @@ export interface PatientStoreInterface {
     formManagePatient: PatientFormDataInterface;
     addPatient: (patient: FormData) => Promise<number>;
     getPatient: (id: number) => Promise<PatientInterface | null>;
-    updatePatient: (patient: FormData) => void;
+    updatePatient: (id: number, patient: FormData) => Promise<number>;
     getPatientForEdit: (id: number) => Promise<PatientFormDataInterface | null>;
     resetFormDataPatient: () => void;
 };
@@ -107,8 +107,25 @@ export const createPatientSlice = (set: any, get: any) => ({
         const patient = await get().getPatient(id);
         set({ formManagePatient: { ...initialState, fields: patient } }, false, "app:patient/getPatientForEdit")
     },
-    updatePatient: (patient: FormData) => {
-        set({ patient }, false, "app:patient/updatePatient");
+    updatePatient: async (id: number, patient: FormData): Promise<number> => {
+        set({ isLoading: true }, false, "app:patient/loadingUpdatePatient");
+        const response = await updatePatient({} as PatientFormDataInterface, id, patient);
+        let patientId = 0;
+        if (response) {
+            // Verifica si el response tiene el formato esperado
+            if ("patient" in response && response.success) {
+                set({ patient: response.patient }, false, "app:patient/updatePatient");
+                patientId = response.patient?.id ?? 0; // Retorna el ID del paciente creado o 0 si es undefined
+            } else {
+                console.error("Unexpected response format", response);
+                if ("fields" in response) {
+                    response.fields = { ...response.fields, id: id };
+                }
+                set({ formManagePatient: { ...response as PatientFormDataInterface } }, false, "app:patient/errorUpdatePatient");
+            }
+        }
+        set({ isLoading: false }, false, "app:patient/loadingUpdatePatient");
+        return patientId;
     },
     resetFormDataPatient: () => {
         set({ formManagePatient: { ...initialState } }, false, "app:patient/resetFormData")

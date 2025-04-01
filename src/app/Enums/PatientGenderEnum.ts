@@ -1,5 +1,5 @@
 export enum PatientGenderEnum {
-    female = "female",
-    male = "male",
-    other = "other"
+    female = "femenino",
+    male = "masculino",
+    other = "otro"
 }
