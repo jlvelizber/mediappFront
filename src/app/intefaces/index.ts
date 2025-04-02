@@ -1,3 +1,4 @@
+export type { AppointmentInterface } from "./AppointmentInterface";
 export type { AuthInterface, UserInterface } from "./AuthInterface";
 export type { DefaultMessageResourceRemoved } from "./CommonInterface";
 export type { DoctorAvailabilityInterface } from "./DoctorInterface";
