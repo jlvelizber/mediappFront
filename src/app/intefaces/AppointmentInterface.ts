@@ -12,5 +12,13 @@ export interface AppointmentInterface {
     updated_at?: string
 }
 
+export interface AppointmentListItemInterface {
+    id: number,
+    patient: string,
+    date: string,
+    time: string,
+    status: string,
+}
 
-export type AppointmentPaginationInterface = PaginatorInterface<AppointmentInterface>
+
+export type AppointmentPaginationInterface = PaginatorInterface<AppointmentListItemInterface>

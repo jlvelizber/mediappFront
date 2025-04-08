@@ -3,7 +3,7 @@ import { DashboardLayout } from "@/app/components/Layouts";
 import { messages } from "@/app/config";
 import { useLayout } from "@/app/context";
 import { useAuth } from "@/app/context/AuthContext";
-import { AppointmentInterface, Meta } from "@/app/intefaces";
+import { AppointmentListItemInterface, Meta } from "@/app/intefaces";
 import { routeNames } from "@/app/routes";
 import { AppointmentService } from "@/app/services";
 import { PlusIcon } from "@primer/octicons-react";
@@ -22,7 +22,7 @@ export default function AppointmentsPage() {
     const [messageOnLoader, setMessageOnLoader] = useState<string>(fetchingList);
     const [hasDataInFirstFetch, setHasDataInFirstFetch] = useState<boolean>(true);
     const [fetchingOnTable, setFetchingOnTable] = useState<boolean>(false);
-    const [appointments, setAppointments] = useState<AppointmentInterface[]>([]);
+    const [appointments, setAppointments] = useState<AppointmentListItemInterface[]>([]);
     const [search, setSearch] = useState<string>("");
     const [flowDelete, setFlowDelete] = useState<{ isOpenDeleteConfirmation: boolean, appId: number }>({
         isOpenDeleteConfirmation: false,
@@ -30,17 +30,20 @@ export default function AppointmentsPage() {
     });
     const [meta, setMeta] = useState<Meta>();
 
+    useEffect(() => {
+        if (appointments.length === 0) {
+            setHasDataInFirstFetch(false)
+        } else {
+            setHasDataInFirstFetch(true)
+        }
+    }, [loading, appointments.length])
+
 
     useEffect(() => {
         setTitlePage(TITLE_PAGE);
         loadAppointments();
     }, []);
 
-    useEffect(() => {
-        if (!loading && appointments.length == 0) {
-            setHasDataInFirstFetch(false)
-        }
-    }, [loading])
 
     const handleEdit = (e: MouseEvent<HTMLButtonElement>, appId: number) => {
         e.preventDefault()
