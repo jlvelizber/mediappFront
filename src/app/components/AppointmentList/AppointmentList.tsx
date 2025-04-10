@@ -1,5 +1,6 @@
-import { AppointmentListItemInterface } from "@/app/intefaces";
+import { AppointmentListItemInterface, AppointmentStatusInterface } from "@/app/intefaces";
 import { PencilIcon, TrashIcon } from "@primer/octicons-react";
+import AppointmentStatusBadge from "../AppointmentStatusBadge";
 import { EmptyState } from "../EmptyState";
 import { Loader } from "../Loader";
 import { Table } from "../Table";
@@ -12,7 +13,7 @@ export default function AppointmentList({ items, fetching, actions: { onRemove, 
             {!fetching && !items.length ? <tr> <td colSpan={4}> < EmptyState /></td> </tr> : ""}
             {!fetching && items.map((appointment: AppointmentListItemInterface) => (
                 <tr key={appointment.id} className="hover:bg-gray-100 transition">
-                    <td className="px-6 py-2">{appointment.status}</td>
+                    <td className="px-6 py-2"> <AppointmentStatusBadge status={appointment.status as AppointmentStatusInterface} text={appointment.status_label} /></td>
                     <td className="px-6 py-2">{appointment.patient}</td>
                     <td className="px-6 py-2">{appointment.date} - {appointment.time} </td>
                     <td className="px-6 py-2 flex justify-between mx-auto">

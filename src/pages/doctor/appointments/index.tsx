@@ -23,6 +23,7 @@ export default function AppointmentsPage() {
     const [hasDataInFirstFetch, setHasDataInFirstFetch] = useState<boolean>(true);
     const [fetchingOnTable, setFetchingOnTable] = useState<boolean>(false);
     const [appointments, setAppointments] = useState<AppointmentListItemInterface[]>([]);
+    const [findWassSuccess, setFindWassSuccess] = useState<boolean>(true);
     const [search, setSearch] = useState<string>("");
     const [flowDelete, setFlowDelete] = useState<{ isOpenDeleteConfirmation: boolean, appId: number }>({
         isOpenDeleteConfirmation: false,
@@ -43,6 +44,21 @@ export default function AppointmentsPage() {
         setTitlePage(TITLE_PAGE);
         loadAppointments();
     }, []);
+
+    useEffect(() => {
+        if (!search && appointments.length < 1) {
+            loadAppointments(DEFAULT_NUM_PAGE, true)
+        } else {
+            filterQueryAppointments()
+        }
+
+    }, [search])
+
+    useEffect(() => {
+        if (!findWassSuccess) {
+            loadAppointments(DEFAULT_NUM_PAGE, true);
+        }
+    }, [findWassSuccess])
 
 
     const handleEdit = (e: MouseEvent<HTMLButtonElement>, appId: number) => {
@@ -70,6 +86,20 @@ export default function AppointmentsPage() {
             }
         }
     };
+
+    const filterQueryAppointments = async () => {
+        const filtered = appointments.filter(
+            (filtered) =>
+                filtered.patient.toLowerCase().includes(search.toLowerCase())
+        );
+        setAppointments(filtered);
+
+        if (!filtered.length) {
+            setFindWassSuccess(false)
+        } else {
+            setFindWassSuccess(true);
+        }
+    }
 
     const paginateAppointmentsOnTable = async (page: number) => await loadAppointments(page, true)
 

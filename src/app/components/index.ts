@@ -1,5 +1,6 @@
 export * from "./AdminDashboard";
 export * from "./AppointmentList";
+export * from "./AppointmentStatusBadge";
 export * from './AvailabilityList';
 export * from "./DeleteConfirmation";
 export * from "./DoctorDashboard";

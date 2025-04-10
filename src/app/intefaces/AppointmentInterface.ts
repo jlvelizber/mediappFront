@@ -1,4 +1,4 @@
-import { PaginatorInterface } from "./PaginatorInterface"
+import { PaginatorInterface } from "./PaginatorInterface";
 
 export interface AppointmentInterface {
     id?: number,
@@ -18,7 +18,10 @@ export interface AppointmentListItemInterface {
     date: string,
     time: string,
     status: string,
+    status_label: string,
 }
+
+export type AppointmentStatusInterface = "pending" | "completed" | "cancelled";
 
 
 export type AppointmentPaginationInterface = PaginatorInterface<AppointmentListItemInterface>
