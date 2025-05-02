@@ -90,7 +90,7 @@ export default function PatientForm({ initialData, handleCancel, handleSubmit, h
                 <div className="md:col-span-2 flex justify-between items-center mt-4">
                     <div className="flex gap-2">
                         <button type="button" onClick={handleCancel} className="btn-secondary">
-                            Cancelar
+                            {fields?.id ? "Regresar" : "Cancelar"}
                         </button>
                         {/* Botón de eliminar SOLO si el paciente ya existe */}
                         {fields?.id && (

@@ -143,7 +143,7 @@ export default function AppointmentsPage() {
                         <div className="flex justify-between items-center mb-4">
                             <h1 className="text-2xl font-bold mb-4">{TITLE_PAGE}</h1>
                             {/* 🔹 Botón SIEMPRE visible */}
-                            <Link href={`/${user?.role}/patients/create`}>
+                            <Link href={`/${user?.role}/appointments/create`}>
                                 <button className="btn-primary">
                                     <PlusIcon className="w-5 h-5 mr-2" />
                                     Agregar Cita
