@@ -2,8 +2,8 @@ import { PaginatorInterface } from "./PaginatorInterface";
 
 export interface AppointmentInterface {
     id?: number,
-    patient_id: number,
-    doctor_id: number,
+    patient_id: number | null,
+    doctor_id: number | null,
     status: string,
     date: string,
     start_time: string,

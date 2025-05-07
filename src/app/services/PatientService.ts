@@ -20,6 +20,17 @@ export const PatientService = {
     },
 
     /**
+     * List patients by doctor in session
+     * @param pageRequest 
+     * @param search 
+     * @returns 
+     */
+    getMyPatients: async (): Promise<PatientInterface[]> => {
+        const response = await apiClient.get(`${PatientService.route}`);
+        return await response.data.data;
+    },
+
+    /**
      * Edit Patients
      * @param id 
      * @param data 

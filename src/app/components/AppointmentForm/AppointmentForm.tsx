@@ -1,7 +1,9 @@
 import { FormEvent } from "react";
 import { AppointmentFormComponentInterface } from "./AppointmentFormComponentInterface";
 
-export default function AppointmentForm({ initialData, handleCancel, handleSubmit, handleDelete }: AppointmentFormComponentInterface) {
+export default function AppointmentForm({ handleCancel, handleSubmit, handleDelete, deps }: AppointmentFormComponentInterface) {
+
+    const { patients } = deps || { patients: [] };
 
     const onHandleSubmit = (e: FormEvent) => {
         e.preventDefault();
@@ -15,6 +17,11 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
                 <label className="block text-sm font-medium text-gray-700">Paciente</label>
                 <select name="patient_id" defaultValue={""} className="input-field">
                     <option value="">Seleccione un paciente</option>
+                    {patients.map((patient) => (
+                        <option key={patient.id} value={patient.id}>
+                            {`${patient.name} ${patient.lastname}`}
+                        </option>
+                    ))}
                 </select>
                 {/* {state.errors.patient_id && <p className="text-red-500 text-sm">{state.errors.patient_id}</p>} */}
             </div>

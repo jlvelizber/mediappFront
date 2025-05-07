@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-import { createPatient, getPatient, removePatient, updatePatient } from "../actions";
+import { createPatient, getPatient, getPatientsByDoctorInSession, removePatient, updatePatient } from "../actions";
 import { PatientFormDataInterface } from "../components";
 import { PatientInterface } from "../intefaces";
 
@@ -15,6 +15,7 @@ export interface PatientStoreInterface {
     getPatientForEdit: (id: number) => Promise<PatientFormDataInterface | null>;
     removePatient: (id: number) => Promise<boolean>;
     resetFormDataPatient: () => void;
+    getPatientsByDoctorInSession: () => Promise<PatientInterface[]>;
 };
 
 const initialState: PatientFormDataInterface = {
@@ -138,6 +139,12 @@ export const createPatientSlice = (set: any, get: any) => ({
     },
     resetFormDataPatient: () => {
         set({ formManagePatient: { ...initialState } }, false, "app:patient/resetFormData")
+    },
+
+    getPatientsByDoctorInSession: async (): Promise<PatientInterface[]> => {
+        const response = await getPatientsByDoctorInSession(); // Cambia esto por la función real para obtener pacientes por doctor
+        if (!response) return [];
+        return response;
     },
 });
 

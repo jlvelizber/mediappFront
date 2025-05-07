@@ -74,3 +74,13 @@ export async function removePatient(id: number): Promise<DefaultMessageResourceR
         return null;
     }
 }
+
+export async function getPatientsByDoctorInSession(): Promise<PatientInterface[]> {
+    try {
+        const patients = await PatientService.getMyPatients();
+        return patients;
+    } catch (error) {
+        console.error("Error al obtener los pacientes:", error);
+        return [];
+    }
+}

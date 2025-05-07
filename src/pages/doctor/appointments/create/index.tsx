@@ -1,12 +1,49 @@
-import { AppointmentForm, DashboardLayout, PageWrapper } from "@/app/components";
-import { useAuth } from "@/app/context";
+import { AppointmentForm, DashboardLayout, Loader, PageWrapper } from "@/app/components";
+import { messages } from "@/app/config";
+import { useAuth, useLayout } from "@/app/context";
+import { PatientInterface } from "@/app/intefaces";
 import { routeNames } from "@/app/routes";
+import { useAppointmentStore, usePatientStore } from "@/app/store";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 export default function CreateAppointment() {
-    const TITLE_PAGE = "Crear";
+    const TITLE_PAGE = "Crear Cita";
+    const { loading: { fetching } } = messages.appointment;
     const router = useRouter();
     const { user } = useAuth();
+    const { setTitlePage } = useLayout();
+    const { getPatientsByDoctorInSession } = usePatientStore();
+    const { isLoading, setIsLoading } = useAppointmentStore();
+    const [messageOnLoader, setMessageOnLoader] = useState<string>(fetching);
+    const [deps, setDeps] = useState<{
+        patients: PatientInterface[];
+    }>({
+        patients: [],
+    });
+
+
+    const loadDependencies = async () => {
+        setIsLoading(true);
+        Promise.all([
+            getPatientsByDoctorInSession(),
+        ]).then((res) => {
+            console.log(res);
+            setDeps({
+                patients: res[0] as unknown as PatientInterface[],
+            });
+
+            setIsLoading(false);
+        })
+    }
+
+    useEffect(() => {
+        setTitlePage(TITLE_PAGE);
+        loadDependencies();
+        return () => {
+            setTitlePage("");
+        };
+    }, []);
 
     const goToList = () => {
         router.replace(`/${user?.role}${routeNames.appointments}`);
@@ -26,6 +63,8 @@ export default function CreateAppointment() {
         // }
     }
 
+    if (isLoading) return <Loader message={messageOnLoader} />
+
     return (
         <DashboardLayout>
             <PageWrapper>
@@ -33,7 +72,7 @@ export default function CreateAppointment() {
                     <div className="flex justify-between items-center mb-4">
                         <h1 className="text-2xl font-bold mb-4">Citas médicas - {TITLE_PAGE}</h1>
                     </div>
-                    <AppointmentForm handleCancel={handleCancel} handleSubmit={handleSubmit} />
+                    <AppointmentForm handleCancel={handleCancel} handleSubmit={handleSubmit} deps={deps} />
                 </div>
             </PageWrapper>
         </DashboardLayout>
