@@ -1,4 +1,5 @@
 import { FormEvent } from "react";
+import { AppointmentDateTimePicker } from "../AppointmentDateTimePicker";
 import { AppointmentFormComponentInterface } from "./AppointmentFormComponentInterface";
 
 export default function AppointmentForm({ handleCancel, handleSubmit, handleDelete, deps }: AppointmentFormComponentInterface) {
@@ -29,7 +30,8 @@ export default function AppointmentForm({ handleCancel, handleSubmit, handleDele
             {/* Fecha y hora */}
             <div>
                 <label className="block text-sm font-medium text-gray-700">Fecha y Hora</label>
-                <input type="datetime-local" name="date_time" defaultValue={""} className="input-field" />
+                {/* <input type="datetime-local" name="date_time" defaultValue={""} className="input-field" /> */}
+                <AppointmentDateTimePicker handleChange={() => { }} value="" />
                 {/* {state.errors.date_time && <p className="text-red-500 text-sm">{state.errors.date_time}</p>} */}
             </div>
 
