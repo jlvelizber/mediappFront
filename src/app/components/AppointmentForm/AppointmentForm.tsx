@@ -11,6 +11,15 @@ export default function AppointmentForm({ handleCancel, handleSubmit, handleDele
         const formData = new FormData(e.currentTarget as HTMLFormElement);
         handleSubmit(formData);
     }
+
+    const onHandleChangeDate = (date: Date | null) => {
+        if (date) {
+            // Aquí puedes manejar el cambio de fecha y hora
+            console.log(date);
+        } else {
+            console.log("Fecha no válida");
+        }
+    }
     return (
         <form onSubmit={onHandleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Paciente */}
@@ -31,7 +40,7 @@ export default function AppointmentForm({ handleCancel, handleSubmit, handleDele
             <div>
                 <label className="block text-sm font-medium text-gray-700">Fecha y Hora</label>
                 {/* <input type="datetime-local" name="date_time" defaultValue={""} className="input-field" /> */}
-                <AppointmentDateTimePicker handleChange={() => { }} value="" />
+                <AppointmentDateTimePicker value="" name="date_time" onChange={onHandleChangeDate} />
                 {/* {state.errors.date_time && <p className="text-red-500 text-sm">{state.errors.date_time}</p>} */}
             </div>
 
