@@ -16,20 +16,20 @@ const initialState: AppointmentFormDataInterface = {
         id: undefined,
         patient_id: null,
         doctor_id: null,
-        date: "",
+        date: new Date(),
         start_time: "",
         end_time: "",
-        status: "pending"
+        status: "pending",
+        reason: ""
     },
     errors: {
-        name: [],
-        lastname: [],
-        email: [],
-        phone: [],
-        address: [],
-        dob: [],
-        document: [],
-        gender: [],
+        patient_id: [],
+        doctor_id: [],
+        date: [],
+        start_time: [],
+        end_time: [],
+        status: [],
+        reason: []
     },
     error: "",
 
@@ -37,6 +37,17 @@ const initialState: AppointmentFormDataInterface = {
 // Slice para el estado de pacientes
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const createAppointmentSlice = (set: any, get: any) => ({
+    appointment: {
+        id: undefined,
+        patient_id: null,
+        doctor_id: null,
+        date: "",
+        start_time: "",
+        end_time: "",
+        status: "pending",
+        reason: ""
+    },
+    formManageAppointment: initialState,
     resetFormDataPatient: () => {
         set({ formManageAppointment: { ...initialState } }, false, "app:appointment/resetFormData")
     },
