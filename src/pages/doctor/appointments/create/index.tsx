@@ -14,7 +14,7 @@ export default function CreateAppointment() {
     const { user } = useAuth();
     const { setTitlePage } = useLayout();
     const { getPatientsByDoctorInSession } = usePatientStore();
-    const { isLoading, setIsLoading } = useAppointmentStore();
+    const { isLoading, setIsLoading, addAppointment } = useAppointmentStore();
     const [messageOnLoader, setMessageOnLoader] = useState<string>(fetching);
     const [deps, setDeps] = useState<{
         patients: PatientInterface[];
@@ -54,9 +54,9 @@ export default function CreateAppointment() {
         // resetFormDataPatient();
     }
 
-    const handleSubmit = async (formData: unknown) => {
+    const handleSubmit = async (formData: FormData) => {
         console.log(formData);
-        // const patientId = await addPatient(formData);
+        const patientId = await addAppointment(formData);
         // if (patientId) {
         //     goEdit(patientId as unknown as string);
         //     addToast(created, "success");

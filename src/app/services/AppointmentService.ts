@@ -1,4 +1,4 @@
-import { AppointmentPaginationInterface } from "../intefaces/AppointmentInterface";
+import { AppointmentInterface, AppointmentPaginationInterface } from "../intefaces/AppointmentInterface";
 import { apiClient } from "./api";
 
 export const AppointmentService = {
@@ -16,4 +16,15 @@ export const AppointmentService = {
         const response = await apiClient.get(`${AppointmentService.route}/paginate${page}${query}`);
         return await response.data;
     },
+
+
+    /**
+     * Create Appointment
+     * @param appointment 
+     * @returns 
+     */
+    createAppointment: async (appointment: AppointmentInterface): Promise<AppointmentInterface> => {
+        const response = await apiClient.post(`${AppointmentService.route}`, appointment);
+        return await response.data;
+    }
 }

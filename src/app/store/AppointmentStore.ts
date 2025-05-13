@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
+import { createAppointment } from "../actions";
 import { AppointmentFormDataInterface } from "../components";
 import { AppointmentInterface } from "../intefaces";
 
@@ -8,6 +9,7 @@ export interface AppointmentStoreInterface {
     isLoading: boolean;
     formManageAppointment: AppointmentFormDataInterface;
     setIsLoading: (isLoading: boolean) => void;
+    addAppointment: (appointment: FormData) => Promise<number>;
 }
 
 
@@ -53,7 +55,18 @@ export const createAppointmentSlice = (set: any, get: any) => ({
     },
     setIsLoading: (isLoading: boolean) => {
         set({ isLoading }, false, "app:appointment/setIsLoading")
-    }
+    },
+    addAppointment: async (appointment: FormData) => {
+        set({ isLoading: true }, false, "app:appointment/addAppointment");
+        try {
+            const response = await createAppointment(appointment);
+            set({ isLoading: false }, false, "app:appointment/addAppointment");
+            return response;
+        } catch (error) {
+            set({ isLoading: false }, false, "app:appointment/addAppointment");
+            throw error;
+        }
+    },
 })
 
 

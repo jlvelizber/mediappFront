@@ -7,8 +7,8 @@ export interface AppointmentFormComponentInterface {
         patients: PatientInterface[];
     };
 
-    handleCancel: (e: MouseEvent<HTMLButtonElement>) => void;
     handleSubmit: (data: FormData) => void,
+    handleCancel: (e: MouseEvent<HTMLButtonElement>) => void;
     handleDelete?: (e: MouseEvent<HTMLButtonElement>, patientId: number) => void;
 }
 

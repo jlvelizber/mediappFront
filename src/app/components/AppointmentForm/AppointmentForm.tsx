@@ -5,9 +5,10 @@ import { AppointmentFormComponentInterface } from "./AppointmentFormComponentInt
 
 export default function AppointmentForm({ initialData, handleCancel, handleSubmit, handleDelete, deps }: AppointmentFormComponentInterface) {
 
+    const { formManageAppointment } = useAppointmentStore();
+
     const { patients } = deps || { patients: [] };
 
-    const { formManageAppointment } = useAppointmentStore();
 
     const { errors, fields, error } = initialData ? initialData : formManageAppointment;
 
@@ -15,7 +16,6 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
         debugger
         e.preventDefault();
         const formData = new FormData(e.currentTarget as HTMLFormElement);
-        console.log(formData);
         handleSubmit(formData);
     }
 
