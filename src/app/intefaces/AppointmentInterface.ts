@@ -4,11 +4,9 @@ export interface AppointmentInterface {
     id?: number,
     patient_id: number | null,
     doctor_id: number | null,
+    date_time: Date,
     status: string,
-    date: string | Date,
     reason: string,
-    start_time: string,
-    end_time: string,
     created_at?: string,
     updated_at?: string
 }

@@ -1,16 +1,17 @@
 import { useAppointmentStore } from "@/app/store";
-import { FormEvent, MouseEvent } from "react";
+import { FormEvent, MouseEvent, useState } from "react";
 import { AppointmentDateTimePicker } from "../AppointmentDateTimePicker";
 import { AppointmentFormComponentInterface } from "./AppointmentFormComponentInterface";
 
 export default function AppointmentForm({ initialData, handleCancel, handleSubmit, handleDelete, deps }: AppointmentFormComponentInterface) {
 
     const { formManageAppointment } = useAppointmentStore();
-
     const { patients } = deps || { patients: [] };
-
-
     const { errors, fields, error } = initialData ? initialData : formManageAppointment;
+    const [dateTime, setDateTime] = useState<Date>(fields?.date_time ?? '');
+
+
+
 
     const onHandleSubmit = (e: FormEvent) => {
         debugger
@@ -20,11 +21,12 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
     }
 
     const onHandleChangeDate = (date: Date | null) => {
+        console.log(date);
         if (date) {
-            // Aquí puedes manejar el cambio de fecha y hora
-            console.log(date);
-        } else {
-            console.log("Fecha no válida");
+            setDateTime(date);
+            const formData = new FormData();
+            formData.append("date_time", date.toISOString());
+            // handleSubmit(formData);
         }
     }
     return (
@@ -50,7 +52,12 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
                 {/* Fecha y hora */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Fecha y Hora</label>
-                    <AppointmentDateTimePicker value={fields?.date instanceof Date ? fields.date.toISOString() : fields?.date} name="date_time" onChange={onHandleChangeDate} />
+                    <AppointmentDateTimePicker
+                        selected={dateTime}
+                        name="date_time"
+                        onChange={onHandleChangeDate}
+                        className={`input-field ${errors?.date_time?.length ? '!border-red-500' : ''}`}
+                    />
                     {errors?.date_time && <p className="text-red-500 text-sm">{errors.date_time}</p>}
                 </div>
 
@@ -67,21 +74,22 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
                         <button type="button" onClick={handleCancel} className="btn-secondary">
                             {fields?.id ? "Regresar" : "Cancelar"}
                         </button>
-                        {/* Botón de eliminar SOLO si la cita ya existe */}
-                        {fields?.id && (
-                            <button
-                                type="button"
-                                onClick={(e: MouseEvent<HTMLButtonElement>) => fields?.id !== undefined && handleDelete?.(e, fields.id)}
-                                className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md shadow-md"
-                            >
-                                Eliminar Cita
-                            </button>
-
-                        )}
-                        <button type="submit" className="btn-primary">
-                            {fields?.id ? "Actualizar" : "Crear"} Cita
-                        </button>
                     </div>
+                    {/* Botón de eliminar SOLO si la cita ya existe */}
+                    {fields?.id && (
+                        <button
+                            type="button"
+                            onClick={(e: MouseEvent<HTMLButtonElement>) => fields?.id !== undefined && handleDelete?.(e, fields.id)}
+                            className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md shadow-md"
+                        >
+                            Eliminar Cita
+                        </button>
+
+                    )}
+                    <button type="submit" className="btn-primary">
+                        {fields?.id ? "Actualizar" : "Crear"} Cita
+                    </button>
+
                 </div>
             </form>
         </>

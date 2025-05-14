@@ -3,18 +3,19 @@ import { messages } from "@/app/config";
 import { useAuth, useLayout } from "@/app/context";
 import { PatientInterface } from "@/app/intefaces";
 import { routeNames } from "@/app/routes";
-import { useAppointmentStore, usePatientStore } from "@/app/store";
+import { useAppointmentStore, usePatientStore, useToastStore } from "@/app/store";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 export default function CreateAppointment() {
     const TITLE_PAGE = "Crear Cita";
-    const { loading: { fetching } } = messages.appointment;
+    const { loading: { fetching, creating }, created } = messages.appointment;
     const router = useRouter();
     const { user } = useAuth();
     const { setTitlePage } = useLayout();
     const { getPatientsByDoctorInSession } = usePatientStore();
-    const { isLoading, setIsLoading, addAppointment } = useAppointmentStore();
+    const { isLoading, setIsLoading, addAppointment, resetFormDataAppointment } = useAppointmentStore();
+    const { addToast } = useToastStore();
     const [messageOnLoader, setMessageOnLoader] = useState<string>(fetching);
     const [deps, setDeps] = useState<{
         patients: PatientInterface[];
@@ -51,16 +52,20 @@ export default function CreateAppointment() {
 
     const handleCancel = () => {
         goToList();
-        // resetFormDataPatient();
+        resetFormDataAppointment();
+    }
+
+    const goEdit = (id: string) => {
+        router.replace(`/${user?.role}${routeNames.appointments}/edit/${id}`);
     }
 
     const handleSubmit = async (formData: FormData) => {
-        console.log(formData);
-        const patientId = await addAppointment(formData);
-        // if (patientId) {
-        //     goEdit(patientId as unknown as string);
-        //     addToast(created, "success");
-        // }
+        setMessageOnLoader(creating);
+        const appointmentId = await addAppointment(formData);
+        if (appointmentId) {
+            goEdit(appointmentId as unknown as string);
+            addToast(created, "success");
+        }
     }
 
     if (isLoading) return <Loader message={messageOnLoader} />

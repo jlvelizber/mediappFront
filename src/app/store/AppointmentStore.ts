@@ -10,6 +10,7 @@ export interface AppointmentStoreInterface {
     formManageAppointment: AppointmentFormDataInterface;
     setIsLoading: (isLoading: boolean) => void;
     addAppointment: (appointment: FormData) => Promise<number>;
+    resetFormDataAppointment: () => void;
 }
 
 
@@ -18,9 +19,7 @@ const initialState: AppointmentFormDataInterface = {
         id: undefined,
         patient_id: null,
         doctor_id: null,
-        date: new Date(),
-        start_time: "",
-        end_time: "",
+        date_time: new Date(),
         status: "pending",
         reason: ""
     },
@@ -37,7 +36,7 @@ const initialState: AppointmentFormDataInterface = {
 
 }
 // Slice para el estado de pacientes
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
 export const createAppointmentSlice = (set: any, get: any) => ({
     appointment: {
         id: undefined,
@@ -58,15 +57,30 @@ export const createAppointmentSlice = (set: any, get: any) => ({
     },
     addAppointment: async (appointment: FormData) => {
         set({ isLoading: true }, false, "app:appointment/addAppointment");
+        let appointmentId = 0;
         try {
-            const response = await createAppointment(appointment);
+            const response = await createAppointment({} as AppointmentFormDataInterface, appointment);
             set({ isLoading: false }, false, "app:appointment/addAppointment");
-            return response;
+            if (response) {
+                // Verifica si el response tiene el formato esperado
+                if ("appointment" in response && response.success) {
+                    set({ appointment: response.appointment }, false, "app:appointment/addAppointment");
+                    appointmentId = response.appointment?.id ?? 0; // Retorna el ID del paciente creado o 0 si es undefined
+                } else {
+                    console.error("Unexpected response format", response);
+                    set({ formManagePatient: { ...response as AppointmentFormDataInterface } }, false, "app:patient/errorAddAppointment");
+                }
+            }
         } catch (error) {
             set({ isLoading: false }, false, "app:appointment/addAppointment");
             throw error;
         }
+        set({ isLoading: false }, false, "app:patient/loadingAddAppointment");
+        return appointmentId;
     },
+    resetFormDataAppointment: () => {
+        set({ formManageAppointment: { ...initialState } }, false, "app:appointment/resetFormData")
+    }
 })
 
 

@@ -3,15 +3,14 @@ import { AppointmentDateTimePickerInterface } from "./AppointmentDateTimePickerI
 
 import "react-datepicker/dist/react-datepicker.css";
 
-export default function AppointmentDateTimePicker({ value }: AppointmentDateTimePickerInterface) {
+export default function AppointmentDateTimePicker(props: AppointmentDateTimePickerInterface) {
     return (
         <DatePicker
-            value={value}
-            selected={value ? new Date(value) : null}
             wrapperClassName="w-full"
             className="input-field"
             showTimeSelect
             dateFormat="Pp"
+            {...props}
         />
     );
 }
