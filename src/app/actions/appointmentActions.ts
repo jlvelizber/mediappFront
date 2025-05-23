@@ -2,11 +2,18 @@ import { AxiosError } from "axios";
 import { AppointmentFormDataInterface } from "../components";
 import { AppointmentInterface } from "../intefaces";
 import { AppointmentService } from "../services";
+import { useAuthStore } from "../store";
 
 export async function createAppointment(prevState: AppointmentFormDataInterface, formData: FormData): Promise<AppointmentFormDataInterface | { success: boolean; appointment: AppointmentInterface }> {
     // Convertir FormData a un objeto
     const data = Object.fromEntries(formData.entries()) as unknown as AppointmentInterface;
     try {
+        // get doctor_id from authStore
+        const doctorId = useAuthStore.getState().doctor?.id;
+        if (!doctorId) {
+            throw new Error("Doctor ID no encontrado en el store");
+        }
+        data.doctor_id = doctorId;
         // 📌 Aquí iría la lógica para guardar en la base de datos
         console.log("guardando Cita: ", data.reason);
         // me da error

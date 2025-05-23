@@ -58,7 +58,7 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
                         onChange={onHandleChangeDate}
                         className={`input-field ${errors?.date_time?.length ? '!border-red-500' : ''}`}
                     />
-                    {errors?.date_time && <p className="text-red-500 text-sm">{errors.date_time}</p>}
+                    {errors?.date_time && <p className="text-red-500 text-sm">{errors.date_time.join(', ')}</p>}
                 </div>
 
                 {/* Motivo */}

@@ -55,22 +55,18 @@ export const createAppointmentSlice = (set: any, get: any): AppointmentStoreInte
     addAppointment: async (appointment: FormData) => {
         set({ isLoading: true }, false, "app:appointment/addAppointment");
         let appointmentId = 0;
-        try {
-            const response = await createAppointment({} as AppointmentFormDataInterface, appointment);
-            set({ isLoading: false }, false, "app:appointment/addAppointment");
-            if (response) {
-                // Verifica si el response tiene el formato esperado
-                if ("appointment" in response && response.success) {
-                    set({ appointment: response.appointment }, false, "app:appointment/addAppointment");
-                    appointmentId = response.appointment?.id ?? 0; // Retorna el ID del paciente creado o 0 si es undefined
-                } else {
-                    console.error("Unexpected response format", response);
-                    set({ formManagePatient: { ...response as AppointmentFormDataInterface } }, false, "app:patient/errorAddAppointment");
-                }
+
+        const response = await createAppointment({} as AppointmentFormDataInterface, appointment);
+        set({ isLoading: false }, false, "app:appointment/addAppointment");
+        if (response) {
+            // Verifica si el response tiene el formato esperado
+            if ("appointment" in response && response.success) {
+                set({ appointment: response.appointment }, false, "app:appointment/addAppointment");
+                appointmentId = response.appointment?.id ?? 0; // Retorna el ID del paciente creado o 0 si es undefined
+            } else {
+                console.error("Unexpected response format", response);
+                set({ formManageAppointment: { ...response as AppointmentFormDataInterface } }, false, "app:patient/errorAddAppointment");
             }
-        } catch (error) {
-            set({ isLoading: false }, false, "app:appointment/addAppointment");
-            throw error;
         }
         set({ isLoading: false }, false, "app:patient/loadingAddAppointment");
         return appointmentId;
