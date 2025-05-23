@@ -11,6 +11,7 @@ export interface AppointmentStoreInterface {
     setIsLoading: (isLoading: boolean) => void;
     addAppointment: (appointment: FormData) => Promise<number>;
     resetFormDataAppointment: () => void;
+    resetSlice: () => void;
 }
 
 
@@ -27,8 +28,6 @@ const initialState: AppointmentFormDataInterface = {
         patient_id: [],
         doctor_id: [],
         date: [],
-        start_time: [],
-        end_time: [],
         status: [],
         reason: []
     },
@@ -37,23 +36,21 @@ const initialState: AppointmentFormDataInterface = {
 }
 // Slice para el estado de pacientes
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-export const createAppointmentSlice = (set: any, get: any) => ({
+export const createAppointmentSlice = (set: any, get: any): AppointmentStoreInterface => ({
     appointment: {
         id: undefined,
         patient_id: null,
         doctor_id: null,
-        date: "",
-        start_time: "",
-        end_time: "",
+        date_time: new Date(),
         status: "pending",
         reason: ""
     },
     formManageAppointment: initialState,
-    resetFormDataPatient: () => {
-        set({ formManageAppointment: { ...initialState } }, false, "app:appointment/resetFormData")
+    resetFormDataAppointment: () => {
+        set({ formManageAppointment: { ...initialState } }, false, "app:appointment/resetFormData");
     },
     setIsLoading: (isLoading: boolean) => {
-        set({ isLoading }, false, "app:appointment/setIsLoading")
+        set({ isLoading }, false, "app:appointment/setIsLoading");
     },
     addAppointment: async (appointment: FormData) => {
         set({ isLoading: true }, false, "app:appointment/addAppointment");
@@ -78,9 +75,10 @@ export const createAppointmentSlice = (set: any, get: any) => ({
         set({ isLoading: false }, false, "app:patient/loadingAddAppointment");
         return appointmentId;
     },
-    resetFormDataAppointment: () => {
-        set({ formManageAppointment: { ...initialState } }, false, "app:appointment/resetFormData")
-    }
+    resetSlice: () => {
+        set({ appointment: { ...initialState } }, false, "app:appointment/resetSlice");
+    },
+    isLoading: false
 })
 
 

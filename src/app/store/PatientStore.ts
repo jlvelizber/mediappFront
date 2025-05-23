@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { create } from "zustand";
-import { devtools } from "zustand/middleware";
+import { createJSONStorage, devtools } from "zustand/middleware";
 import { createPatient, getPatient, getPatientsByDoctorInSession, removePatient, updatePatient } from "../actions";
 import { PatientFormDataInterface } from "../components";
 import { PatientInterface } from "../intefaces";
@@ -16,6 +16,7 @@ export interface PatientStoreInterface {
     removePatient: (id: number) => Promise<boolean>;
     resetFormDataPatient: () => void;
     getPatientsByDoctorInSession: () => Promise<PatientInterface[]>;
+    resetSlice: () => void;
 };
 
 const initialState: PatientFormDataInterface = {
@@ -46,7 +47,7 @@ const initialState: PatientFormDataInterface = {
 
 // Slice para el estado de pacientes
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const createPatientSlice = (set: any, get: any) => ({
+export const createPatientSlice = (set: any, get: any): PatientStoreInterface => ({
     patient: {
         document: "",
         name: "",
@@ -55,6 +56,7 @@ export const createPatientSlice = (set: any, get: any) => ({
         phone: "",
         address: "",
     },
+    isLoading: false,
     formManagePatient: {
         fields: {
             id: undefined,
@@ -104,10 +106,13 @@ export const createPatientSlice = (set: any, get: any) => ({
         if (!response) return null;
         return response;
     },
-    getPatientForEdit: async (id: number): Promise<void> => {
-        set({ formManagePatient: { fields: {} } }, false, "app:patient/getPatientForEdit")
+    getPatientForEdit: async (id: number): Promise<PatientFormDataInterface | null> => {
+        set({ formManagePatient: { fields: {} } }, false, "app:patient/getPatientForEdit");
         const patient = await get().getPatient(id);
-        set({ formManagePatient: { ...initialState, fields: patient } }, false, "app:patient/getPatientForEdit")
+        if (!patient) return null;
+        const formData = { ...initialState, fields: patient };
+        set({ formManagePatient: formData }, false, "app:patient/getPatientForEdit");
+        return formData;
     },
     updatePatient: async (id: number, patient: FormData): Promise<number> => {
         set({ isLoading: true }, false, "app:patient/loadingUpdatePatient");
@@ -138,7 +143,7 @@ export const createPatientSlice = (set: any, get: any) => ({
         return true;
     },
     resetFormDataPatient: () => {
-        set({ formManagePatient: { ...initialState } }, false, "app:patient/resetFormData")
+        set({ formManagePatient: { ...initialState } }, false, "app:patient/resetFormData");
     },
 
     getPatientsByDoctorInSession: async (): Promise<PatientInterface[]> => {
@@ -146,6 +151,19 @@ export const createPatientSlice = (set: any, get: any) => ({
         if (!response) return [];
         return response;
     },
+    resetSlice: () => {
+        set({
+            patient: {
+                document: "",
+                name: "",
+                lastname: "",
+                email: "",
+                phone: "",
+                address: "",
+            },
+            formManagePatient: { ...initialState }
+        }, false, "app:patient/resetSlice");
+    }
 });
 
 
@@ -155,6 +173,6 @@ export const usePatientStore = create<PatientStoreInterface>()(
         (set, get) => ({
             ...createPatientSlice(set, get), // Combina el slice con otros si es necesario
         }),
-        { name: "PatientStore" } // Nombre que aparecerá en los devtools
+        { name: "PatientStore", storage: createJSONStorage(() => localStorage) } // Nombre que aparecerá en los devtools
     )
 );

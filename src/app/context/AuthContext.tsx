@@ -1,5 +1,6 @@
 "use client";
 
+import { useAppStore, useAuthStore } from "@/app/store";
 import { useRouter } from "next/router";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { AuthInterface, UserInterface } from "../intefaces";
@@ -25,6 +26,8 @@ export const AuthProvider = ({ children }: AuthProviderProps): ReactNode => {
 
     const [user, setUser] = useState<UserInterface | null>(null);
     const router = useRouter();
+    const { setDoctor, setUser: setUserStore } = useAuthStore();
+    const { resetSlice } = useAppStore() as { resetSlice: () => void };
 
 
     useEffect(() => {
@@ -43,10 +46,14 @@ export const AuthProvider = ({ children }: AuthProviderProps): ReactNode => {
         try {
             const data: AuthInterface = await AuthService.login(email, password);
             setUser(data.user);
+            setUserStore(data.user);
             if (data?.token) {
                 localStorage.setItem('token', data.token);
             }
             localStorage.setItem('user', JSON.stringify(data.user));
+            // guardamos el rol en el store
+            if (data.doctor) setDoctor(data.doctor);
+
             ApiClient.apiClient.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
             return true;
         } catch (error) {
@@ -59,10 +66,10 @@ export const AuthProvider = ({ children }: AuthProviderProps): ReactNode => {
         router.push(routeNames.login);
         setUser(null);
         await AuthService.logout();
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+        localStorage.clear();
         delete ApiClient.apiClient.defaults.headers.Authorization;
         document.cookie = "role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        resetSlice();
     };
 
     return (<AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>);

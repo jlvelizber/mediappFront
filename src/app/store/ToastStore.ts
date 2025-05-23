@@ -13,6 +13,7 @@ interface ToastStoreInterface {
     toasts: Toast[];
     addToast: (message: string, type: ToastType) => void;
     removeToast: (id: number) => void;
+    resetSlice: () => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -34,6 +35,9 @@ export const createToastSlice = (set: any): ToastStoreInterface => ({
         set((state: ToastStoreInterface) => ({
             toasts: state.toasts.filter((toast) => toast.id !== id),
         }), false, "toastStore/removeToast");
+    },
+    resetSlice: () => {
+        set({ toasts: [] }, false, "toastStore/resetSlice");
     },
 })
 
