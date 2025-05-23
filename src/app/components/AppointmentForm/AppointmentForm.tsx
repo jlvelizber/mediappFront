@@ -8,27 +8,17 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
     const { formManageAppointment } = useAppointmentStore();
     const { patients } = deps || { patients: [] };
     const { errors, fields, error } = initialData ? initialData : formManageAppointment;
-    const [dateTime, setDateTime] = useState<Date>(fields?.date_time ?? '');
+    const [dateTime, setDateTime] = useState<string>(fields?.date_time ?? '');
 
 
 
 
     const onHandleSubmit = (e: FormEvent) => {
-        debugger
         e.preventDefault();
         const formData = new FormData(e.currentTarget as HTMLFormElement);
         handleSubmit(formData);
     }
 
-    const onHandleChangeDate = (date: Date | null) => {
-        console.log(date);
-        if (date) {
-            setDateTime(date);
-            const formData = new FormData();
-            formData.append("date_time", date.toISOString());
-            // handleSubmit(formData);
-        }
-    }
     return (
         <>
             {/* 📌 Mensaje de error global */}
@@ -53,9 +43,9 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Fecha y Hora</label>
                     <AppointmentDateTimePicker
-                        selected={dateTime}
                         name="date_time"
-                        onChange={onHandleChangeDate}
+                        value={dateTime}
+                        onChange={setDateTime}
                         className={`input-field ${errors?.date_time?.length ? '!border-red-500' : ''}`}
                     />
                     {errors?.date_time && <p className="text-red-500 text-sm">{errors.date_time.join(', ')}</p>}

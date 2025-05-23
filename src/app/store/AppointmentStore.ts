@@ -20,7 +20,7 @@ const initialState: AppointmentFormDataInterface = {
         id: undefined,
         patient_id: null,
         doctor_id: null,
-        date_time: new Date(),
+        date_time: "",
         status: "pending",
         reason: ""
     },
@@ -41,7 +41,7 @@ export const createAppointmentSlice = (set: any, get: any): AppointmentStoreInte
         id: undefined,
         patient_id: null,
         doctor_id: null,
-        date_time: new Date(),
+        date_time: "",
         status: "pending",
         reason: ""
     },
