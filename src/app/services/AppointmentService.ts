@@ -25,6 +25,6 @@ export const AppointmentService = {
      */
     createAppointment: async (appointment: AppointmentInterface): Promise<AppointmentInterface> => {
         const response = await apiClient.post(`${AppointmentService.route}`, appointment);
-        return await response.data;
+        return await response.data.data;
     }
 }
