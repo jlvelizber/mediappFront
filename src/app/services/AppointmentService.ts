@@ -1,3 +1,4 @@
+import { AxiosResponse } from "axios";
 import { AppointmentInterface, AppointmentPaginationInterface } from "../intefaces/AppointmentInterface";
 import { apiClient } from "./api";
 
@@ -26,5 +27,29 @@ export const AppointmentService = {
     createAppointment: async (appointment: AppointmentInterface): Promise<AppointmentInterface> => {
         const response = await apiClient.post(`${AppointmentService.route}`, appointment);
         return await response.data.data;
-    }
+    },
+
+
+    /**
+     * Update Appointment
+     * @param id 
+     * @param appointment 
+     * @returns 
+     */
+    updateAppointment: async (id: number, appointment: AppointmentInterface): Promise<AppointmentInterface> => {
+        const response = await apiClient.put(`${AppointmentService.route}/${id}`, appointment);
+        return await response.data.data;
+    },
+
+
+    /**
+       * Get Appointment by ID
+       * @param id 
+       * @returns 
+       */
+    getAppointment: async (id: string): Promise<AppointmentInterface> => {
+        const response = await apiClient.get<AxiosResponse<AppointmentInterface>>(`${AppointmentService.route}/${id}`);
+        const appointment: AppointmentInterface = response.data.data
+        return appointment;
+    },
 }

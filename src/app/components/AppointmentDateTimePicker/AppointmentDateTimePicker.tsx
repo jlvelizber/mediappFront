@@ -61,6 +61,7 @@ export default function AppointmentDateTimePicker({
             wrapperClassName="input-field"
             timeFormat="HH:mm"
             timeIntervals={20}
+            autoComplete="off"
         />
     );
 }

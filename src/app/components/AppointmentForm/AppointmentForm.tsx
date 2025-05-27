@@ -1,5 +1,5 @@
 import { useAppointmentStore } from "@/app/store";
-import { FormEvent, MouseEvent, useState } from "react";
+import { FormEvent, MouseEvent, useEffect, useState } from "react";
 import { AppointmentDateTimePicker } from "../AppointmentDateTimePicker";
 import { AppointmentFormComponentInterface } from "./AppointmentFormComponentInterface";
 
@@ -8,9 +8,16 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
     const { formManageAppointment } = useAppointmentStore();
     const { patients } = deps || { patients: [] };
     const { errors, fields, error } = initialData ? initialData : formManageAppointment;
-    const [dateTime, setDateTime] = useState<string>(fields?.date_time ?? '');
+    const [dateTime, setDateTime] = useState<string>("");
 
 
+
+    useEffect(() => {
+        if (fields?.date_time) {
+            setDateTime(fields.date_time);
+        }
+    }
+        , [dateTime, fields]);
 
 
     const onHandleSubmit = (e: FormEvent) => {
@@ -18,6 +25,8 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
         const formData = new FormData(e.currentTarget as HTMLFormElement);
         handleSubmit(formData);
     }
+
+
 
     return (
         <>
@@ -28,7 +37,7 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
                 {/* Paciente */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Paciente</label>
-                    <select name="patient_id" className={`input-field ${errors?.patient_id?.length ? '!border-red-500' : ''}`} defaultValue={fields?.patient_id ?? ''}>
+                    <select name="patient_id" className={`input-field ${errors?.patient_id?.length ? '!border-red-500' : ''}`} defaultValue={fields?.patient_id ?? ''} value={fields?.patient_id ?? ''}>
                         <option value="">Seleccione un paciente</option>
                         {patients.map((patient) => (
                             <option key={patient.id} value={patient.id}>
@@ -64,18 +73,18 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
                         <button type="button" onClick={handleCancel} className="btn-secondary">
                             {fields?.id ? "Regresar" : "Cancelar"}
                         </button>
-                    </div>
-                    {/* Botón de eliminar SOLO si la cita ya existe */}
-                    {fields?.id && (
-                        <button
-                            type="button"
-                            onClick={(e: MouseEvent<HTMLButtonElement>) => fields?.id !== undefined && handleDelete?.(e, fields.id)}
-                            className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md shadow-md"
-                        >
-                            Eliminar Cita
-                        </button>
+                        {/* Botón de eliminar SOLO si la cita ya existe */}
+                        {fields?.id && (
+                            <button
+                                type="button"
+                                onClick={(e: MouseEvent<HTMLButtonElement>) => fields?.id !== undefined && handleDelete?.(e, fields.id)}
+                                className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md shadow-md"
+                            >
+                                Eliminar Cita
+                            </button>
 
-                    )}
+                        )}
+                    </div>
                     <button type="submit" className="btn-primary">
                         {fields?.id ? "Actualizar" : "Crear"} Cita
                     </button>
