@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { AppointmentFormDataInterface } from "../components";
-import { AppointmentInterface } from "../intefaces";
+import { AppointmentInterface, DefaultMessageResourceRemoved } from "../intefaces";
 import { AppointmentService } from "../services";
 import { useAuthStore } from "../store";
 
@@ -52,7 +52,7 @@ export async function updateAppointment(prevState: AppointmentFormDataInterface,
         prevState.fields = data;
         const axiosError = error as AxiosError;
         // @ts-expect-error: axiosError.response may be undefined or not have a data property
-        prevState.error = "Error al guardar el Appointment. " + axiosError.response?.data?.message
+        prevState.error = "Error al actualizar la cita. " + axiosError.response?.data?.message
         // @ts-expect-error: axiosError.response may be undefined or not have a data property
         prevState.errors = axiosError.response?.data?.errors
         return prevState;
@@ -66,6 +66,17 @@ export async function getAppointment(id: number): Promise<AppointmentInterface |
         return appointment;
     } catch (error) {
         console.error("Error al obtener el appointment:", error);
+        return null;
+    }
+}
+
+
+export async function removeAppointment(id: number): Promise<DefaultMessageResourceRemoved | null> {
+    try {
+        const response: DefaultMessageResourceRemoved = await AppointmentService.removeAppointment(id);
+        return response;
+    } catch (error) {
+        console.error("Error al eliminar el appointment:", error);
         return null;
     }
 }

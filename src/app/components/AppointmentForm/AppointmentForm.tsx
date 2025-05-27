@@ -9,15 +9,20 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
     const { patients } = deps || { patients: [] };
     const { errors, fields, error } = initialData ? initialData : formManageAppointment;
     const [dateTime, setDateTime] = useState<string>("");
+    const [patientId, setPatientId] = useState<string>("");
+    const onHandleChangePatient = (e: FormEvent<HTMLSelectElement>) => {
+        const { value } = e.currentTarget;
+        setPatientId(value);
+    }
 
 
 
     useEffect(() => {
+        debugger
         if (fields?.date_time) {
             setDateTime(fields.date_time);
         }
-    }
-        , [dateTime, fields]);
+    }, [fields]);
 
 
     const onHandleSubmit = (e: FormEvent) => {
@@ -37,7 +42,7 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
                 {/* Paciente */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Paciente</label>
-                    <select name="patient_id" className={`input-field ${errors?.patient_id?.length ? '!border-red-500' : ''}`} defaultValue={fields?.patient_id ?? ''} value={fields?.patient_id ?? ''}>
+                    <select name="patient_id" className={`input-field ${errors?.patient_id?.length ? '!border-red-500' : ''}`} defaultValue={fields?.patient_id ? fields?.patient_id : patientId} onChange={onHandleChangePatient}>
                         <option value="">Seleccione un paciente</option>
                         {patients.map((patient) => (
                             <option key={patient.id} value={patient.id}>

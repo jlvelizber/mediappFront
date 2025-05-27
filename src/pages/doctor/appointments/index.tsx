@@ -6,6 +6,7 @@ import { useAuth } from "@/app/context/AuthContext";
 import { AppointmentListItemInterface, Meta } from "@/app/intefaces";
 import { routeNames } from "@/app/routes";
 import { AppointmentService } from "@/app/services";
+import { useAppointmentStore } from "@/app/store";
 import { PlusIcon } from "@primer/octicons-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -30,6 +31,7 @@ export default function AppointmentsPage() {
         appId: 0
     });
     const [meta, setMeta] = useState<Meta>();
+    const { removeAppointment, isLoading, setIsLoading } = useAppointmentStore();
 
     useEffect(() => {
         if (appointments.length === 0) {
@@ -70,6 +72,7 @@ export default function AppointmentsPage() {
         try {
             if (!onTable) {
                 setLoading(true);
+                setIsLoading(true);
             } else {
                 setFetchingOnTable(true)
             }
@@ -81,6 +84,7 @@ export default function AppointmentsPage() {
         } finally {
             if (!onTable) {
                 setLoading(false);
+                setIsLoading(false);
             } else {
                 setFetchingOnTable(false)
             }
@@ -124,18 +128,18 @@ export default function AppointmentsPage() {
     }
 
     const handleConfirmDelete = async () => {
-        // const { appId } = flowDelete;
+        const { appId } = flowDelete;
         setMessageOnLoader(deleting);
         handleCloseDeleteConfirmation();
-        // await removePatient(appId);
+        await removeAppointment(appId);
         await loadAppointments(DEFAULT_NUM_PAGE, true);
     };
 
 
-    if (loading) return <Loader message={messageOnLoader} />
+    if (loading || isLoading) return <Loader message={messageOnLoader} />
     return (
         <>
-            <DeleteConfirmation entityName="Paciente" isOpen={flowDelete.isOpenDeleteConfirmation} onClose={handleCloseDeleteConfirmation} onConfirm={handleConfirmDelete} />
+            <DeleteConfirmation entityName="Cita" isOpen={flowDelete.isOpenDeleteConfirmation} onClose={handleCloseDeleteConfirmation} onConfirm={handleConfirmDelete} />
 
             <DashboardLayout>
                 <PageWrapper>

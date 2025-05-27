@@ -1,4 +1,5 @@
 import { AxiosResponse } from "axios";
+import { DefaultMessageResourceRemoved } from "../intefaces";
 import { AppointmentInterface, AppointmentPaginationInterface } from "../intefaces/AppointmentInterface";
 import { apiClient } from "./api";
 
@@ -52,4 +53,14 @@ export const AppointmentService = {
         const appointment: AppointmentInterface = response.data.data
         return appointment;
     },
+
+    /**
+     * Remove Appointment
+     * @param id 
+     * @returns 
+     */
+    removeAppointment: async (id: number): Promise<DefaultMessageResourceRemoved> => {
+        const response = await apiClient.delete(`${AppointmentService.route}/${id}`);
+        return await response.data;
+    }
 }

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-import { createAppointment, getAppointment, updateAppointment } from "../actions";
+import { createAppointment, getAppointment, removeAppointment, updateAppointment } from "../actions";
 import { AppointmentFormDataInterface } from "../components";
 import { AppointmentInterface } from "../intefaces";
 
@@ -15,6 +15,7 @@ export interface AppointmentStoreInterface {
     updateAppointment: (id: number, appointment: FormData) => Promise<number>;
     getAppointment: (id: number) => Promise<AppointmentInterface | null>;
     resetSlice: () => void;
+    removeAppointment: (id: number) => Promise<boolean>;
 }
 
 
@@ -106,11 +107,18 @@ export const createAppointmentSlice = (set: any, get: any): AppointmentStoreInte
                 if ("fields" in response) {
                     response.fields = { ...response.fields, id: id };
                 }
-                set({ formManageappointment: { ...response as AppointmentFormDataInterface } }, false, "app:appointment/errorUpdateAppointment");
+                set({ formManageAppointment: { ...response as AppointmentFormDataInterface } }, false, "app:appointment/errorUpdateAppointment");
             }
         }
         set({ isLoading: false }, false, "app:appointment/loadingUpdateAppointment");
         return appointmentId;
+    },
+    removeAppointment: async (id: number): Promise<boolean> => {
+        set({ isLoading: true }, false, "app:appointment/loadingRemoveAppointment");
+        const response = await removeAppointment(id);
+        set({ isLoading: false }, false, "app:appointment/loadingRemoveAppointment");
+        if (!response) return false;
+        return true;
     },
     resetSlice: () => {
         set({ appointment: { ...initialState } }, false, "app:appointment/resetSlice");
