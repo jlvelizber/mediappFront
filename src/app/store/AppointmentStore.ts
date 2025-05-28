@@ -100,7 +100,6 @@ export const createAppointmentSlice = (set: any, get: any): AppointmentStoreInte
                 set({ appointment: response.appointment }, false, "app:appointment/updateAppointment");
                 await get().getAppointmentForEdit(id); // Actualiza el appointment en el estado para edicion
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-expect-error 
                 appointmentId = response.appointment?.id ?? 0; // Retorna el ID del appointment creado o 0 si es undefined
             } else {
                 console.error("Unexpected response format", response);

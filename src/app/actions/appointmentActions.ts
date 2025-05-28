@@ -34,7 +34,7 @@ export async function createAppointment(prevState: AppointmentFormDataInterface,
 }
 
 
-export async function updateAppointment(prevState: AppointmentFormDataInterface, id: number, formData: FormData): Promise<AppointmentFormDataInterface | { success: boolean; patient: AppointmentInterface }> {
+export async function updateAppointment(prevState: AppointmentFormDataInterface, id: number, formData: FormData): Promise<AppointmentFormDataInterface | { success: boolean; appointment: AppointmentInterface }> {
     // Convertir FormData a un objeto
     const data = Object.fromEntries(formData.entries()) as unknown as AppointmentInterface;
     try {
@@ -46,8 +46,8 @@ export async function updateAppointment(prevState: AppointmentFormDataInterface,
         data.doctor_id = doctorId;
         // 📌 Aquí iría la lógica para guardar en la base de datos
         console.log("actualizando Appointment: ", data.id);
-        const patient = await AppointmentService.updateAppointment(id, data);
-        return { success: true, patient };
+        const appointment = await AppointmentService.updateAppointment(id, data);
+        return { success: true, appointment };
     } catch (error: unknown) {
         prevState.fields = data;
         const axiosError = error as AxiosError;
