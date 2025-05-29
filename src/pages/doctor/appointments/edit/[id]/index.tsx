@@ -1,4 +1,4 @@
-import { AppointmentForm, DashboardLayout, Loader, PageWrapper } from "@/app/components";
+import { AppointmentForm, DashboardLayout, DeleteConfirmation, Loader, PageWrapper } from "@/app/components";
 import { messages } from "@/app/config";
 import { useAuth, useLayout } from "@/app/context";
 import { PatientInterface } from "@/app/intefaces";
@@ -6,18 +6,22 @@ import { routeNames } from "@/app/routes";
 import { useAppointmentStore, usePatientStore, useToastStore } from "@/app/store";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 
 export default function CreateAppointment() {
     const TITLE_PAGE = "Editar Cita";
-    const { loading: { fetching, updating }, updated } = messages.appointment;
+    const { loading: { fetching, updating, deleting }, updated, deleted: deletedMessage } = messages.appointment;
     const router = useRouter();
     const { user } = useAuth();
     const { setTitlePage } = useLayout();
     const { getPatientsByDoctorInSession } = usePatientStore();
-    const { isLoading, setIsLoading, resetFormDataAppointment, getAppointmentForEdit, updateAppointment } = useAppointmentStore();
+    const { isLoading, setIsLoading, resetFormDataAppointment, getAppointmentForEdit, updateAppointment, removeAppointment } = useAppointmentStore();
     const { addToast } = useToastStore();
     const [messageOnLoader, setMessageOnLoader] = useState<string>(fetching);
+    const [flowDelete, setFlowDelete] = useState<{ isOpenDeleteConfirmation: boolean, appId: number }>({
+        isOpenDeleteConfirmation: false,
+        appId: 0
+    });
     const [deps, setDeps] = useState<{
         patients: PatientInterface[];
     }>({
@@ -83,19 +87,51 @@ export default function CreateAppointment() {
         }
     }
 
-    if (isLoading) return <Loader message={messageOnLoader} />
+    /**
+       * HANDLE REMOVE APPOINTMENT 
+       */
+
+    const handleCloseDeleteConfirmation = () => {
+        setFlowDelete({
+            isOpenDeleteConfirmation: false,
+            appId: 0
+        });
+    }
+
+    const handleConfirmDelete = async () => {
+        const { appId } = flowDelete;
+        setMessageOnLoader(deleting);
+        handleCloseDeleteConfirmation();
+        await removeAppointment(appId);
+        goToList();
+        addToast(deletedMessage, "success");
+    };
+
+
+    const handleRemove = (e: MouseEvent<HTMLButtonElement>, appId: number) => {
+        e.preventDefault()
+        setFlowDelete({
+            isOpenDeleteConfirmation: true,
+            appId
+        });
+    }
+
+    if (isLoading || isLoading) return <Loader message={messageOnLoader} />
 
     return (
-        <DashboardLayout>
-            <PageWrapper>
-                <div className="container mx-auto p-4">
-                    <div className="flex justify-between items-center mb-4">
-                        <h1 className="text-2xl font-bold mb-4">Citas médicas - {TITLE_PAGE}</h1>
-                    </div>
-                    {!isLoading && <AppointmentForm handleCancel={handleCancel} handleSubmit={handleSubmit} deps={deps} />}
+        <>
+            <DeleteConfirmation entityName="Cita" isOpen={flowDelete.isOpenDeleteConfirmation} onClose={handleCloseDeleteConfirmation} onConfirm={handleConfirmDelete} />
+            <DashboardLayout>
+                <PageWrapper>
+                    <div className="container mx-auto p-4">
+                        <div className="flex justify-between items-center mb-4">
+                            <h1 className="text-2xl font-bold mb-4">Citas médicas - {TITLE_PAGE}</h1>
+                        </div>
+                        {!isLoading && <AppointmentForm handleCancel={handleCancel} handleSubmit={handleSubmit} handleDelete={handleRemove} deps={deps} />}
 
-                </div>
-            </PageWrapper>
-        </DashboardLayout>
+                    </div>
+                </PageWrapper>
+            </DashboardLayout>
+        </>
     );
 }

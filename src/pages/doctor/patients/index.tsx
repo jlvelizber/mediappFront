@@ -5,7 +5,7 @@ import { PatientInterface } from "@/app/intefaces";
 import { Meta } from "@/app/intefaces/PaginatorInterface";
 import { routeNames } from "@/app/routes";
 import { PatientService } from "@/app/services";
-import { usePatientStore } from "@/app/store";
+import { usePatientStore, useToastStore } from "@/app/store";
 import { PlusIcon } from "@primer/octicons-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -14,7 +14,7 @@ import { MouseEvent, useEffect, useState } from "react";
 export default function Patients() {
   const TITLE_PAGE = "Pacientes";
   const DEFAULT_NUM_PAGE = 1;
-  const { loading: { fetchingList, deleting } } = messages.patient
+  const { loading: { fetchingList, deleting }, deleted: deletedMessage } = messages.patient
   const { setTitlePage } = useLayout();
   const [search, setSearch] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
@@ -32,6 +32,7 @@ export default function Patients() {
   const { user } = useAuth()
   const router = useRouter();
   const { removePatient, isLoading } = usePatientStore()
+  const { addToast } = useToastStore();
 
 
   useEffect(() => {
@@ -133,6 +134,7 @@ export default function Patients() {
     handleCloseDeleteConfirmation();
     await removePatient(patientId);
     await loadPatients(DEFAULT_NUM_PAGE, true);
+    addToast(deletedMessage, "success");
   };
 
 

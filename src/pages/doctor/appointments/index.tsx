@@ -6,7 +6,7 @@ import { useAuth } from "@/app/context/AuthContext";
 import { AppointmentListItemInterface, Meta } from "@/app/intefaces";
 import { routeNames } from "@/app/routes";
 import { AppointmentService } from "@/app/services";
-import { useAppointmentStore } from "@/app/store";
+import { useAppointmentStore, useToastStore } from "@/app/store";
 import { PlusIcon } from "@primer/octicons-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -15,7 +15,7 @@ import { MouseEvent, useEffect, useState } from "react";
 export default function AppointmentsPage() {
     const TITLE_PAGE = "Citas médicas";
     const DEFAULT_NUM_PAGE = 1;
-    const { loading: { fetchingList, deleting } } = messages.appointment
+    const { loading: { fetchingList, deleting }, deleted: deletedMessage } = messages.appointment
     const { setTitlePage } = useLayout();
     const { user } = useAuth();
     const router = useRouter();
@@ -32,6 +32,8 @@ export default function AppointmentsPage() {
     });
     const [meta, setMeta] = useState<Meta>();
     const { removeAppointment, isLoading, setIsLoading } = useAppointmentStore();
+    const { addToast } = useToastStore();
+
 
     useEffect(() => {
         if (appointments.length === 0) {
@@ -133,6 +135,7 @@ export default function AppointmentsPage() {
         handleCloseDeleteConfirmation();
         await removeAppointment(appId);
         await loadAppointments(DEFAULT_NUM_PAGE, true);
+        addToast(deletedMessage, "success");
     };
 
 

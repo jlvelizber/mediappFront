@@ -18,7 +18,6 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
 
 
     useEffect(() => {
-        debugger
         if (fields?.date_time) {
             setDateTime(fields.date_time);
         }
