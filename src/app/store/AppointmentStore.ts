@@ -1,11 +1,12 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-import { createAppointment, getAppointment, removeAppointment, updateAppointment } from "../actions";
+import { createAppointment, getAppointment, removeAppointment, updateAppointment, updateAppointmentStatus } from "../actions";
 import { AppointmentFormDataInterface } from "../components";
-import { AppointmentInterface } from "../intefaces";
+import { AppointmentInterface, AppointmentStatusInterface } from "../intefaces";
 
 export interface AppointmentStoreInterface {
     appointment: AppointmentInterface;
+    mustUpdateList?: boolean; // Indica si se debe actualizar la lista de appointments
     isLoading: boolean;
     formManageAppointment: AppointmentFormDataInterface;
     setIsLoading: (isLoading: boolean) => void;
@@ -16,10 +17,11 @@ export interface AppointmentStoreInterface {
     getAppointment: (id: number) => Promise<AppointmentInterface | null>;
     resetSlice: () => void;
     removeAppointment: (id: number) => Promise<boolean>;
+    updateStateAppointment: (id: number, status: AppointmentStatusInterface, mustUpdateList?: boolean) => Promise<void>;
 }
 
 
-const initialState: AppointmentFormDataInterface = {
+const formInitialState: AppointmentFormDataInterface = {
     fields: {
         id: undefined,
         patient_id: null,
@@ -49,9 +51,12 @@ export const createAppointmentSlice = (set: any, get: any): AppointmentStoreInte
         status: "pending",
         reason: ""
     },
-    formManageAppointment: initialState,
+    formManageAppointment: formInitialState,
+    mustUpdateList: false, // Indica si se debe actualizar la lista de appointments
+    // Estado de carga para las acciones
+    isLoading: false,
     resetFormDataAppointment: () => {
-        set({ formManageAppointment: { ...initialState } }, false, "app:appointment/resetFormData");
+        set({ formManageAppointment: { ...formInitialState } }, false, "app:appointment/resetFormData");
     },
     setIsLoading: (isLoading: boolean) => {
         set({ isLoading }, false, "app:appointment/setIsLoading");
@@ -79,7 +84,7 @@ export const createAppointmentSlice = (set: any, get: any): AppointmentStoreInte
         set({ formManageAppointment: { fields: {} } }, false, "app:appointment/getAppointmentForEdit");
         const appointment = await get().getAppointment(id);
         if (!appointment) return null;
-        const formData = { ...initialState, fields: appointment };
+        const formData = { ...formInitialState, fields: appointment };
         set({ formManageAppointment: formData }, false, "app:appointment/getAppointmentForEdit");
         return formData;
     },
@@ -120,9 +125,23 @@ export const createAppointmentSlice = (set: any, get: any): AppointmentStoreInte
         return true;
     },
     resetSlice: () => {
-        set({ appointment: { ...initialState } }, false, "app:appointment/resetSlice");
+        set({ appointment: { ...formInitialState } }, false, "app:appointment/resetSlice");
     },
-    isLoading: false
+    updateStateAppointment: async (id: number, status: AppointmentStatusInterface, mustUpdateList): Promise<void> => {
+        set({ isLoading: true }, false, "app:appointment/loadingUpdateStateAppointment");
+        try {
+            const response = await updateAppointmentStatus(id, status);
+            set({ appointment: response }, false, "app:appointment/updateStateAppointment");
+
+        } catch (error: unknown) {
+            // TODO: MAnagement of errors
+            console.error("Error updating appointment status", error);
+
+        } finally {
+            if (mustUpdateList) set({ mustUpdateList: true }, false, "app:appointment/mustUpdateList");
+            set({ isLoading: false }, false, "app:appointment/loadingUpdateStateAppointment");
+        }
+    }
 })
 
 

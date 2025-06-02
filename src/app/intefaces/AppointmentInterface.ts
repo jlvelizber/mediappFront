@@ -20,7 +20,7 @@ export interface AppointmentListItemInterface {
     status_label: string,
 }
 
-export type AppointmentStatusInterface = "pending" | "completed" | "cancelled";
+export type AppointmentStatusInterface = "pending" | "confirmed" | "completed" | "cancelled";
 
 
 export type AppointmentPaginationInterface = PaginatorInterface<AppointmentListItemInterface>

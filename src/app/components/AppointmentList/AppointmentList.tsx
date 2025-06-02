@@ -1,5 +1,6 @@
 import { AppointmentListItemInterface, AppointmentStatusInterface } from "@/app/intefaces";
 import { PencilIcon, TrashIcon } from "@primer/octicons-react";
+import { AppointmentChangeStatus } from "../AppointmentChangeStatus";
 import AppointmentStatusBadge from "../AppointmentStatusBadge";
 import { EmptyState } from "../EmptyState";
 import { Loader } from "../Loader";
@@ -16,7 +17,8 @@ export default function AppointmentList({ items, fetching, actions: { onRemove, 
                     <td className="px-6 py-2"> <AppointmentStatusBadge status={appointment.status as AppointmentStatusInterface} text={appointment.status_label} /></td>
                     <td className="px-6 py-2">{appointment.patient}</td>
                     <td className="px-6 py-2">{appointment.date} - {appointment.time} </td>
-                    <td className="px-6 py-2 flex justify-between mx-auto">
+                    <td className="px-6 py-2 flex justify-items-center mx-auto">
+                        <AppointmentChangeStatus appointmentId={appointment.id} status={appointment.status} key={appointment.id} mustUpdateList={true} />
                         <button className="btn-secondary" aria-label="Editar" title={`Editar cita ${appointment.id}`} onClick={(e) => appointment.id !== undefined && onEdit(e, appointment.id)}> <PencilIcon /></button>
                         <button className="btn-danger" aria-label="Eliminar" title={`Eliminar cita ${appointment.id}`} onClick={(e) => appointment.id !== undefined && onRemove(e, appointment.id)}> <TrashIcon /></button>
                     </td>

@@ -31,7 +31,7 @@ export default function AppointmentsPage() {
         appId: 0
     });
     const [meta, setMeta] = useState<Meta>();
-    const { removeAppointment, isLoading, setIsLoading } = useAppointmentStore();
+    const { removeAppointment, isLoading, setIsLoading, mustUpdateList } = useAppointmentStore();
     const { addToast } = useToastStore();
 
 
@@ -63,6 +63,12 @@ export default function AppointmentsPage() {
             loadAppointments(DEFAULT_NUM_PAGE, true);
         }
     }, [findWassSuccess])
+
+    useEffect(() => {
+        if (mustUpdateList) {
+            loadAppointments(DEFAULT_NUM_PAGE, true);
+        }
+    }, [mustUpdateList])
 
 
     const handleEdit = (e: MouseEvent<HTMLButtonElement>, appId: number) => {

@@ -1,4 +1,5 @@
 export * from "./AdminDashboard";
+export * from "./AppointmentChangeStatus";
 export * from "./AppointmentDateTimePicker";
 export * from "./AppointmentForm";
 export * from "./AppointmentList";

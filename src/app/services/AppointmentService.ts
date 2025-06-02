@@ -62,5 +62,17 @@ export const AppointmentService = {
     removeAppointment: async (id: number): Promise<DefaultMessageResourceRemoved> => {
         const response = await apiClient.delete(`${AppointmentService.route}/${id}`);
         return await response.data;
+    },
+
+
+    /**
+     * Update Appointment Status
+     * @param id
+     * @param status
+     * @return
+     */
+    updateAppointmentStatus: async (id: number, status: string): Promise<AppointmentInterface> => {
+        const response = await apiClient.put(`${AppointmentService.route}/${id}/status`, { status });
+        return await response.data.data;
     }
 }

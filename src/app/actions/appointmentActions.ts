@@ -80,3 +80,21 @@ export async function removeAppointment(id: number): Promise<DefaultMessageResou
         return null;
     }
 }
+
+
+export async function updateAppointmentStatus(id: number, status: string): Promise<AppointmentInterface | { error: string; errors?: Array<string> }> {
+    try {
+        const appointment = await AppointmentService.updateAppointmentStatus(id, status);
+        return appointment;
+    } catch (error: unknown) {
+        const { response } = error as AxiosError;
+
+        const message = response?.data && typeof response.data === "object" && "message" in response.data
+            ? (response.data as { message?: string }).message
+            : "";
+        const errors = response?.data && typeof response.data === "object" && "errors" in response.data
+            ? (response.data as { errors?: Array<string> }).errors
+            : undefined;
+        throw { error: "Error al actualizar la cita. " + message, errors };
+    }
+}

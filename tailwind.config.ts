@@ -32,6 +32,11 @@ export default {
             text: "#b91c1c",    // rose-700
             border: "#fecaca",  // rose-200
           },
+          confirmed: {
+            DEFAULT: "#eff6ff", // sky-50
+            text: "#1e40af",    // sky-800
+            border: "#bfdbfe",  // sky-200
+          },
         },
       },
     },
