@@ -37,9 +37,9 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
             {/* 📌 Mensaje de error global */}
             {error && <p className="text-red-500 mb-4">{error}</p>}
 
-            <form onSubmit={onHandleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <form onSubmit={onHandleSubmit} className={`grid ${fields?.id ? 'md:grid-cols-3' : 'md:grid-cols-2'} grid-cols-1 gap-4`}>
                 {/* Paciente */}
-                <div>
+                <div className="col-span-1">
                     <label className="block text-sm font-medium text-gray-700">Paciente</label>
                     <select name="patient_id" className={`input-field ${errors?.patient_id?.length ? '!border-red-500' : ''}`} defaultValue={fields?.patient_id ? fields?.patient_id : patientId} onChange={onHandleChangePatient}>
                         <option value="">Seleccione un paciente</option>
@@ -53,7 +53,7 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
                 </div>
 
                 {/* Fecha y hora */}
-                <div>
+                <div className="col-span-1">
                     <label className="block text-sm font-medium text-gray-700">Fecha y Hora</label>
                     <AppointmentDateTimePicker
                         name="date_time"
@@ -64,15 +64,33 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
                     {errors?.date_time && <p className="text-red-500 text-sm">{errors.date_time.join(', ')}</p>}
                 </div>
 
+                {/* Estado — solo en edición */}
+                {fields?.id && (
+                    <div className="col-span-1">
+                        <label className="block text-sm font-medium text-gray-700">Estado</label>
+                        <select
+                            name="status"
+                            defaultValue={fields?.status}
+                            className={`input-field capitalize ${errors?.status?.length ? '!border-red-500' : ''}`}
+                        >
+                            <option value="pending">Pendiente</option>
+                            <option value="confirmed">Confirmada</option>
+                            <option value="cancelled">Cancelada</option>
+                        </select>
+                        {errors?.status && <p className="text-red-500 text-sm">{errors.status}</p>}
+                    </div>
+                )}
+
+
                 {/* Motivo */}
-                <div className="md:col-span-2">
+                <div className={`${fields?.id ? 'md:col-span-3' : 'md:col-span-2'}`}>
                     <label className="block text-sm font-medium text-gray-700">Motivo de la Cita</label>
                     <textarea name="reason" rows={3} className={`input-field ${errors?.reason?.length ? '!border-red-500' : ''}`} defaultValue={fields?.reason} />
                     {errors?.reason && <p className="text-red-500 text-sm">{errors.reason}</p>}
                 </div>
 
                 {/* Botones */}
-                <div className="md:col-span-2 flex justify-between items-center mt-4">
+                <div className={`${fields?.id ? 'md:col-span-3' : 'md:col-span-2'} flex justify-between items-center mt-4`}>
                     <div className="flex gap-2">
                         <button type="button" onClick={handleCancel} className="btn-secondary">
                             {fields?.id ? "Regresar" : "Cancelar"}
