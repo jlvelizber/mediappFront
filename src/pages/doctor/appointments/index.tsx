@@ -1,4 +1,4 @@
-import { AppointmentList, DeleteConfirmation, EmptyState, Loader, PageWrapper, Paginator } from "@/app/components";
+import { AppointmentList, DeleteConfirmation, EmptyState, Loader, PageWrapper, Paginator, Tabs } from "@/app/components";
 import { DashboardLayout } from "@/app/components/Layouts";
 import { messages } from "@/app/config";
 import { useLayout } from "@/app/context";
@@ -33,6 +33,7 @@ export default function AppointmentsPage() {
     const [meta, setMeta] = useState<Meta>();
     const { removeAppointment, isLoading, setIsLoading, mustUpdateList } = useAppointmentStore();
     const { addToast } = useToastStore();
+    const [activeTab, setActiveTab] = useState<"list" | "calendar">("list");
 
 
     useEffect(() => {
@@ -167,15 +168,33 @@ export default function AppointmentsPage() {
                             <EmptyState />
                         ) : (
                             <>
-                                <input
-                                    type="text"
-                                    placeholder="Buscar cita..."
-                                    value={search}
-                                    onChange={(e) => setSearch(e.target.value)}
-                                    className="mb-4 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary"
+                                <Tabs
+                                    tabs={[
+                                        { label: "Listado", value: "list" },
+                                        { label: "Calendario", value: "calendar" },
+                                    ]}
+                                    active={activeTab}
+                                    onChange={(value) => setActiveTab(value as "list" | "calendar")}
                                 />
-                                <AppointmentList items={appointments} fetching={fetchingOnTable} actions={{ onEdit: handleEdit, onRemove: handleRemove }} />
-                                {meta && <Paginator meta={meta} onPageChange={paginateAppointmentsOnTable} />}
+                                {activeTab === "list" && (
+                                    <>
+                                        <input
+                                            type="text"
+                                            placeholder="Buscar cita..."
+                                            value={search}
+                                            onChange={(e) => setSearch(e.target.value)}
+                                            className="mb-4 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary"
+                                        />
+                                        <AppointmentList items={appointments} fetching={fetchingOnTable} actions={{ onEdit: handleEdit, onRemove: handleRemove }} />
+                                        {meta && <Paginator meta={meta} onPageChange={paginateAppointmentsOnTable} />}
+                                    </>
+                                )}
+                                {activeTab === "calendar" && (
+                                    // Aquí podrías implementar la vista de calendario
+                                    <div className="text-center text-gray-500">
+                                        <p>Vista de calendario aún no implementada.</p>
+                                    </div>
+                                )}
                             </>
                         )}
                     </div>
