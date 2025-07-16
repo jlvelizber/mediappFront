@@ -1,4 +1,5 @@
 import { AppointmentList, DeleteConfirmation, EmptyState, Loader, PageWrapper, Paginator, Tabs } from "@/app/components";
+import AppointmentCalendar from "@/app/components/AppointmentCalendar/AppointmentCalendar";
 import { DashboardLayout } from "@/app/components/Layouts";
 import { messages } from "@/app/config";
 import { useLayout } from "@/app/context";
@@ -191,9 +192,7 @@ export default function AppointmentsPage() {
                                 )}
                                 {activeTab === "calendar" && (
                                     // Aquí podrías implementar la vista de calendario
-                                    <div className="text-center text-gray-500">
-                                        <p>Vista de calendario aún no implementada.</p>
-                                    </div>
+                                    <AppointmentCalendar appointments={appointments} />
                                 )}
                             </>
                         )}

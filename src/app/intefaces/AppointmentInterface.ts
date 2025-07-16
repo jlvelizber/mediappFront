@@ -18,6 +18,8 @@ export interface AppointmentListItemInterface {
     time: string,
     status: string,
     status_label: string,
+    duration_minutes: string,
+    date_time: string
 }
 
 export type AppointmentStatusInterface = "pending" | "confirmed" | "completed" | "cancelled";
