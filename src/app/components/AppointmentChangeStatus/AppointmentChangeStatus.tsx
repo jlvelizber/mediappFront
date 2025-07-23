@@ -39,15 +39,27 @@ export default function AppointmentChangeStatus({ appointmentId, status, mustUpd
             )}
 
             {status === "confirmed" && (
-                <button
-                    onClick={() => onChangeStatus(appointmentId, "cancelled")}
-                    className="flex items-center gap-2 bg-status-cancelled-text text-white text-xs px-3 py-1 rounded-md"
-                    title="Cancelar cita"
-                    aria-label="Cancelar cita"
-                >
-                    <XCircleIcon className="w-4 h-4" />
-                    Cancelar
-                </button>
+                <>
+                    <button
+                        onClick={() => onChangeStatus(appointmentId, "completed")}
+                        className="flex items-center gap-2 bg-status-completed-text text-white text-xs px-3 py-1 rounded-md"
+                        title="Atender cita"
+                        aria-label="Atender cita"
+                    >
+                        <XCircleIcon className="w-4 h-4" />
+                        Atender cita
+                    </button>
+                    <button
+                        onClick={() => onChangeStatus(appointmentId, "cancelled")}
+                        className="flex items-center gap-2 bg-status-cancelled-text text-white text-xs px-3 py-1 rounded-md"
+                        title="Cancelar cita"
+                        aria-label="Cancelar cita"
+                    >
+                        <XCircleIcon className="w-4 h-4" />
+                        Cancelar
+                    </button>
+
+                </>
             )}
         </>
     )
