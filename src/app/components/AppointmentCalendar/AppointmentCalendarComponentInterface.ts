@@ -1,5 +1,6 @@
-import { AppointmentListItemInterface } from "@/app/intefaces";
+import { View } from "react-big-calendar";
 
-export interface AppointmentCalendarComponentInterface {
-    appointments: AppointmentListItemInterface[];
+export type AppointmentCalendarComponentInterface = {
+    handleSelectEvent?: (event: unknown) => unknown;
+    defaultView?: View;
 }
