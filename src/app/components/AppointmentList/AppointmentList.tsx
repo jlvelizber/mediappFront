@@ -21,7 +21,7 @@ export default function AppointmentList({ items, fetching, actions: { onRemove, 
                     <td className="px-6 py-2"> <AppointmentStatusBadge status={appointment.status as AppointmentStatusInterface} text={appointment.status_label} /></td>
                     <td className="px-6 py-2">{appointment.patient}</td>
                     <td className="px-6 py-2">{appointment.date} - {appointment.time} </td>
-                    <td className="w-full px-6 py-2 flex justify-items-center mx-auto">
+                    <td className="w-full px-6 py-2 flex justify-center mx-auto">
                         <AppointmentChangeStatus appointmentId={appointment.id} status={appointment.status} key={appointment.id} mustUpdateList={true} />
                         <>
                             {(mustShowEditBtn(appointment.status)) && (<>
