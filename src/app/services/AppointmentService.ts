@@ -74,5 +74,21 @@ export const AppointmentService = {
     updateAppointmentStatus: async (id: number, status: string): Promise<AppointmentInterface> => {
         const response = await apiClient.put(`${AppointmentService.route}/${id}/status`, { status });
         return await response.data.data;
+    },
+
+    /**
+     * Get Appointments by Range Date
+     * @param startDate 
+     * @param endDate 
+     * @returns 
+     */
+    getAppointmentsByRangeDate: async (startDate: string, endDate: string): Promise<AppointmentInterface[]> => {
+        const response = await apiClient.get(`${AppointmentService.route}`, {
+            params: {
+                start_date: startDate,
+                end_date: endDate
+            }
+        });
+        return await response.data.data;
     }
 }

@@ -77,6 +77,10 @@ export default function AppointmentsPage() {
         e.preventDefault()
         router.push(`/${user?.role}${routeNames.appointments}/edit/${appId}`)
     }
+    const onClickEvent = (event: AppointmentListItemInterface) => {
+        console.log("Evento seleccionado:", event);
+        router.push(`/${user?.role}${routeNames.appointments}/edit/${event.id}`);
+    }
 
     const loadAppointments = async (page?: number, onTable?: boolean) => {
         try {
@@ -192,7 +196,7 @@ export default function AppointmentsPage() {
                                 )}
                                 {activeTab === "calendar" && (
                                     // Aquí podrías implementar la vista de calendario
-                                    <AppointmentCalendar appointments={appointments} />
+                                    <AppointmentCalendar handleSelectEvent={(event: unknown) => onClickEvent(event as AppointmentListItemInterface)} />
                                 )}
                             </>
                         )}

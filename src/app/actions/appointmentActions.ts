@@ -98,3 +98,21 @@ export async function updateAppointmentStatus(id: number, status: string): Promi
         throw { error: "Error al actualizar la cita. " + message, errors };
     }
 }
+
+
+export async function getAppointmentsByRangeDate(startDate: string, endDate: string): Promise<AppointmentInterface[] | { error: string; errors?: Array<string> }> {
+    try {
+        const appointments = await AppointmentService.getAppointmentsByRangeDate(startDate, endDate);
+        return appointments;
+    } catch (error: unknown) {
+        const { response } = error as AxiosError;
+
+        const message = response?.data && typeof response.data === "object" && "message" in response.data
+            ? (response.data as { message?: string }).message
+            : "";
+        const errors = response?.data && typeof response.data === "object" && "errors" in response.data
+            ? (response.data as { errors?: Array<string> }).errors
+            : undefined;
+        throw { error: "Error al obtener las citas por rango de fechas. " + message, errors };
+    }
+}
