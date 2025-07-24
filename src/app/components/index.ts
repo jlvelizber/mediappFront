@@ -15,6 +15,7 @@ export * from "./MedicalRecordForm";
 export * from "./Navigation";
 export * from "./PageWrapper";
 export * from "./Paginator";
+export * from "./PatientCard";
 export * from "./PatientForm";
 export * from "./PatientList";
 export * from "./Sidebar";

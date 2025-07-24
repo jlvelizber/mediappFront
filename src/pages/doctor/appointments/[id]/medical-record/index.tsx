@@ -1,4 +1,4 @@
-import { DashboardLayout, Loader, MedicalRecordForm, PageWrapper } from "@/app/components";
+import { DashboardLayout, Loader, MedicalRecordForm, PageWrapper, PatientCard } from "@/app/components";
 import { messages } from "@/app/config";
 import { useAppointmentStore } from "@/app/store";
 import { useState } from "react";
@@ -29,6 +29,7 @@ export default function MedicalHistory() {
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-2xl font-bold mb-4">Citas médicas - {TITLE_PAGE}</h1>
           </div>
+          <PatientCard />
           <MedicalRecordForm handleCancel={onHandleCancel} handleSubmit={onHandleSubmit} />
         </div></PageWrapper>
     </DashboardLayout>
