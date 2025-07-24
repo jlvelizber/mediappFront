@@ -32,7 +32,7 @@ export default function AppointmentsPage() {
         appId: 0
     });
     const [meta, setMeta] = useState<Meta>();
-    const { removeAppointment, isLoading, setIsLoading, mustUpdateList } = useAppointmentStore();
+    const { removeAppointment, isLoading, setIsLoading, mustUpdateList, appointmenForAttendId } = useAppointmentStore();
     const { addToast } = useToastStore();
     const [activeTab, setActiveTab] = useState<"list" | "calendar">("list");
 
@@ -44,6 +44,13 @@ export default function AppointmentsPage() {
             setHasDataInFirstFetch(true)
         }
     }, [loading, appointments.length])
+
+    // attend appointment
+    useEffect(() => {
+        if (!appointmenForAttendId) return;
+        router.push(`/${user?.role}${routeNames.appointments}/${appointmenForAttendId}/medical-record`);
+
+    }, [appointmenForAttendId])
 
 
     useEffect(() => {

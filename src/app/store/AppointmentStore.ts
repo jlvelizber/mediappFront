@@ -8,6 +8,7 @@ export interface AppointmentStoreInterface {
     appointment: AppointmentInterface;
     mustUpdateList?: boolean; // Indica si se debe actualizar la lista de appointments
     isLoading: boolean;
+    appointmenForAttendId: number | null;
     formManageAppointment: AppointmentFormDataInterface;
     setIsLoading: (isLoading: boolean) => void;
     addAppointment: (appointment: FormData) => Promise<number>;
@@ -18,6 +19,7 @@ export interface AppointmentStoreInterface {
     resetSlice: () => void;
     removeAppointment: (id: number) => Promise<boolean>;
     updateStateAppointment: (id: number, status: AppointmentStatusInterface, mustUpdateList?: boolean) => Promise<void>;
+    attendAppointment: (id: number) => Promise<void>;
 }
 
 
@@ -55,6 +57,7 @@ export const createAppointmentSlice = (set: any, get: any): AppointmentStoreInte
     mustUpdateList: false, // Indica si se debe actualizar la lista de appointments
     // Estado de carga para las acciones
     isLoading: false,
+    appointmenForAttendId: null,
     resetFormDataAppointment: () => {
         set({ formManageAppointment: { ...formInitialState } }, false, "app:appointment/resetFormData");
     },
@@ -141,6 +144,13 @@ export const createAppointmentSlice = (set: any, get: any): AppointmentStoreInte
             if (mustUpdateList) set({ mustUpdateList: true }, false, "app:appointment/mustUpdateList");
             set({ isLoading: false }, false, "app:appointment/loadingUpdateStateAppointment");
         }
+    },
+    attendAppointment: async (id: number): Promise<void> => {
+        // Implementa la lógica para atender una cita
+        // set({ isLoading: true }, false, "app:appointment/attendAppointment");
+        // Aquí podrías llamar a una acción para actualizar el estado de la cita a "completed"
+        set({ appointmenForAttendId: id }, false, "app:appointment/attendAppointment");
+
     }
 })
 
