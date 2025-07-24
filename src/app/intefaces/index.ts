@@ -5,4 +5,5 @@ export type { DoctorAvailabilityInterface, DoctorInterface } from "./DoctorInter
 export type { Navigation, NavigationOption } from "./NavigationInterface";
 export type { Meta, PaginatorInterface } from "./PaginatorInterface";
 export type { PatientInterface, PatientPaginationInterface } from "./PatientInterface";
+export type { PrescriptionItemInterface } from "./PrescriptionInterface";
 

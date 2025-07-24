@@ -1,4 +1,4 @@
-import { DashboardLayout, Loader, PageWrapper } from "@/app/components";
+import { DashboardLayout, Loader, MedicalRecordForm, PageWrapper } from "@/app/components";
 import { messages } from "@/app/config";
 import { useAppointmentStore } from "@/app/store";
 import { useState } from "react";
@@ -10,6 +10,17 @@ export default function MedicalHistory() {
   const [messageOnLoader, setMessageOnLoader] = useState<string>(fetching);
   const { isLoading } = useAppointmentStore();
 
+  const onHandleCancel = () => {
+    // Aquí puedes implementar la lógica para manejar la cancelación
+    // Por ejemplo, redirigir a otra página o cerrar un modal
+  };
+
+  const onHandleSubmit = async (formData: FormData) => {
+    // Aquí puedes implementar la lógica para manejar el envío del formulario
+    // Por ejemplo, enviar los datos a una API o actualizar el estado de la aplicación
+    console.log("Form data submitted:", formData);
+  };
+
   if (isLoading) return <Loader message={messageOnLoader} />
   return (
     <DashboardLayout>
@@ -18,6 +29,7 @@ export default function MedicalHistory() {
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-2xl font-bold mb-4">Citas médicas - {TITLE_PAGE}</h1>
           </div>
+          <MedicalRecordForm handleCancel={onHandleCancel} handleSubmit={onHandleSubmit} />
         </div></PageWrapper>
     </DashboardLayout>
   )

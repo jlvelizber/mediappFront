@@ -11,6 +11,7 @@ export * from "./DoctorDashboard";
 export * from "./EmptyState";
 export * from "./Layouts";
 export * from "./Loader";
+export * from "./MedicalRecordForm";
 export * from "./Navigation";
 export * from "./PageWrapper";
 export * from "./Paginator";
