@@ -37,6 +37,11 @@ export default {
             text: "#1e40af",    // sky-800
             border: "#bfdbfe",  // sky-200
           },
+          rescheduled: {
+            DEFAULT: "#f0f9ff", // cyan-50
+            text: "#0284c7",    // cyan-800
+            border: "#cffafe",  // cyan-200
+          },
         },
       },
     },

@@ -19,6 +19,10 @@ body {
   @apply bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow-sm transition;
 }
 
+.btn-completed {
+  @apply bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow-sm transition;
+}
+
 /* Estilos reutilizables */
 .btn-secondary {
   @apply border border-gray-500 text-gray-700 py-2 px-4 rounded-lg transition hover:bg-gray-100 hover:border-gray-700;

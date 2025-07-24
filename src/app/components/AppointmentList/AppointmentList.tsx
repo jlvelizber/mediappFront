@@ -30,6 +30,10 @@ export default function AppointmentList({ items, fetching, actions: { onRemove, 
                             {appointment.status !== "completed" && (<>
                                 <button className="btn-danger flex items-center gap-2  text-white text-xs px-3 py-1 rounded-md" aria-label="Eliminar" title={`Eliminar cita ${appointment.id}`} onClick={(e) => appointment.id !== undefined && onRemove(e, appointment.id)}> <TrashIcon className="w-4 h-4" /> Eliminar</button>
                             </>)}
+
+                            {appointment.status === "completed" && (
+                                <button className="btn-completed flex items-center gap-2  text-white text-xs px-3 py-1 rounded-md" aria-label="Ver" title={`Ver cita ${appointment.id}`} onClick={(e) => appointment.id !== undefined && onRemove(e, appointment.id)}> <TrashIcon className="w-4 h-4" /> Ver</button>
+                            )}
                         </>
 
                     </td>
