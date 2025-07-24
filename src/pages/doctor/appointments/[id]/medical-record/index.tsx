@@ -1,14 +1,43 @@
 import { DashboardLayout, Loader, MedicalRecordForm, PageWrapper, PatientCard } from "@/app/components";
 import { messages } from "@/app/config";
+import { PatientInterface } from "@/app/intefaces";
 import { useAppointmentStore } from "@/app/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function MedicalHistory() {
   const TITLE_PAGE = "Cita";
   const { loading: { fetching }, } = messages.appointment;
-
   const [messageOnLoader, setMessageOnLoader] = useState<string>(fetching);
-  const { isLoading } = useAppointmentStore();
+  const [titlePage, setTitlePage] = useState<string>(TITLE_PAGE);
+  const { isLoading, appointmenForAttendId } = useAppointmentStore();
+  const [deps, setDeps] = useState<{
+    patient: PatientInterface;
+  }>({
+    patient: {} as unknown as PatientInterface,
+  });
+
+  const loadDependencies = async () => {
+    // setIsLoading(true);
+    Promise.all([
+      // getPatientsByDoctorInSession(),
+    ]).then((res) => {
+      setDeps({
+        patient: {} as unknown as PatientInterface,
+      });
+
+      // setIsLoading(false);
+    })
+  }
+
+  useEffect(() => {
+    setTitlePage(TITLE_PAGE);
+    loadDependencies();
+    return () => {
+      setTitlePage("");
+    };
+  }, []);
+
+
 
   const onHandleCancel = () => {
     // Aquí puedes implementar la lógica para manejar la cancelación
@@ -27,10 +56,10 @@ export default function MedicalHistory() {
       <PageWrapper>
         <div className="container mx-auto p-4">
           <div className="flex justify-between items-center mb-4">
-            <h1 className="text-2xl font-bold mb-4">Citas médicas - {TITLE_PAGE}</h1>
+            <h1 className="text-2xl font-bold mb-4">Citas médicas - {titlePage}</h1>
           </div>
           <PatientCard />
-          <MedicalRecordForm handleCancel={onHandleCancel} handleSubmit={onHandleSubmit} />
+          <MedicalRecordForm handleCancel={onHandleCancel} handleSubmit={onHandleSubmit} deps={deps} />
         </div></PageWrapper>
     </DashboardLayout>
   )
