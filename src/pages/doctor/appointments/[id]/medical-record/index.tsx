@@ -1,7 +1,7 @@
 import { DashboardLayout, Loader, MedicalRecordForm, PageWrapper, PatientCard } from "@/app/components";
 import { messages } from "@/app/config";
 import { PatientInterface } from "@/app/intefaces";
-import { useAppointmentStore } from "@/app/store";
+import { useAppointmentStore, usePatientStore } from "@/app/store";
 import { useEffect, useState } from "react";
 
 export default function MedicalHistory() {
@@ -9,23 +9,22 @@ export default function MedicalHistory() {
   const { loading: { fetching }, } = messages.appointment;
   const [messageOnLoader, setMessageOnLoader] = useState<string>(fetching);
   const [titlePage, setTitlePage] = useState<string>(TITLE_PAGE);
-  const { isLoading, appointmenForAttendId } = useAppointmentStore();
-  const [deps, setDeps] = useState<{
-    patient: PatientInterface;
-  }>({
-    patient: {} as unknown as PatientInterface,
-  });
+  const { isLoading, appointmenForAttendId, setIsLoading } = useAppointmentStore();
+  const { getPatientBasedOnAppointment } = usePatientStore();
+  const [patient, setPatient] = useState<PatientInterface>({} as PatientInterface);
+
 
   const loadDependencies = async () => {
-    // setIsLoading(true);
+    setIsLoading(true);
     Promise.all([
-      // getPatientsByDoctorInSession(),
+      getPatientBasedOnAppointment(appointmenForAttendId ? appointmenForAttendId : 0),
     ]).then((res) => {
-      setDeps({
-        patient: {} as unknown as PatientInterface,
-      });
+      if (!res) {
+        setMessageOnLoader("No se encontró el paciente asociado a la cita");
+      }
+      setPatient(res[0] as PatientInterface);
 
-      // setIsLoading(false);
+      setIsLoading(false);
     })
   }
 
@@ -58,8 +57,8 @@ export default function MedicalHistory() {
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-2xl font-bold mb-4">Citas médicas - {titlePage}</h1>
           </div>
-          <PatientCard />
-          <MedicalRecordForm handleCancel={onHandleCancel} handleSubmit={onHandleSubmit} deps={deps} />
+          <PatientCard patient={patient} />
+          <MedicalRecordForm handleCancel={onHandleCancel} handleSubmit={onHandleSubmit} />
         </div></PageWrapper>
     </DashboardLayout>
   )

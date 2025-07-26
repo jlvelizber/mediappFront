@@ -82,6 +82,17 @@ export const PatientService = {
     updatePatient: async (id: number, data: PatientInterface): Promise<PatientInterface> => {
         const response = await apiClient.put(`${PatientService.route}/${id}`, data);
         return await response.data;
+    },
+
+
+    /**
+     * Get Patient by appointment
+     * @param appointmentId
+     */
+    getPatientBasedOnAppointment: async (appointmentId: number): Promise<PatientInterface> => {
+        const response = await apiClient.get<AxiosResponse<PatientInterface>>(`${PatientService.route}/appointment/${appointmentId}`);
+        const patient: PatientInterface = response.data.data;
+        return patient;
     }
 
 

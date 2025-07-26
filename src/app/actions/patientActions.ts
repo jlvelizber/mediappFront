@@ -75,6 +75,10 @@ export async function removePatient(id: number): Promise<DefaultMessageResourceR
     }
 }
 
+/**
+ * 
+ * @returns Promise<PatientInterface[]>
+ */
 export async function getPatientsByDoctorInSession(): Promise<PatientInterface[]> {
     try {
         const patients = await PatientService.getMyPatients();
@@ -84,3 +88,20 @@ export async function getPatientsByDoctorInSession(): Promise<PatientInterface[]
         return [];
     }
 }
+
+/**
+ * 
+ * @param appointId 
+ * @returns Promise<PatientInterface>
+ */
+export async function getPatientBasedOnAppointment(appointId: number): Promise<PatientInterface> {
+    try {
+        const patient = await PatientService.getPatientBasedOnAppointment(appointId);
+        return patient;
+    } catch (error) {
+        console.error("Error al obtener el paciente basado en la cita:", error);
+        throw error;
+    }
+}
+
+

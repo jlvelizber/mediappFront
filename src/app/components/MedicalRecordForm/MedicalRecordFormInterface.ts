@@ -2,7 +2,7 @@ import { PatientInterface } from "@/app/intefaces";
 
 export interface MedicalRecordFormInterface {
     initialData?: object;
-    deps: {
+    deps?: {
         patient: PatientInterface
     };
     handleCancel: () => void;
