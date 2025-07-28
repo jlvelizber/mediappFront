@@ -89,7 +89,7 @@ export const PatientService = {
      * Get Patient by appointment
      * @param appointmentId
      */
-    getPatientBasedOnAppointment: async (appointmentId: number): Promise<PatientInterface> => {
+    getPatientBasedOnAppointment: async (appointmentId: string): Promise<PatientInterface> => {
         const response = await apiClient.get<AxiosResponse<PatientInterface>>(`${PatientService.route}/appointment/${appointmentId}`);
         const patient: PatientInterface = response.data.data;
         return patient;

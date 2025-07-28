@@ -32,7 +32,7 @@ export default function AppointmentsPage() {
         appId: 0
     });
     const [meta, setMeta] = useState<Meta>();
-    const { removeAppointment, isLoading, setIsLoading, mustUpdateList, appointmenForAttendId } = useAppointmentStore();
+    const { removeAppointment, isLoading, setIsLoading, mustUpdateList } = useAppointmentStore();
     const { addToast } = useToastStore();
     const [activeTab, setActiveTab] = useState<"list" | "calendar">("list");
 
@@ -44,13 +44,6 @@ export default function AppointmentsPage() {
             setHasDataInFirstFetch(true)
         }
     }, [loading, appointments.length])
-
-    // attend appointment
-    useEffect(() => {
-        if (!appointmenForAttendId) return;
-        router.push(`/${user?.role}${routeNames.appointments}/${appointmenForAttendId}/medical-record`);
-
-    }, [appointmenForAttendId])
 
 
     useEffect(() => {
@@ -84,6 +77,14 @@ export default function AppointmentsPage() {
         e.preventDefault()
         router.push(`/${user?.role}${routeNames.appointments}/edit/${appId}`)
     }
+
+    // attend appointment
+    const attendAppointment = (appointmenForAttendId: number) => {
+        if (!appointmenForAttendId) return;
+        router.push(`/${user?.role}${routeNames.appointments}/${appointmenForAttendId}/medical-record`);
+    }
+
+
     const onClickEvent = (event: AppointmentListItemInterface) => {
         console.log("Evento seleccionado:", event);
         router.push(`/${user?.role}${routeNames.appointments}/edit/${event.id}`);
@@ -197,7 +198,7 @@ export default function AppointmentsPage() {
                                             onChange={(e) => setSearch(e.target.value)}
                                             className="mb-4 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary"
                                         />
-                                        <AppointmentList items={appointments} fetching={fetchingOnTable} actions={{ onEdit: handleEdit, onRemove: handleRemove }} />
+                                        <AppointmentList items={appointments} fetching={fetchingOnTable} actions={{ onEdit: handleEdit, onRemove: handleRemove, onAttendAppointment: attendAppointment }} />
                                         {meta && <Paginator meta={meta} onPageChange={paginateAppointmentsOnTable} />}
                                     </>
                                 )}

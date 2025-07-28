@@ -7,5 +7,6 @@ export interface AppointmentListInterface {
     actions: {
         onRemove: (e: MouseEvent<HTMLButtonElement>, patientId: number) => void,
         onEdit: (e: MouseEvent<HTMLButtonElement>, patientId: number) => void,
+        onAttendAppointment?: (appointmentId: number) => void
     }
 }

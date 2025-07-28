@@ -2,6 +2,7 @@ import { DashboardLayout, Loader, MedicalRecordForm, PageWrapper, PatientCard } 
 import { messages } from "@/app/config";
 import { PatientInterface } from "@/app/intefaces";
 import { useAppointmentStore, usePatientStore } from "@/app/store";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function MedicalHistory() {
@@ -9,15 +10,15 @@ export default function MedicalHistory() {
   const { loading: { fetching }, } = messages.appointment;
   const [messageOnLoader, setMessageOnLoader] = useState<string>(fetching);
   const [titlePage, setTitlePage] = useState<string>(TITLE_PAGE);
-  const { isLoading, appointmenForAttendId, setIsLoading } = useAppointmentStore();
+  const { isLoading, setIsLoading } = useAppointmentStore();
   const { getPatientBasedOnAppointment } = usePatientStore();
   const [patient, setPatient] = useState<PatientInterface>({} as PatientInterface);
-
+  const params = useParams<{ id: string }>();
 
   const loadDependencies = async () => {
     setIsLoading(true);
     Promise.all([
-      getPatientBasedOnAppointment(appointmenForAttendId ? appointmenForAttendId : 0),
+      getPatientBasedOnAppointment(params ? params?.id : ""),
     ]).then((res) => {
       if (!res) {
         setMessageOnLoader("No se encontró el paciente asociado a la cita");

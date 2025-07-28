@@ -1,5 +1,5 @@
 import { AppointmentListItemInterface, AppointmentStatusInterface } from "@/app/intefaces";
-import { PencilIcon, TrashIcon } from "@primer/octicons-react";
+import { PencilIcon, TrashIcon, XCircleIcon } from "@primer/octicons-react";
 import { AppointmentChangeStatus } from "../AppointmentChangeStatus";
 import AppointmentStatusBadge from "../AppointmentStatusBadge";
 import { EmptyState } from "../EmptyState";
@@ -7,7 +7,7 @@ import { Loader } from "../Loader";
 import { Table } from "../Table";
 import { AppointmentListInterface } from "./AppointmentListInterface";
 
-export default function AppointmentList({ items, fetching, actions: { onRemove, onEdit } }: AppointmentListInterface) {
+export default function AppointmentList({ items, fetching, actions: { onRemove, onEdit, onAttendAppointment } }: AppointmentListInterface) {
 
     const mustShowEditBtn = (status: string) => (status != "completed" && status != "cancelled");
 
@@ -24,6 +24,19 @@ export default function AppointmentList({ items, fetching, actions: { onRemove, 
                     <td className="w-full px-6 py-2 flex justify-center mx-auto">
                         <AppointmentChangeStatus appointmentId={appointment.id} status={appointment.status} key={appointment.id} mustUpdateList={true} />
                         <>
+                            {
+                                appointment.status === "confirmed" && (
+                                    <button
+                                        onClick={() => onAttendAppointment && onAttendAppointment(appointment.id)}
+                                        className="flex items-center gap-2 bg-status-completed-text text-white text-xs px-3 py-1 rounded-md"
+                                        title="Atender cita"
+                                        aria-label="Atender cita"
+                                    >
+                                        <XCircleIcon className="w-4 h-4" />
+                                        Atender cita
+                                    </button>
+                                )
+                            }
                             {(mustShowEditBtn(appointment.status)) && (<>
                                 <button className="btn-secondary flex items-center gap-2  text-white text-xs px-3 py-1 rounded-md" aria-label="Editar" title={`Editar cita ${appointment.id}`} onClick={(e) => appointment.id !== undefined && onEdit(e, appointment.id)}> <PencilIcon className="w-4 h-4" /> Editar</button>
                             </>)}
@@ -34,6 +47,7 @@ export default function AppointmentList({ items, fetching, actions: { onRemove, 
                             {appointment.status === "completed" && (
                                 <button className="btn-completed flex items-center gap-2  text-white text-xs px-3 py-1 rounded-md" aria-label="Ver" title={`Ver cita ${appointment.id}`} onClick={(e) => appointment.id !== undefined && onRemove(e, appointment.id)}> <TrashIcon className="w-4 h-4" /> Ver</button>
                             )}
+
                         </>
 
                     </td>

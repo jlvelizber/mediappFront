@@ -16,7 +16,7 @@ export interface PatientStoreInterface {
     removePatient: (id: number) => Promise<boolean>;
     resetFormDataPatient: () => void;
     getPatientsByDoctorInSession: () => Promise<PatientInterface[]>;
-    getPatientBasedOnAppointment: (appointId: number) => Promise<PatientInterface | null>
+    getPatientBasedOnAppointment: (appointId: string) => Promise<PatientInterface | null>
     resetSlice: () => void;
 };
 
@@ -152,7 +152,7 @@ export const createPatientSlice = (set: any, get: any): PatientStoreInterface =>
         if (!response) return [];
         return response;
     },
-    getPatientBasedOnAppointment: async (appointId: number): Promise<PatientInterface | null> => {
+    getPatientBasedOnAppointment: async (appointId: string): Promise<PatientInterface | null> => {
         const patient = await getPatientBasedOnAppointment(appointId);
         if (!patient) return null;
         return patient;

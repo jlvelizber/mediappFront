@@ -94,7 +94,7 @@ export async function getPatientsByDoctorInSession(): Promise<PatientInterface[]
  * @param appointId 
  * @returns Promise<PatientInterface>
  */
-export async function getPatientBasedOnAppointment(appointId: number): Promise<PatientInterface> {
+export async function getPatientBasedOnAppointment(appointId: string): Promise<PatientInterface> {
     try {
         const patient = await PatientService.getPatientBasedOnAppointment(appointId);
         return patient;
