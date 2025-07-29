@@ -15,6 +15,8 @@ export default function MedicalHistory() {
   const [patient, setPatient] = useState<PatientInterface>({} as PatientInterface);
   const params = useParams<{ id: string }>();
 
+
+
   const loadDependencies = async () => {
     setIsLoading(true);
     Promise.all([
@@ -35,7 +37,7 @@ export default function MedicalHistory() {
     return () => {
       setTitlePage("");
     };
-  }, []);
+  }, [params?.id]);
 
 
 
