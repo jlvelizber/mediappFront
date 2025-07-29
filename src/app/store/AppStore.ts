@@ -3,6 +3,7 @@ import { devtools } from "zustand/middleware";
 import { createAppointmentSlice } from "./AppointmentStore";
 import { createAuthStoreSlice } from "./AuthStore";
 import { createCalendarAppointmentSlice } from "./CalendarAppointmentStore";
+import { createMedicalRecordSlice } from "./MedicalRecordStore";
 import { createPatientSlice } from "./PatientStore";
 import { createToastSlice } from "./ToastStore";
 
@@ -13,6 +14,7 @@ const allResets = (set: unknown, get: unknown) => [
     createToastSlice(set).resetSlice,
     createAuthStoreSlice(set, get).resetSlice,
     createCalendarAppointmentSlice(set, get).resetSlice,
+    createMedicalRecordSlice(set, get).resetSlice,
 ];
 
 export const useAppStore = create()(
@@ -22,6 +24,7 @@ export const useAppStore = create()(
         ...createAppointmentSlice(set, get),
         ...createAuthStoreSlice(set, get),
         ...createCalendarAppointmentSlice(set, get),
+        ...createMedicalRecordSlice(set, get),
         resetSlice: () => allResets(set, get).forEach((reset) => reset()), // Llama a todos los resets de los slices
     })),
 );
