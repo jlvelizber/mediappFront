@@ -153,6 +153,7 @@ export const createPatientSlice = (set: any, get: any): PatientStoreInterface =>
         return response;
     },
     getPatientBasedOnAppointment: async (appointId: string): Promise<PatientInterface | null> => {
+        if (!appointId) return null;
         const patient = await getPatientBasedOnAppointment(appointId);
         if (!patient) return null;
         return patient;
