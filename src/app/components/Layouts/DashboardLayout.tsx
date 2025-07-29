@@ -5,7 +5,7 @@ import { Toasts } from "../Toasts";
 
 export function DashboardLayout({ children }: { children: ReactNode }) {
     return (
-        <div className="flex h-screen">
+        <div className="min-h-screen flex">
             <Toasts />
             {/* Sidebar */}
             <Sidebar />
