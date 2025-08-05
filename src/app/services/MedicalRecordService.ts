@@ -3,7 +3,7 @@ import { MedicalRecordInterface } from "../intefaces";
 import { apiClient } from "./api";
 
 export const MedicalRecordService = {
-    route: "/medical-records",
+    route: "/medical-record",
 
     /**
      * Create a new medical record

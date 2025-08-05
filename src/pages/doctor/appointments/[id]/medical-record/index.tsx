@@ -47,6 +47,7 @@ export default function MedicalHistory() {
   };
 
   const onHandleSubmit = async (formData: FormData) => {
+    formData.append("appointment_id", String(params?.id));
     await addMedicalRecord(formData)
   };
 
