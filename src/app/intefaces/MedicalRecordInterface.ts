@@ -1,10 +1,12 @@
+import { PrescriptionInterface } from "./PrescriptionInterface";
 
 export interface MedicalRecordInterface {
     id?: number;
-    appoint_id: number | null;
+    appointment_id: number | null;
     cascade: string;
     symptoms: string;
     diagnosis: string;
     treatment: string;
     notes: string;
+    prescription: PrescriptionInterface // Assuming prescriptions is an array of strings
 }

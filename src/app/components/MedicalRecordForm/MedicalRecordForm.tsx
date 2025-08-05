@@ -90,9 +90,9 @@ export default function MedicalHistory({ initialData, handleCancel, handleSubmit
 
                     <label className="block text-sm font-medium text-gray-700">Notas de la receta</label>
                     <textarea
-                        name="prescription_notes"
+                        name="prescription.notes"
                         rows={2}
-                        // defaultValue={prescription?.notes}
+                        defaultValue={fields?.prescription.notes}
                         className="input-field resize-none mb-4"
                     />
 
@@ -101,37 +101,37 @@ export default function MedicalHistory({ initialData, handleCancel, handleSubmit
                         <div key={index} className="grid md:grid-cols-5 gap-2 mb-2">
                             <input
                                 type="text"
-                                name={`medication_name_${index}`}
+                                name={`prescription.items[${index}].medication_name`}
                                 placeholder="Medicamento"
-                                defaultValue={item.medication_name}
+                                defaultValue={fields?.prescription?.items[index]?.medication_name}
                                 className="input-field"
                             />
                             <input
                                 type="text"
-                                name={`dosage_${index}`}
+                                name={`prescription.items[${index}].dosage`}
                                 placeholder="Dosis"
-                                defaultValue={item.dosage}
+                                defaultValue={fields?.prescription?.items[index]?.dosage}
                                 className="input-field"
                             />
                             <input
                                 type="text"
-                                name={`frequency_${index}`}
+                                name={`prescription.items[${index}].frequency`}
                                 placeholder="Frecuencia"
-                                defaultValue={item.frequency}
+                                defaultValue={fields?.prescription?.items[index]?.frequency}
                                 className="input-field"
                             />
                             <input
                                 type="text"
-                                name={`duration_${index}`}
+                                name={`prescription.items[${index}].duration`}
                                 placeholder="Duración"
-                                defaultValue={item.duration}
+                                defaultValue={fields?.prescription?.items[index]?.duration}
                                 className="input-field"
                             />
                             <input
                                 type="text"
-                                name={`notes_${index}`}
+                                name={`prescription.items[${index}].notes`}
                                 placeholder="Notas"
-                                defaultValue={item.notes}
+                                defaultValue={fields?.prescription?.items[index]?.notes}
                                 className="input-field"
                             />
                         </div>

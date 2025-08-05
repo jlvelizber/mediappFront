@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { createJSONStorage, devtools } from "zustand/middleware";
+import { createMedicalRecord } from "../actions/medicalRecordActions";
 import { MedicalRecordFormDataInterface } from "../components";
 import { MedicalRecordInterface } from "../intefaces";
 
@@ -9,53 +10,82 @@ export interface MedicalRecordStoreInterface {
     formManageMedicalRecord: MedicalRecordFormDataInterface;
     addMedicalRecord: (record: FormData) => Promise<number>;
     getMedicalRecord: (id: number) => Promise<MedicalRecordInterface | null>;
+    setIsLoading: (loading: boolean) => void;
     resetSlice: () => void;
 }
 
 const initialState: MedicalRecordFormDataInterface = {
     fields: {
         id: undefined,
-        appoint_id: null,
+        appointment_id: null,
         cascade: "",
         symptoms: "",
         diagnosis: "",
         treatment: "",
-        notes: ""
+        notes: "",
+        prescription: {
+            appointment_id: null,
+            notes: "",
+            items: []
+        } // Assuming you want to add prescriptions here
     },
     errors: {
-        patient_id: [],
-        doctor_id: [],
+        appoint_id: [],
+        cascade: [],
+        symptoms: [],
         diagnosis: [],
-        treatment_plan: [],
-        medications: [],
-        next_visit: [],
+        treatment: [],
+        notes: [],
     },
     error: "",
 };
 
 
 // Slice for the medical record state
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
 export const createMedicalRecordSlice = (set: any, get: any): MedicalRecordStoreInterface => ({
     medicalRecord: {
         id: undefined,
-        appoint_id: null,
+        appointment_id: null,
         cascade: "",
         symptoms: "",
         diagnosis: "",
         treatment: "",
-        notes: ""
+        notes: "",
+        prescription: {
+            appointment_id: null,
+            notes: "",
+            items: []
+        } // Assuming you want to add prescriptions here
     },
     isLoading: false,
     formManageMedicalRecord: initialState,
-    addMedicalRecord: async (record: FormData) => {
-        // Implementation for adding a medical record
-        return 1; // Placeholder return value
+    addMedicalRecord: async (record: FormData): Promise<number> => {
+        debugger
+        set({ isLoading: true }, false, "app:medicalRecord/loadingMedicalRecord");
+        const response = await createMedicalRecord({} as MedicalRecordFormDataInterface, record);
+        let medicalRecordId = 0;
+        if (response) {
+            // Verifica si el response tiene el formato esperado
+            if ("medicalRecord" in response && response.success) {
+                set({ medicalRecord: response.medicalRecord }, false, "app:medicalRecord/addMedicalRecord");
+                medicalRecordId = response.medicalRecord?.id ?? 0; // Retorna el ID del paciente creado o 0 si es undefined
+            } else {
+                console.error("Unexpected response format", response);
+                set({ formManagePatient: { ...response as MedicalRecordFormDataInterface } }, false, "app:patient/errorAddPatient");
+            }
+        }
+        set({ isLoading: false }, false, "app:patient/loadingAddPatient");
+        return medicalRecordId;
     },
     // 
     getMedicalRecord: async (id: number) => {
+        console.log("Fetching medical record with ID:", id);
         // Implementation for fetching a medical record by ID
         return null; // Placeholder return value
+    },
+    setIsLoading: (loading: boolean) => {
+        set({ isLoading: loading });
     },
     resetSlice: () => {
         set({
@@ -63,7 +93,7 @@ export const createMedicalRecordSlice = (set: any, get: any): MedicalRecordStore
             formManageMedicalRecord: initialState,
             isLoading: false,
         });
-    },
+    }
 });
 
 

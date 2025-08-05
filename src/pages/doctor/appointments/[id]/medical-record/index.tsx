@@ -1,7 +1,7 @@
 import { DashboardLayout, Loader, MedicalRecordForm, PageWrapper, PatientCard } from "@/app/components";
 import { messages } from "@/app/config";
 import { PatientInterface } from "@/app/intefaces";
-import { useAppointmentStore, usePatientStore } from "@/app/store";
+import { useAppointmentStore, useMedicalRecordStore, usePatientStore } from "@/app/store";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -12,6 +12,7 @@ export default function MedicalHistory() {
   const [titlePage, setTitlePage] = useState<string>(TITLE_PAGE);
   const { isLoading, setIsLoading } = useAppointmentStore();
   const { getPatientBasedOnAppointment } = usePatientStore();
+  const { isLoading: loadingMedicalRecord, addMedicalRecord } = useMedicalRecordStore()
   const [patient, setPatient] = useState<PatientInterface>({} as PatientInterface);
   const params = useParams<{ id: string }>();
 
@@ -46,12 +47,10 @@ export default function MedicalHistory() {
   };
 
   const onHandleSubmit = async (formData: FormData) => {
-    // Aquí puedes implementar la lógica para manejar el envío del formulario
-    // Por ejemplo, enviar los datos a una API o actualizar el estado de la aplicación
-    console.log("Form data submitted:", formData);
+    await addMedicalRecord(formData)
   };
 
-  if (isLoading) return <Loader message={messageOnLoader} />
+  if (isLoading || loadingMedicalRecord) return <Loader message={messageOnLoader} />
   return (
     <DashboardLayout>
       <PageWrapper>
