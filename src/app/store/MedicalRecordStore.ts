@@ -18,7 +18,6 @@ const initialState: MedicalRecordFormDataInterface = {
     fields: {
         id: undefined,
         appointment_id: null,
-        cascade: "",
         symptoms: "",
         diagnosis: "",
         treatment: "",
@@ -47,7 +46,6 @@ export const createMedicalRecordSlice = (set: any, get: any): MedicalRecordStore
     medicalRecord: {
         id: undefined,
         appointment_id: null,
-        cascade: "",
         symptoms: "",
         diagnosis: "",
         treatment: "",
@@ -61,7 +59,6 @@ export const createMedicalRecordSlice = (set: any, get: any): MedicalRecordStore
     isLoading: false,
     formManageMedicalRecord: initialState,
     addMedicalRecord: async (record: FormData): Promise<number> => {
-        debugger
         set({ isLoading: true }, false, "app:medicalRecord/loadingMedicalRecord");
         const response = await createMedicalRecord({} as MedicalRecordFormDataInterface, record);
         let medicalRecordId = 0;

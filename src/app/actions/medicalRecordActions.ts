@@ -5,7 +5,20 @@ import { MedicalRecordService } from "../services/MedicalRecordService";
 
 export async function createMedicalRecord(prevState: MedicalRecordFormDataInterface, formData: FormData): Promise<MedicalRecordFormDataInterface | { success: boolean; medicalRecord: MedicalRecordInterface }> {
     // Convertir FormData a un objeto
-    const data = Object.fromEntries(formData.entries()) as unknown as MedicalRecordInterface;
+    const entries = Object.fromEntries(formData.entries()) as unknown as MedicalRecordInterface;
+    const prescriptionNote = formData.get("prescription.notes") as string;
+    const data: MedicalRecordInterface = {
+        appointment_id: entries.appointment_id,
+        symptoms: entries.symptoms,
+        diagnosis: entries.diagnosis,
+        treatment: entries.treatment,
+        notes: entries.notes,
+        prescription: {
+            appointment_id: entries.appointment_id,
+            notes: prescriptionNote,
+            items: JSON.parse(formData.get("prescription.items") as string) || []
+        }
+    }
     try {
         // 📌 Aquí iría la lógica para guardar en la base de datos
         console.log("Medical record guardado: ", data.id);

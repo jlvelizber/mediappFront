@@ -1,6 +1,6 @@
 import { PrescriptionItemInterface } from "@/app/intefaces";
 import { useMedicalRecordStore } from "@/app/store";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { MedicalRecordFormInterface } from "./MedicalRecordFormInterface";
 
 export default function MedicalHistory({ initialData, handleCancel, handleSubmit }: MedicalRecordFormInterface) {
@@ -17,6 +17,8 @@ export default function MedicalHistory({ initialData, handleCancel, handleSubmit
     const onHandleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
+        // Agregar los items de la receta al FormData
+        formData.append("prescription.items", JSON.stringify(prescriptionItems));
         handleSubmit(formData);
     };
 
@@ -30,6 +32,17 @@ export default function MedicalHistory({ initialData, handleCancel, handleSubmit
     const onHandleCancel = () => {
         handleCancel();
     };
+
+    const onHandleChantePrescriptionItem = (e: ChangeEvent<HTMLInputElement>, indexItem: number) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        e.target.value && setPrescriptionItems(prev => {
+            const newItems = [...prev];
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error 
+            newItems[indexItem][e.target.name] = e.target.value;
+            return newItems;
+        })
+    }
 
     return (
         <>
@@ -101,38 +114,43 @@ export default function MedicalHistory({ initialData, handleCancel, handleSubmit
                         <div key={index} className="grid md:grid-cols-5 gap-2 mb-2">
                             <input
                                 type="text"
-                                name={`prescription.items[${index}].medication_name`}
                                 placeholder="Medicamento"
-                                defaultValue={fields?.prescription?.items[index]?.medication_name}
+                                name="medication_name"
+                                defaultValue={item?.medication_name}
+                                onChange={(e) => onHandleChantePrescriptionItem(e, index)}
                                 className="input-field"
                             />
                             <input
                                 type="text"
-                                name={`prescription.items[${index}].dosage`}
                                 placeholder="Dosis"
-                                defaultValue={fields?.prescription?.items[index]?.dosage}
+                                name="dosage"
+                                defaultValue={item?.dosage}
                                 className="input-field"
+                                onChange={(e) => onHandleChantePrescriptionItem(e, index)}
                             />
                             <input
                                 type="text"
-                                name={`prescription.items[${index}].frequency`}
                                 placeholder="Frecuencia"
-                                defaultValue={fields?.prescription?.items[index]?.frequency}
+                                name="frequency"
+                                defaultValue={item?.frequency}
                                 className="input-field"
+                                onChange={(e) => onHandleChantePrescriptionItem(e, index)}
                             />
                             <input
                                 type="text"
-                                name={`prescription.items[${index}].duration`}
                                 placeholder="Duración"
-                                defaultValue={fields?.prescription?.items[index]?.duration}
+                                name="duration"
+                                defaultValue={item?.duration}
                                 className="input-field"
+                                onChange={(e) => onHandleChantePrescriptionItem(e, index)}
                             />
                             <input
                                 type="text"
-                                name={`prescription.items[${index}].notes`}
                                 placeholder="Notas"
-                                defaultValue={fields?.prescription?.items[index]?.notes}
+                                name="notes"
+                                defaultValue={item?.notes}
                                 className="input-field"
+                                onChange={(e) => onHandleChantePrescriptionItem(e, index)}
                             />
                         </div>
                     ))}
