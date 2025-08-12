@@ -12,7 +12,7 @@ export async function createMedicalRecord(prevState: MedicalRecordFormDataInterf
         symptoms: entries.symptoms,
         diagnosis: entries.diagnosis,
         treatment: entries.treatment,
-        notes: entries.notes,
+        notes: formData.get("notes") as string,
         prescription: {
             appointment_id: entries.appointment_id,
             notes: prescriptionNote,
@@ -26,6 +26,7 @@ export async function createMedicalRecord(prevState: MedicalRecordFormDataInterf
         return { success: true, medicalRecord };
 
     } catch (error: unknown) {
+        debugger
         prevState.fields = data;
         const axiosError = error as AxiosError;
         // @ts-expect-error: axiosError.response may be undefined or not have a data property

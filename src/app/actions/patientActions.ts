@@ -19,7 +19,7 @@ export async function createPatient(prevState: PatientFormDataInterface, formDat
         return { success: true, patient };
 
     } catch (error: unknown) {
-        prevState.fields = data;
+        prevState.fields = data; // Mantener los datos ingresados en el formulario
         const axiosError = error as AxiosError;
         // @ts-expect-error: axiosError.response may be undefined or not have a data property
         prevState.error = "Error al guardar el paciente. " + axiosError.response?.data?.message

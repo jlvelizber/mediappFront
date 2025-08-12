@@ -59,6 +59,7 @@ export default function MedicalHistory({ initialData, handleCancel, handleSubmit
                         className={`input-field resize-none ${errors?.symptoms?.length ? '!border-red-500' : ''}`}
                         placeholder="Describa los síntomas del paciente..."
                     />
+                    {errors?.symptoms && <p className="text-red-500 text-sm">{errors.symptoms}</p>}
                 </div>
 
                 {/* Diagnóstico */}
@@ -71,6 +72,7 @@ export default function MedicalHistory({ initialData, handleCancel, handleSubmit
                         className={`input-field resize-none ${errors?.diagnosis?.length ? '!border-red-500' : ''}`}
                         placeholder="Ingrese el diagnóstico clínico..."
                     />
+                    {errors?.diagnosis && <p className="text-red-500 text-sm">{errors.diagnosis}</p>}
                 </div>
 
                 {/* Tratamiento */}
@@ -83,6 +85,7 @@ export default function MedicalHistory({ initialData, handleCancel, handleSubmit
                         className={`input-field resize-none ${errors?.treatment?.length ? '!border-red-500' : ''}`}
                         placeholder="Describa el tratamiento indicado..."
                     />
+                    {errors?.treatment && <p className="text-red-500 text-sm">{errors.treatment}</p>}
                 </div>
 
                 {/* Notas */}
@@ -93,8 +96,10 @@ export default function MedicalHistory({ initialData, handleCancel, handleSubmit
                         rows={2}
                         defaultValue={fields?.notes}
                         className={`input-field resize-none ${errors?.notes?.length ? '!border-red-500' : ''}`}
-
+                        placeholder="Ingrese notas adicionales..."
+                        onChange={(e) => fields.notes = e.target.value}
                     />
+                    {errors?.notes && <p className="text-red-500 text-sm">{errors.notes}</p>}
                 </div>
 
                 {/* Sección de Receta */}
@@ -108,50 +113,68 @@ export default function MedicalHistory({ initialData, handleCancel, handleSubmit
                         defaultValue={fields?.prescription.notes}
                         className="input-field resize-none mb-4"
                     />
+                    {errors?.prescription?.notes && <p className="text-red-500 text-sm">{errors.prescription.notes}</p>}
 
                     {/* Items de la receta */}
                     {prescriptionItems.map((item, index) => (
                         <div key={index} className="grid md:grid-cols-5 gap-2 mb-2">
-                            <input
-                                type="text"
-                                placeholder="Medicamento"
-                                name="medication_name"
-                                defaultValue={item?.medication_name}
-                                onChange={(e) => onHandleChantePrescriptionItem(e, index)}
-                                className="input-field"
-                            />
-                            <input
-                                type="text"
-                                placeholder="Dosis"
-                                name="dosage"
-                                defaultValue={item?.dosage}
-                                className="input-field"
-                                onChange={(e) => onHandleChantePrescriptionItem(e, index)}
-                            />
-                            <input
-                                type="text"
-                                placeholder="Frecuencia"
-                                name="frequency"
-                                defaultValue={item?.frequency}
-                                className="input-field"
-                                onChange={(e) => onHandleChantePrescriptionItem(e, index)}
-                            />
-                            <input
-                                type="text"
-                                placeholder="Duración"
-                                name="duration"
-                                defaultValue={item?.duration}
-                                className="input-field"
-                                onChange={(e) => onHandleChantePrescriptionItem(e, index)}
-                            />
-                            <input
-                                type="text"
-                                placeholder="Notas"
-                                name="notes"
-                                defaultValue={item?.notes}
-                                className="input-field"
-                                onChange={(e) => onHandleChantePrescriptionItem(e, index)}
-                            />
+                            <div>
+                                <input
+                                    type="text"
+                                    placeholder="Medicamento"
+                                    name="medication_name"
+                                    defaultValue={prescriptionItems[index]?.medication_name || fields?.prescription?.items?.[index]?.medication_name}
+                                    onChange={(e) => onHandleChantePrescriptionItem(e, index)}
+                                    className="input-field"
+                                />
+                                {errors?.prescription?.items?.[index]?.medication_name && <p className="text-red-500 text-sm">{errors.prescription.items[index].medication_name}</p>}
+                            </div>
+                            <div>
+
+                                <input
+                                    type="text"
+                                    placeholder="Dosis"
+                                    name="dosage"
+                                    defaultValue={prescriptionItems[index]?.dosage || fields?.prescription?.items?.[index]?.dosage}
+                                    className="input-field"
+                                    onChange={(e) => onHandleChantePrescriptionItem(e, index)}
+                                />
+
+                                {errors?.prescription?.items?.[index]?.dosage && <p className="text-red-500 text-sm">{errors.prescription.items[index].dosage}</p>}
+                            </div>
+                            <div>
+                                <input
+                                    type="text"
+                                    placeholder="Frecuencia"
+                                    name="frequency"
+                                    defaultValue={prescriptionItems[index]?.frequency || fields?.prescription?.items?.[index]?.frequency}
+                                    className="input-field"
+                                    onChange={(e) => onHandleChantePrescriptionItem(e, index)}
+                                />
+                                {errors?.prescription?.items?.[index]?.frequency && <p className="text-red-500 text-sm">{errors.prescription.items[index].frequency}</p>}
+                            </div>
+                            <div>
+                                <input
+                                    type="text"
+                                    placeholder="Duración"
+                                    name="duration"
+                                    defaultValue={prescriptionItems[index]?.duration || fields?.prescription?.items?.[index]?.duration}
+                                    className="input-field"
+                                    onChange={(e) => onHandleChantePrescriptionItem(e, index)}
+                                />
+                                {errors?.prescription?.items?.[index]?.duration && <p className="text-red-500 text-sm">{errors.prescription.items[index].duration}</p>}
+                            </div>
+                            <div>
+                                <input
+                                    type="text"
+                                    placeholder="Notas"
+                                    name="notes"
+                                    defaultValue={prescriptionItems[index]?.notes || fields?.prescription?.items?.[index]?.notes}
+                                    className="input-field"
+                                    onChange={(e) => onHandleChantePrescriptionItem(e, index)}
+                                />
+                            </div>
+                            {errors?.prescription?.items?.[index]?.notes && <p className="text-red-500 text-sm">{errors.prescription.items[index].notes}</p>}
                         </div>
                     ))}
 
@@ -165,7 +188,7 @@ export default function MedicalHistory({ initialData, handleCancel, handleSubmit
                 </div>
 
                 {/* Acciones */}
-                <div className="md:col-span-2 flex justify-between mt-6">
+                < div className="md:col-span-2 flex justify-between mt-6" >
                     <button type="button" onClick={onHandleCancel} className="btn-secondary">
                         Cancelar
                     </button>

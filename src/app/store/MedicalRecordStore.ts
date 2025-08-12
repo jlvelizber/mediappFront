@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { createJSONStorage, devtools } from "zustand/middleware";
 import { createMedicalRecord } from "../actions/medicalRecordActions";
-import { MedicalRecordFormDataInterface } from "../components";
+import { MedicalRecordFormDataInterface, PrescriptionItemError } from "../components";
 import { MedicalRecordInterface } from "../intefaces";
 
 export interface MedicalRecordStoreInterface {
@@ -29,12 +29,17 @@ const initialState: MedicalRecordFormDataInterface = {
         } // Assuming you want to add prescriptions here
     },
     errors: {
-        appoint_id: [],
-        cascade: [],
-        symptoms: [],
-        diagnosis: [],
-        treatment: [],
-        notes: [],
+        appointment_id: [] as string[],
+        cascade: [] as string[],
+        symptoms: [] as string[],
+        diagnosis: [] as string[],
+        treatment: [] as string[],
+        notes: [] as string[],
+        prescription: {
+            notes: [] as string[],
+            items: [] as PrescriptionItemError[]
+        }
+
     },
     error: "",
 };
@@ -53,12 +58,13 @@ export const createMedicalRecordSlice = (set: any, get: any): MedicalRecordStore
         prescription: {
             appointment_id: null,
             notes: "",
-            items: []
+            items: [],
         } // Assuming you want to add prescriptions here
     },
     isLoading: false,
     formManageMedicalRecord: initialState,
     addMedicalRecord: async (record: FormData): Promise<number> => {
+
         set({ isLoading: true }, false, "app:medicalRecord/loadingMedicalRecord");
         const response = await createMedicalRecord({} as MedicalRecordFormDataInterface, record);
         let medicalRecordId = 0;
@@ -69,10 +75,10 @@ export const createMedicalRecordSlice = (set: any, get: any): MedicalRecordStore
                 medicalRecordId = response.medicalRecord?.id ?? 0; // Retorna el ID del paciente creado o 0 si es undefined
             } else {
                 console.error("Unexpected response format", response);
-                set({ formManagePatient: { ...response as MedicalRecordFormDataInterface } }, false, "app:patient/errorAddPatient");
+                set({ formManageMedicalRecord: { ...response as MedicalRecordFormDataInterface } }, false, "app:patient/errorAddMedicalRecord");
             }
         }
-        set({ isLoading: false }, false, "app:patient/loadingAddPatient");
+        set({ isLoading: false }, false, "app:patient/loadingAddMedicalRecord");
         return medicalRecordId;
     },
     // 

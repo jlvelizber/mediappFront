@@ -9,8 +9,27 @@ export interface MedicalRecordFormInterface {
     handleSubmit: (formData: FormData) => void;
 }
 
+export interface PrescriptionItemError {
+    medication_name?: string[];
+    dosage?: string[];
+    frequency?: string[];
+    duration?: string[];
+    notes?: string[];
+}
+
 export interface MedicalRecordFormDataInterface {
     fields: MedicalRecordInterface,
-    errors: Record<string, string[]>,
+    errors: {
+        appointment_id?: string[],
+        cascade?: string[],
+        symptoms?: string[],
+        diagnosis?: string[],
+        treatment?: string[],
+        notes?: string[],
+        prescription?: {
+            notes?: string[],
+            items?: PrescriptionItemError[]
+        }
+    },
     error: string
 }
