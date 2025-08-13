@@ -6,6 +6,7 @@ export * from "./AppointmentForm";
 export * from "./AppointmentList";
 export * from "./AppointmentStatusBadge";
 export * from './AvailabilityList';
+export * from "./ConfirmationModal";
 export * from "./DeleteConfirmation";
 export * from "./DoctorDashboard";
 export * from "./EmptyState";
