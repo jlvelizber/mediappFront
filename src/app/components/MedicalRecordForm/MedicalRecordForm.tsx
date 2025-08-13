@@ -1,6 +1,6 @@
 import { PrescriptionItemInterface } from "@/app/intefaces";
 import { useMedicalRecordStore } from "@/app/store";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { MedicalRecordFormInterface } from "./MedicalRecordFormInterface";
 
 export default function MedicalHistory({ initialData, handleCancel, handleSubmit }: MedicalRecordFormInterface) {
@@ -35,7 +35,7 @@ export default function MedicalHistory({ initialData, handleCancel, handleSubmit
 
     const onHandleChantePrescriptionItem = (e: ChangeEvent<HTMLInputElement>, indexItem: number) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        e.target.value && setPrescriptionItems(prev => {
+        setPrescriptionItems(prev => {
             const newItems = [...prev];
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error 
@@ -43,6 +43,13 @@ export default function MedicalHistory({ initialData, handleCancel, handleSubmit
             return newItems;
         })
     }
+
+
+    useEffect(() => {
+        if (fields?.prescription?.items.length) {
+            setPrescriptionItems(fields.prescription.items);
+        }
+    }, [fields])
 
     return (
         <>
