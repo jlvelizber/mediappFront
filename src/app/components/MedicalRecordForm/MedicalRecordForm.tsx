@@ -3,7 +3,7 @@ import { useMedicalRecordStore } from "@/app/store";
 import { ChangeEvent, useEffect, useState } from "react";
 import { MedicalRecordFormInterface } from "./MedicalRecordFormInterface";
 
-export default function MedicalHistory({ initialData, handleCancel, handleSubmit }: MedicalRecordFormInterface) {
+export default function MedicalRecordForm({ initialData, handleCancel, handleSubmit }: MedicalRecordFormInterface) {
 
     const { formManageMedicalRecord } = useMedicalRecordStore()
 

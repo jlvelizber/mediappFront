@@ -34,5 +34,11 @@ export const messages = {
             fetching: "Cargando cita...",
             fetchingList: "Cargando lista de citas...",
         },
+        confirmation: {
+            title: "Confirmar finalización de cita",
+            message: "Una vez guardada, la cita pasará a estado 'Completada' y se enviarán las notificaciones correspondientes al paciente. Esta acción no se puede deshacer.",
+            confirmText: "Sí, guardar y enviar",
+            cancelText: "Cancelar",
+        }
     },
 };
