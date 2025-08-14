@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 const APP_NAME = process.env.NEXT_PUBLIC_TITLE || "Mediapp"; // Ajusta según tu backend.
 
+
 export default function Login() {
     const router = useRouter()
     const { setTitlePage } = useLayout();
@@ -31,6 +32,8 @@ export default function Login() {
             if (wasSuccess) router.push("/")
         } catch (error) {
             console.error("Error en el login:", error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
