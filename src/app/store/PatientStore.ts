@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { create } from "zustand";
 import { createJSONStorage, devtools } from "zustand/middleware";
-import { createPatient, getPatient, getPatientBasedOnAppointment, getPatientsByDoctorInSession, removePatient, updatePatient } from "../actions";
+import { createPatient, getPatient, getPatientBasedOnAppointment, getPatientHistory, getPatientsByDoctorInSession, removePatient, updatePatient } from "../actions";
 import { PatientFormDataInterface } from "../components";
 import { PatientInterface } from "../intefaces";
 
 export interface PatientStoreInterface {
     patient: PatientInterface;
     isLoading: boolean;
+    setIsLoading: (isLoading: boolean) => void;
     formManagePatient: PatientFormDataInterface;
     addPatient: (patient: FormData) => Promise<number>;
     getPatient: (id: number) => Promise<PatientInterface | null>;
@@ -16,7 +17,8 @@ export interface PatientStoreInterface {
     removePatient: (id: number) => Promise<boolean>;
     resetFormDataPatient: () => void;
     getPatientsByDoctorInSession: () => Promise<PatientInterface[]>;
-    getPatientBasedOnAppointment: (appointId: string) => Promise<PatientInterface | null>
+    getPatientBasedOnAppointment: (appointId: string) => Promise<PatientInterface | null>;
+    getPatientHistory: (id: number) => Promise<PatientInterface | null>;
     resetSlice: () => void;
 };
 
@@ -101,6 +103,7 @@ export const createPatientSlice = (set: any, get: any): PatientStoreInterface =>
     },
 
     getPatient: async (id: number): Promise<PatientInterface | null> => {
+        if (!id) return null;
         set({ isLoading: true }, false, "app:patient/loadingGetPatient");
         const response = await getPatient(id);
         set({ isLoading: false }, false, "app:patient/loadingGetPatient");
@@ -108,6 +111,7 @@ export const createPatientSlice = (set: any, get: any): PatientStoreInterface =>
         return response;
     },
     getPatientForEdit: async (id: number): Promise<PatientFormDataInterface | null> => {
+        if (!id) return null;
         set({ formManagePatient: { fields: {} } }, false, "app:patient/getPatientForEdit");
         const patient = await get().getPatient(id);
         if (!patient) return null;
@@ -116,6 +120,7 @@ export const createPatientSlice = (set: any, get: any): PatientStoreInterface =>
         return formData;
     },
     updatePatient: async (id: number, patient: FormData): Promise<number> => {
+        if (!id) return 0;
         set({ isLoading: true }, false, "app:patient/loadingUpdatePatient");
         const response = await updatePatient({} as PatientFormDataInterface, id, patient);
         let patientId = 0;
@@ -157,6 +162,15 @@ export const createPatientSlice = (set: any, get: any): PatientStoreInterface =>
         const patient = await getPatientBasedOnAppointment(appointId);
         if (!patient) return null;
         return patient;
+    },
+    getPatientHistory: async (id: number): Promise<PatientInterface | null> => {
+        if (!id) return null;
+        const patient = await getPatientHistory(id);
+        if (!patient) return null;
+        return patient;
+    },
+    setIsLoading: (isLoading: boolean) => {
+        set({ isLoading }, false, "app:patient/setIsLoading");
     },
     resetSlice: () => {
         set({

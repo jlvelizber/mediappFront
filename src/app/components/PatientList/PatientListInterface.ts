@@ -7,5 +7,6 @@ export interface PatientListInterface {
     actions: {
         onRemove: (e: MouseEvent<HTMLButtonElement>, patientId: number) => void,
         onEdit: (e: MouseEvent<HTMLButtonElement>, patientId: number) => void,
+        onView: (e: MouseEvent<HTMLButtonElement>, patientId: number) => void,
     }
 }

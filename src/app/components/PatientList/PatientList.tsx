@@ -1,11 +1,11 @@
 import { PatientInterface } from "@/app/intefaces";
-import { PencilIcon, TrashIcon } from "@primer/octicons-react";
+import { EyeIcon, PencilIcon, TrashIcon } from "@primer/octicons-react";
 import { EmptyState } from "../EmptyState";
 import { Loader } from "../Loader";
 import { Table } from "../Table";
 import { PatientListInterface } from "./PatientListInterface";
 
-export default function PatientList({ items, fetching, actions: { onRemove, onEdit } }: PatientListInterface) {
+export default function PatientList({ items, fetching, actions: { onRemove, onEdit, onView } }: PatientListInterface) {
     return (
         <Table headers={['Identificación', 'Nombre', 'Telf.', 'C. Electrónico', 'Acciones']} shadow>
             {fetching ? (<tr><td colSpan={5}><Loader onScreen={false} /></td></tr>) : ""}
@@ -26,6 +26,7 @@ export default function PatientList({ items, fetching, actions: { onRemove, onEd
                     </td>
                     <td className="px-6 py-2 flex justify-between mx-auto">
                         <button className="btn-secondary" aria-label="Editar" title={`Editar paciente ${patient.name}`} onClick={(e) => patient.id !== undefined && onEdit(e, patient.id)}> <PencilIcon /></button>
+                        <button className="btn-secondary" aria-label="Ver" title={`Ver paciente ${patient.name}`} onClick={(e) => patient.id !== undefined && onView(e, patient.id)}> <EyeIcon /></button>
                         <button className="btn-danger" aria-label="Eliminar" title={`Eliminar paciente ${patient.name}`} onClick={(e) => patient.id !== undefined && onRemove(e, patient.id)}> <TrashIcon /></button>
                     </td>
                 </tr>

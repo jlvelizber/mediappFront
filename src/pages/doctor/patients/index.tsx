@@ -105,7 +105,12 @@ export default function Patients() {
 
   const handleEdit = (e: MouseEvent<HTMLButtonElement>, patientId: number) => {
     e.preventDefault()
-    router.push(`/${user?.role}${routeNames.patients}/edit/${patientId}`)
+    router.push(`/${user?.role}${routeNames.patients}/${patientId}/edit`)
+  }
+
+  const handleView = (e: MouseEvent<HTMLButtonElement>, patientId: number) => {
+    e.preventDefault()
+    router.push(`/${user?.role}${routeNames.patients}/${patientId}/history`)
   }
 
 
@@ -169,7 +174,7 @@ export default function Patients() {
                   onChange={(e) => setSearch(e.target.value)}
                   className="mb-4 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary"
                 />
-                <PatientList items={patients} fetching={fetchingOnTable} actions={{ onEdit: handleEdit, onRemove: handleRemove }} />
+                <PatientList items={patients} fetching={fetchingOnTable} actions={{ onEdit: handleEdit, onRemove: handleRemove, onView: handleView }} />
                 {meta && <Paginator meta={meta} onPageChange={paginatePatientsOnTable} />}
               </>
             )}

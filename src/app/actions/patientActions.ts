@@ -105,3 +105,15 @@ export async function getPatientBasedOnAppointment(appointId: string): Promise<P
 }
 
 
+export async function getPatientHistory(id: number): Promise<PatientInterface> {
+    try {
+        const patient = await PatientService.getPatientHistory(id);
+        return patient;
+    } catch (error) {
+        console.error("Error al obtener el historial del paciente:", error);
+        throw error;
+    }
+}
+
+
+
