@@ -1,4 +1,4 @@
-import { DashboardLayout } from "@/app/components";
+import { DashboardLayout, DoctorDashboard } from "@/app/components";
 import { useLayout } from "@/app/context";
 import { useEffect } from "react";
 
@@ -12,6 +12,11 @@ export default function Index() {
   useEffect(() => setTitlePage(TITLE_PAGE), [setTitlePage])
 
   return (
-    <DashboardLayout>¡Bienvenidos Dosctores!  </DashboardLayout>
+    <DashboardLayout>
+      <div className="space-y-6 p-6">
+        ¡Bienvenidos Dosctores! <DoctorDashboard/>  
+
+      </div>
+    </DashboardLayout>
   )
 }
