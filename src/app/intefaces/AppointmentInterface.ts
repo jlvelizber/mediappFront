@@ -1,12 +1,14 @@
 import { PaginatorInterface } from "./PaginatorInterface";
+import { PatientInterface } from "./PatientInterface";
 
 export interface AppointmentInterface {
     id?: number,
-    patient_id: number | null,
-    doctor_id: number | null,
+    patient_id?: number | null,
+    doctor_id?: number | null,
     date_time: string,
-    status: string,
-    reason: string,
+    status?: string,
+    reason?: string,
+    patient?: PatientInterface,
     created_at?: string,
     updated_at?: string
 }
@@ -22,7 +24,12 @@ export interface AppointmentListItemInterface {
     date_time: string
 }
 
-export type AppointmentStatusInterface = "pending" | "confirmed" | "completed" | "cancelled";
+export enum AppointmentStatusEnum {
+    PENDING = "pending",
+    CONFIRMED = "confirmed",
+    COMPLETED = "completed",
+    CANCELLED = "cancelled",
+}
 
 
 export type AppointmentPaginationInterface = PaginatorInterface<AppointmentListItemInterface>

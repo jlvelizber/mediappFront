@@ -10,7 +10,7 @@ export default function AppointmentStatusBadge({ status, text }: AppointmentStat
     };
     return (
         <span
-            className={`inline-block text-xs font-medium px-2 py-1 border rounded-md ${styleMap[status]}`}
+            className={`inline-block text-xs font-medium px-2 py-1 border rounded-md ${styleMap[status as keyof typeof styleMap]}`}
         >
             {text}
         </span>

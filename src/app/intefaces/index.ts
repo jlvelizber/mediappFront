@@ -1,4 +1,5 @@
-export type { AppointmentInterface, AppointmentListItemInterface, AppointmentStatusInterface } from "./AppointmentInterface";
+export { AppointmentStatusEnum } from "./AppointmentInterface";
+export type { AppointmentInterface, AppointmentListItemInterface } from "./AppointmentInterface";
 export type { AuthInterface, UserInterface } from "./AuthInterface";
 export type { DefaultMessageResourceRemoved } from "./CommonInterface";
 export type { DoctorDashboardInfoInterface, WeeklyStat } from "./DashboardInterface";
