@@ -4,7 +4,9 @@ export interface DoctorDashboardInfoInterface {
     todayAppointments: number,
     totalPatients: number,
     weeklyStats: WeeklyStat,
-    nextAppointment: AppointmentInterface []
+    completedAppointments: number,
+    nextAppointment: AppointmentInterface[],
+    recentAppointments: AppointmentInterface[]
 }
 
 export interface WeeklyStat  {

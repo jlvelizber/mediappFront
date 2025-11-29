@@ -1,8 +1,21 @@
 import { AppointmentInterface, AppointmentStatusEnum } from "@/app/intefaces";
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { RecentAppointmentsProps } from "./RecentAppointmentsInterface";
 
 export const RecentAppointments: FC<RecentAppointmentsProps> = ({ appointments }) => {
+  const dateFormatter = useMemo(
+    () =>
+      new Intl.DateTimeFormat("es-ES", {
+        year: "numeric",
+        month: "short",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "UTC",
+      }),
+    []
+  );
+
   return (
     <div className="bg-white rounded-2xl shadow-sm p-4 mt-6">
       <h2 className="text-lg font-semibold mb-4 text-gray-800">Citas recientes</h2>
@@ -16,7 +29,7 @@ export const RecentAppointments: FC<RecentAppointmentsProps> = ({ appointments }
                   {a.patient?.lastname && ` ${a.patient?.lastname}`}
                 </p>
                 <p className="text-sm text-gray-500">
-                  {a.date_time ? new Date(a.date_time).toLocaleString() : ""}
+                  {a.date_time ? dateFormatter.format(new Date(`${a.date_time}Z`)) : ""}
                 </p>
               </div>
               <span

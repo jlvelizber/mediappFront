@@ -1,3 +1,3 @@
 export interface DashboardHeaderProps {
-    doctorName: string;
+    doctorName?: string;
 }  

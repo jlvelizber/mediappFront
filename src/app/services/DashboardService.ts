@@ -7,7 +7,7 @@ export const DashboardService = {
     getDoctorDashboardInfo : async () : Promise<DoctorDashboardInfoInterface | null> => {
         try {
             const response = await apiClient.get(`${DashboardService.route}`);
-            return response.data.data;
+            return response.data;
         } catch (error) {
             console.error("Error fetching Dashboard Data:", error);
             return null;

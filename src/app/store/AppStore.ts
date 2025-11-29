@@ -3,7 +3,7 @@ import { devtools } from "zustand/middleware";
 import { createAppointmentSlice } from "./AppointmentStore";
 import { createAuthStoreSlice } from "./AuthStore";
 import { createCalendarAppointmentSlice } from "./CalendarAppointmentStore";
-import { createDashboardStore } from "./DashboardStore";
+import { createDashboardStoreSlice } from "./DashboardStore";
 import { createMedicalRecordSlice } from "./MedicalRecordStore";
 import { createPatientSlice } from "./PatientStore";
 import { createToastSlice } from "./ToastStore";
@@ -16,7 +16,7 @@ const allResets = (set: unknown, get: unknown) => [
     createAuthStoreSlice(set, get).resetSlice,
     createCalendarAppointmentSlice(set, get).resetSlice,
     createMedicalRecordSlice(set, get).resetSlice,
-    createDashboardStore(set).resetSlice,
+    createDashboardStoreSlice(set, get).resetSlice,
 ];
 
 export const useAppStore = create()(

@@ -41,4 +41,7 @@ export const messages = {
             cancelText: "Cancelar",
         }
     },
+    dashboard: {
+        loading: "Cargando datos"
+    }
 };
