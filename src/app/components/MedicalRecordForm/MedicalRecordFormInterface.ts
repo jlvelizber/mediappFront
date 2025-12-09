@@ -7,6 +7,7 @@ export interface MedicalRecordFormInterface {
     };
     handleCancel: () => void;
     handleSubmit: (formData: FormData) => void;
+    onlyViewMode?: boolean;
 }
 
 export interface PrescriptionItemError {

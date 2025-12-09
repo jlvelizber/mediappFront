@@ -2,7 +2,7 @@ export { AppointmentStatusEnum } from "./AppointmentInterface";
 export type { AppointmentInterface, AppointmentListItemInterface } from "./AppointmentInterface";
 export type { AuthInterface, UserInterface } from "./AuthInterface";
 export type { DefaultMessageResourceRemoved } from "./CommonInterface";
-export type { DoctorDashboardInfoInterface, WeeklyStat } from "./DashboardInterface";
+export type { DoctorDashboardInfoInterface, WeeklyStat, ChartDataItem } from "./DashboardInterface";
 export type { DoctorAvailabilityInterface, DoctorInterface } from "./DoctorInterface";
 export type { MedicalRecordInterface } from "./MedicalRecordInterface";
 export type { Navigation, NavigationOption } from "./NavigationInterface";

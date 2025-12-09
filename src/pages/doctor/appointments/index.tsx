@@ -158,6 +158,11 @@ export default function AppointmentsPage() {
         addToast(deletedMessage, "success");
     };
 
+    const handleView = (e: MouseEvent<HTMLButtonElement>, appId: number, medicalRecordId: number | null) => {
+        e.preventDefault()
+        router.push(`/${user?.role}${routeNames.appointments}/${appId}/medical-record/${medicalRecordId}/show`);
+    }
+
 
     if (loading || isLoading) return <Loader message={messageOnLoader} />
     return (
@@ -198,7 +203,7 @@ export default function AppointmentsPage() {
                                             onChange={(e) => setSearch(e.target.value)}
                                             className="mb-4 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary"
                                         />
-                                        <AppointmentList items={appointments} fetching={fetchingOnTable} actions={{ onEdit: handleEdit, onRemove: handleRemove, onAttendAppointment: attendAppointment }} />
+                                        <AppointmentList items={appointments} fetching={fetchingOnTable} actions={{ onEdit: handleEdit, onRemove: handleRemove, onAttendAppointment: attendAppointment, onView: handleView }} />
                                         {meta && <Paginator meta={meta} onPageChange={paginateAppointmentsOnTable} />}
                                     </>
                                 )}

@@ -6,7 +6,13 @@ export interface DoctorDashboardInfoInterface {
     weeklyStats: WeeklyStat,
     completedAppointments: number,
     nextAppointment: AppointmentInterface[],
-    recentAppointments: AppointmentInterface[]
+    recentAppointments: AppointmentInterface[],
+    chartData: ChartDataItem[]
+}
+
+export interface ChartDataItem {
+    date: string,
+    total: number
 }
 
 export interface WeeklyStat  {

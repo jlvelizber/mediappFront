@@ -33,15 +33,13 @@ export const RecentAppointments: FC<RecentAppointmentsProps> = ({ appointments }
                 </p>
               </div>
               <span
-                className={`px-2 py-1 text-xs rounded-full ${
+                className={`px-4 py-1 text-xs rounded-full self-center ${
                   a.status === AppointmentStatusEnum.COMPLETED                   ? "bg-green-100 text-green-700"
                     : a.status === AppointmentStatusEnum.PENDING
                     ? "bg-yellow-100 text-yellow-700"
                     : "bg-gray-100 text-gray-700"
                 }`}
-              >
-                {a.status}
-              </span>
+              >{a.status_label}</span>
             </div>
           ))
         ) : (

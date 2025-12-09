@@ -3,13 +3,13 @@ import { messages } from "@/app/config";
 import { useAuth } from "@/app/context";
 import { PatientInterface } from "@/app/intefaces";
 import { routeNames } from "@/app/routes";
-import { useAppointmentStore, useMedicalRecordStore, usePatientStore, useToastStore } from "@/app/store";
+import { useAppointmentStore, useMedicalRecordStore, usePatientStore } from "@/app/store";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function MedicalHistory() {
   const TITLE_PAGE = "Cita";
-  const { loading: { fetching }, confirmation: confirmationMessagesModal, medicalRecordCreated: created } = messages.appointment;
+  const { loading: { fetching }, confirmation: confirmationMessagesModal } = messages.appointment;
   const [isOpenAlert, setIsOpenAlert] = useState<boolean>(false);
   const [formDataOnState, setFormDataOnState] = useState<FormData>(new FormData());
   const [messageOnLoader, setMessageOnLoader] = useState<string>(fetching);
@@ -18,7 +18,6 @@ export default function MedicalHistory() {
   const { getPatientBasedOnAppointment } = usePatientStore();
   const { isLoading: loadingMedicalRecord, addMedicalRecord } = useMedicalRecordStore()
   const [patient, setPatient] = useState<PatientInterface>({} as PatientInterface);
-  const { addToast } = useToastStore()
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const { user } = useAuth();
@@ -65,11 +64,7 @@ export default function MedicalHistory() {
    */
   const handleConfirmAddMedicalRecord = async () => {
     setIsOpenAlert(false);
-    const medicalRecordId = await addMedicalRecord(formDataOnState)
-    if (medicalRecordId) {
-      router.push(`/${user?.role}${routeNames.appointments}`);
-      addToast(created, "success");
-    }
+    await addMedicalRecord(formDataOnState)
   };
 
   if (isLoading || loadingMedicalRecord) return <Loader message={messageOnLoader} />
@@ -90,7 +85,7 @@ export default function MedicalHistory() {
             <h1 className="text-2xl font-bold mb-4">Citas médicas - {titlePage}</h1>
           </div>
           <PatientCard patient={patient} />
-          <MedicalRecordForm handleCancel={onHandleCancel} handleSubmit={onHandleSubmit} />
+          <MedicalRecordForm handleCancel={onHandleCancel} handleSubmit={onHandleSubmit} onlyViewMode={true}/>
         </div></PageWrapper>
     </DashboardLayout>
   )

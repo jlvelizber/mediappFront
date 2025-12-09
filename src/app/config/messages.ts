@@ -19,6 +19,7 @@ export const messages = {
     },
     appointment: {
         created: "Cita creada correctamente",
+        medicalRecordCreated: "Historial médico creado correctamente",
         updated: "Cita actualizada correctamente",
         deleted: "Cita eliminada correctamente",
         error: {

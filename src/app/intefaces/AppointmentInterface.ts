@@ -11,6 +11,7 @@ export interface AppointmentInterface {
     patient?: PatientInterface,
     created_at?: string,
     updated_at?: string
+    status_label?: string,
 }
 
 export interface AppointmentListItemInterface {
@@ -21,7 +22,8 @@ export interface AppointmentListItemInterface {
     status: string,
     status_label: string,
     duration_minutes: string,
-    date_time: string
+    date_time: string,
+    medical_record_id: number | null
 }
 
 export enum AppointmentStatusEnum {

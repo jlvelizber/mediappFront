@@ -23,7 +23,7 @@ export default function CreatePatient() {
     }
 
     const goEdit = (id: string) => {
-        router.replace(`/${user?.role}${routeNames.patients}/edit/${id}`);
+        router.replace(`/${user?.role}${routeNames.patients}/${id}/edit`);
     }
 
     const handleSubmit = async (formData: FormData) => {

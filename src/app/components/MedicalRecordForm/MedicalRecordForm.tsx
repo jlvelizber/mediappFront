@@ -3,7 +3,7 @@ import { useMedicalRecordStore } from "@/app/store";
 import { ChangeEvent, useEffect, useState } from "react";
 import { MedicalRecordFormInterface } from "./MedicalRecordFormInterface";
 
-export default function MedicalRecordForm({ initialData, handleCancel, handleSubmit }: MedicalRecordFormInterface) {
+export default function MedicalRecordForm({ initialData, handleCancel, handleSubmit, onlyViewMode = false }: MedicalRecordFormInterface) {
 
     const { formManageMedicalRecord } = useMedicalRecordStore()
 
@@ -65,6 +65,7 @@ export default function MedicalRecordForm({ initialData, handleCancel, handleSub
                         defaultValue={fields?.symptoms}
                         className={`input-field resize-none ${errors?.symptoms?.length ? '!border-red-500' : ''}`}
                         placeholder="Describa los síntomas del paciente..."
+                        disabled={onlyViewMode}
                     />
                     {errors?.symptoms && <p className="text-red-500 text-sm">{errors.symptoms}</p>}
                 </div>
@@ -78,6 +79,7 @@ export default function MedicalRecordForm({ initialData, handleCancel, handleSub
                         defaultValue={fields?.diagnosis}
                         className={`input-field resize-none ${errors?.diagnosis?.length ? '!border-red-500' : ''}`}
                         placeholder="Ingrese el diagnóstico clínico..."
+                        disabled={onlyViewMode}
                     />
                     {errors?.diagnosis && <p className="text-red-500 text-sm">{errors.diagnosis}</p>}
                 </div>
@@ -91,6 +93,7 @@ export default function MedicalRecordForm({ initialData, handleCancel, handleSub
                         defaultValue={fields?.treatment}
                         className={`input-field resize-none ${errors?.treatment?.length ? '!border-red-500' : ''}`}
                         placeholder="Describa el tratamiento indicado..."
+                        disabled={onlyViewMode}
                     />
                     {errors?.treatment && <p className="text-red-500 text-sm">{errors.treatment}</p>}
                 </div>
@@ -105,6 +108,7 @@ export default function MedicalRecordForm({ initialData, handleCancel, handleSub
                         className={`input-field resize-none ${errors?.notes?.length ? '!border-red-500' : ''}`}
                         placeholder="Ingrese notas adicionales..."
                         onChange={(e) => fields.notes = e.target.value}
+                        disabled={onlyViewMode}
                     />
                     {errors?.notes && <p className="text-red-500 text-sm">{errors.notes}</p>}
                 </div>
@@ -119,6 +123,7 @@ export default function MedicalRecordForm({ initialData, handleCancel, handleSub
                         rows={2}
                         defaultValue={fields?.prescription.notes}
                         className="input-field resize-none mb-4"
+                        disabled={onlyViewMode}
                     />
                     {errors?.prescription?.notes && <p className="text-red-500 text-sm">{errors.prescription.notes}</p>}
 
@@ -133,6 +138,7 @@ export default function MedicalRecordForm({ initialData, handleCancel, handleSub
                                     defaultValue={prescriptionItems[index]?.medication_name || fields?.prescription?.items?.[index]?.medication_name}
                                     onChange={(e) => onHandleChantePrescriptionItem(e, index)}
                                     className="input-field"
+                                    disabled={onlyViewMode}
                                 />
                                 {errors?.prescription?.items?.[index]?.medication_name && <p className="text-red-500 text-sm">{errors.prescription.items[index].medication_name}</p>}
                             </div>
@@ -145,6 +151,7 @@ export default function MedicalRecordForm({ initialData, handleCancel, handleSub
                                     defaultValue={prescriptionItems[index]?.dosage || fields?.prescription?.items?.[index]?.dosage}
                                     className="input-field"
                                     onChange={(e) => onHandleChantePrescriptionItem(e, index)}
+                                    disabled={onlyViewMode}
                                 />
 
                                 {errors?.prescription?.items?.[index]?.dosage && <p className="text-red-500 text-sm">{errors.prescription.items[index].dosage}</p>}
@@ -157,6 +164,7 @@ export default function MedicalRecordForm({ initialData, handleCancel, handleSub
                                     defaultValue={prescriptionItems[index]?.frequency || fields?.prescription?.items?.[index]?.frequency}
                                     className="input-field"
                                     onChange={(e) => onHandleChantePrescriptionItem(e, index)}
+                                    disabled={onlyViewMode}
                                 />
                                 {errors?.prescription?.items?.[index]?.frequency && <p className="text-red-500 text-sm">{errors.prescription.items[index].frequency}</p>}
                             </div>
@@ -168,6 +176,7 @@ export default function MedicalRecordForm({ initialData, handleCancel, handleSub
                                     defaultValue={prescriptionItems[index]?.duration || fields?.prescription?.items?.[index]?.duration}
                                     className="input-field"
                                     onChange={(e) => onHandleChantePrescriptionItem(e, index)}
+                                    disabled={onlyViewMode}
                                 />
                                 {errors?.prescription?.items?.[index]?.duration && <p className="text-red-500 text-sm">{errors.prescription.items[index].duration}</p>}
                             </div>
@@ -179,12 +188,13 @@ export default function MedicalRecordForm({ initialData, handleCancel, handleSub
                                     defaultValue={prescriptionItems[index]?.notes || fields?.prescription?.items?.[index]?.notes}
                                     className="input-field"
                                     onChange={(e) => onHandleChantePrescriptionItem(e, index)}
+                                    disabled={onlyViewMode}
                                 />
                             </div>
                             {errors?.prescription?.items?.[index]?.notes && <p className="text-red-500 text-sm">{errors.prescription.items[index].notes}</p>}
                         </div>
                     ))}
-
+                    {!onlyViewMode && (
                     <button
                         type="button"
                         onClick={handleAddItem}
@@ -192,16 +202,19 @@ export default function MedicalRecordForm({ initialData, handleCancel, handleSub
                     >
                         + Añadir Medicamento
                     </button>
+                    )}
                 </div>
 
                 {/* Acciones */}
                 < div className="md:col-span-2 flex justify-between mt-6" >
-                    <button type="button" onClick={onHandleCancel} className="btn-secondary">
+                    <button type="button" onClick={onHandleCancel} className="btn-secondary"    >
                         Cancelar
                     </button>
-                    <button type="submit" className="btn-primary">
-                        Guardar
-                    </button>
+                    {!onlyViewMode && (         
+                        <button type="submit" className="btn-primary">
+                            Guardar
+                        </button>
+                    )}
                 </div>
             </form>
         </>

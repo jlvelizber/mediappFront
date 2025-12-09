@@ -1,5 +1,5 @@
 import { AppointmentListItemInterface, AppointmentStatusInterface } from "@/app/intefaces";
-import { PencilIcon, TrashIcon, XCircleIcon } from "@primer/octicons-react";
+import { EyeIcon, PencilIcon, TrashIcon, XCircleIcon } from "@primer/octicons-react";
 import { AppointmentChangeStatus } from "../AppointmentChangeStatus";
 import AppointmentStatusBadge from "../AppointmentStatusBadge";
 import { EmptyState } from "../EmptyState";
@@ -7,7 +7,7 @@ import { Loader } from "../Loader";
 import { Table } from "../Table";
 import { AppointmentListInterface } from "./AppointmentListInterface";
 
-export default function AppointmentList({ items, fetching, actions: { onRemove, onEdit, onAttendAppointment } }: AppointmentListInterface) {
+export default function AppointmentList({ items, fetching, actions: { onRemove, onEdit, onAttendAppointment, onView } }: AppointmentListInterface) {
 
     const mustShowEditBtn = (status: string) => (status != "completed" && status != "cancelled");
 
@@ -45,7 +45,7 @@ export default function AppointmentList({ items, fetching, actions: { onRemove, 
                             </>)}
 
                             {appointment.status === "completed" && (
-                                <button className="btn-completed flex items-center gap-2  text-white text-xs px-3 py-1 rounded-md" aria-label="Ver" title={`Ver cita ${appointment.id}`} onClick={(e) => appointment.id !== undefined && onRemove(e, appointment.id)}> <TrashIcon className="w-4 h-4" /> Ver</button>
+                                <button className="btn-completed flex items-center gap-2  text-white text-xs px-3 py-1 rounded-md" aria-label="Ver" title={`Ver cita ${appointment.id}`} onClick={(e) => appointment.id !== undefined && onView(e, appointment.id, appointment.medical_record_id)}> <EyeIcon className="w-4 h-4" /> Ver</button>
                             )}
 
                         </>
