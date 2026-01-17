@@ -10,7 +10,8 @@ export interface PatientInterface {
     phone?: string,
     address?: string,
     dob?: string,
-    gender?: PatientGenderEnum
+    gender?: PatientGenderEnum,
+    age?: number
 }
 
 export type PatientPaginationInterface = PaginatorInterface<PatientInterface>

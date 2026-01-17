@@ -1,6 +1,7 @@
 import { PrescriptionItemInterface } from "@/app/intefaces";
 import { useMedicalRecordStore } from "@/app/store";
 import { ChangeEvent, useEffect, useState } from "react";
+import { RecipeTable } from "../RecipeTable";
 import { MedicalRecordFormInterface } from "./MedicalRecordFormInterface";
 
 export default function MedicalRecordForm({ initialData, handleCancel, handleSubmit, onlyViewMode = false }: MedicalRecordFormInterface) {
@@ -34,7 +35,6 @@ export default function MedicalRecordForm({ initialData, handleCancel, handleSub
     };
 
     const onHandleChantePrescriptionItem = (e: ChangeEvent<HTMLInputElement>, indexItem: number) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         setPrescriptionItems(prev => {
             const newItems = [...prev];
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -42,6 +42,10 @@ export default function MedicalRecordForm({ initialData, handleCancel, handleSub
             newItems[indexItem][e.target.name] = e.target.value;
             return newItems;
         })
+    }
+
+    const onHandleRemoveItem = (index: number) => {
+        setPrescriptionItems((prev) => prev.filter((_, i) => i !== index));
     }
 
 
@@ -127,73 +131,8 @@ export default function MedicalRecordForm({ initialData, handleCancel, handleSub
                     />
                     {errors?.prescription?.notes && <p className="text-red-500 text-sm">{errors.prescription.notes}</p>}
 
-                    {/* Items de la receta */}
-                    {prescriptionItems.map((item, index) => (
-                        <div key={index} className="grid md:grid-cols-5 gap-2 mb-2">
-                            <div>
-                                <input
-                                    type="text"
-                                    placeholder="Medicamento"
-                                    name="medication_name"
-                                    defaultValue={prescriptionItems[index]?.medication_name || fields?.prescription?.items?.[index]?.medication_name}
-                                    onChange={(e) => onHandleChantePrescriptionItem(e, index)}
-                                    className="input-field"
-                                    disabled={onlyViewMode}
-                                />
-                                {errors?.prescription?.items?.[index]?.medication_name && <p className="text-red-500 text-sm">{errors.prescription.items[index].medication_name}</p>}
-                            </div>
-                            <div>
-
-                                <input
-                                    type="text"
-                                    placeholder="Dosis"
-                                    name="dosage"
-                                    defaultValue={prescriptionItems[index]?.dosage || fields?.prescription?.items?.[index]?.dosage}
-                                    className="input-field"
-                                    onChange={(e) => onHandleChantePrescriptionItem(e, index)}
-                                    disabled={onlyViewMode}
-                                />
-
-                                {errors?.prescription?.items?.[index]?.dosage && <p className="text-red-500 text-sm">{errors.prescription.items[index].dosage}</p>}
-                            </div>
-                            <div>
-                                <input
-                                    type="text"
-                                    placeholder="Frecuencia"
-                                    name="frequency"
-                                    defaultValue={prescriptionItems[index]?.frequency || fields?.prescription?.items?.[index]?.frequency}
-                                    className="input-field"
-                                    onChange={(e) => onHandleChantePrescriptionItem(e, index)}
-                                    disabled={onlyViewMode}
-                                />
-                                {errors?.prescription?.items?.[index]?.frequency && <p className="text-red-500 text-sm">{errors.prescription.items[index].frequency}</p>}
-                            </div>
-                            <div>
-                                <input
-                                    type="text"
-                                    placeholder="Duración"
-                                    name="duration"
-                                    defaultValue={prescriptionItems[index]?.duration || fields?.prescription?.items?.[index]?.duration}
-                                    className="input-field"
-                                    onChange={(e) => onHandleChantePrescriptionItem(e, index)}
-                                    disabled={onlyViewMode}
-                                />
-                                {errors?.prescription?.items?.[index]?.duration && <p className="text-red-500 text-sm">{errors.prescription.items[index].duration}</p>}
-                            </div>
-                            <div>
-                                <input
-                                    type="text"
-                                    placeholder="Notas"
-                                    name="notes"
-                                    defaultValue={prescriptionItems[index]?.notes || fields?.prescription?.items?.[index]?.notes}
-                                    className="input-field"
-                                    onChange={(e) => onHandleChantePrescriptionItem(e, index)}
-                                    disabled={onlyViewMode}
-                                />
-                            </div>
-                            {errors?.prescription?.items?.[index]?.notes && <p className="text-red-500 text-sm">{errors.prescription.items[index].notes}</p>}
-                        </div>
-                    ))}
+                    <RecipeTable items={prescriptionItems} onHandleChantePrescriptionItem={onHandleChantePrescriptionItem} onHandleRemoveItem={onHandleRemoveItem} onlyViewMode={onlyViewMode} errors={errors} />
+                       
                     {!onlyViewMode && (
                     <button
                         type="button"

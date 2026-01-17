@@ -7,7 +7,7 @@ import { PatientListInterface } from "./PatientListInterface";
 
 export default function PatientList({ items, fetching, actions: { onRemove, onEdit, onView } }: PatientListInterface) {
     return (
-        <Table headers={['Identificación', 'Nombre', 'Telf.', 'C. Electrónico', 'Acciones']} shadow>
+        <Table headers={['Identificación', 'Nombre', 'Edad', 'Telf.', 'C. Electrónico', 'Acciones']} shadow>
             {fetching ? (<tr><td colSpan={5}><Loader onScreen={false} /></td></tr>) : ""}
             {!fetching && !items.length ? <tr> <td colSpan={5}> < EmptyState /></td> </tr> : ""}
             {!fetching && items.map((patient: PatientInterface) => (
@@ -17,6 +17,9 @@ export default function PatientList({ items, fetching, actions: { onRemove, onEd
                     </td>
                     <td className="px-6 py-2 text-gray-700 w-6/12">
                         <span className="font-medium"> {patient.name} </span>
+                    </td>
+                    <td className="px-6 py-2 text-gray-700 w-1/12">
+                        <span className="font-medium"> {patient.age} </span>
                     </td>
                     <td className="px-6 py-2">
                         {patient.phone}

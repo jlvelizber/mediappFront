@@ -23,6 +23,7 @@ export * from "./PatientHistoryTabs";
 export * from "./PatientList";
 export * from "./PatientsSummary";
 export * from "./RecentAppointments";
+export * from "./RecipeTable";
 export * from "./Sidebar";
 export * from "./StatsCard";
 export * from "./Table";

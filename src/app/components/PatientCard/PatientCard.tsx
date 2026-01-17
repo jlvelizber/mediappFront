@@ -10,7 +10,7 @@ export default function PatientCard({ patient }: PatientCardInterface) {
                 <div><strong>Email:</strong> {patient?.email}</div>
                 <div><strong>Teléfono:</strong> {patient?.phone}</div>
                 <div><strong>Dirección:</strong> {patient?.address}</div>
-                <div><strong>Fecha de Nacimiento:</strong> {new Date(patient?.dob ? patient.dob : "").toLocaleDateString()}</div>
+                <div><strong>Fecha de Nacimiento:</strong> {new Date(patient?.dob ? patient.dob : "").toLocaleDateString()} - <strong>Edad:</strong> {patient?.age} años de edad</div>
             </div>
         </div>
     );
