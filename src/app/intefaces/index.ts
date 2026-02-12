@@ -8,5 +8,6 @@ export type { MedicalRecordInterface } from "./MedicalRecordInterface";
 export type { Navigation, NavigationOption } from "./NavigationInterface";
 export type { Meta, PaginatorInterface } from "./PaginatorInterface";
 export type { PatientInterface, PatientPaginationInterface } from "./PatientInterface";
+export type { PatientHistoryInterface, AppointmentWithMedicalRecord } from "./PatientHistoryInterface";
 export type { PrescriptionItemInterface } from "./PrescriptionInterface";
 
