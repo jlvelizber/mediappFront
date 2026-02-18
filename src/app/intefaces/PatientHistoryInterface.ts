@@ -11,6 +11,8 @@ export interface AppointmentWithMedicalRecord extends AppointmentInterface {
     date?: string;
     time?: string;
     status_label?: string;
+    duration_minutes?: number | string;
+    has_prescription?: boolean;
 }
 
 
