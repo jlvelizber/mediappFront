@@ -1,7 +1,9 @@
 import { useAuth } from "@/app/context";
+import { useDownloadFile } from "@/app/hooks";
 import { AppointmentStatusEnum, AppointmentWithMedicalRecord } from "@/app/intefaces";
 import { routeNames } from "@/app/routes";
-import { CalendarIcon, ClockIcon, StopwatchIcon } from "@primer/octicons-react";
+import { AppointmentService } from "@/app/services/AppointmentService";
+import { CalendarIcon, ClockIcon, DownloadIcon, StopwatchIcon } from "@primer/octicons-react";
 import { useRouter } from "next/navigation";
 import AppointmentStatusBadge from "../AppointmentStatusBadge";
 
@@ -12,7 +14,17 @@ interface AppointmentHistoryItemProps {
 export default function AppointmentHistoryItem({ appointment }: AppointmentHistoryItemProps) {
     const router = useRouter();
     const { user } = useAuth();
+    const { download, isDownloading } = useDownloadFile();
     const hasPrescription = appointment.has_prescription;
+
+    const handleDownloadPdf = () => {
+        const id = appointment.id;
+        if (id == null) return;
+        download(async () => {
+            const blob = await AppointmentService.downloadPrescriptionPdf(id);
+            return { blob, filename: `receta_cita_${id}.pdf` };
+        });
+    };
     return (
         <article className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow p-4 sm:p-6">
             {/* Título de contexto: identifica la cita de un vistazo */}
@@ -80,14 +92,19 @@ export default function AppointmentHistoryItem({ appointment }: AppointmentHisto
                         Ver Detalle
                     </button>
                     {hasPrescription && (
-                        <button
-                            type="button"
-                            onClick={() => router.push(`/${user?.role}${routeNames.appointments}/${appointment.id}/prescription/detail`)}
-                            className="px-4 py-2 text-white bg-primary rounded-lg shadow-sm hover:bg-primary-dark disabled:opacity-50 text-xs"
-                            aria-label="Ver Prescripción de esta cita"
-                        >
-                            Ver Prescripción
-                        </button>
+                        <>
+                          
+                            <button
+                                type="button"
+                                onClick={handleDownloadPdf}
+                                disabled={isDownloading}
+                                className="px-4 py-2 border border-primary text-primary rounded-lg shadow-sm hover:bg-primary/10 disabled:opacity-50 text-xs inline-flex items-center gap-1.5"
+                                aria-label="Descargar receta en PDF"
+                            >
+                                <DownloadIcon className="w-4 h-4" />
+                                {isDownloading ? "Descargando…" : "Descargar Prescripción"}
+                            </button>
+                        </>
                     )}
                 </div>
 

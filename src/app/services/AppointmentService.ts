@@ -90,5 +90,15 @@ export const AppointmentService = {
             }
         });
         return await response.data.data;
-    }
-}
+    },
+
+    /**
+     * Descarga el PDF de la prescripción de una cita (genera el PDF, dispara el evento de envío por correo y devuelve el archivo).
+     */
+    downloadPrescriptionPdf: async (appointmentId: number): Promise<Blob> => {
+        const response = await apiClient.get(`${AppointmentService.route}/${appointmentId}/prescription/download`, {
+            responseType: "blob",
+        });
+        return response.data as Blob;
+    },
+};
