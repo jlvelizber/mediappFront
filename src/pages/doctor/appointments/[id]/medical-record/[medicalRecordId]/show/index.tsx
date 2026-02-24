@@ -1,8 +1,10 @@
 import { DashboardLayout, Loader, MedicalRecordForm, MedicalRecordFormDataInterface, PageWrapper, PatientCard } from "@/app/components";
 import { useAuth } from "@/app/context";
+import { useDownloadFile } from "@/app/hooks";
 import { AppointmentInterface, PatientInterface } from "@/app/intefaces";
 import { routeNames } from "@/app/routes";
-import { useAppointmentStore } from "@/app/store";
+import { AppointmentService } from "@/app/services/AppointmentService";
+import { useAppointmentStore, useToastStore } from "@/app/store";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -14,6 +16,9 @@ export default function MedicalHistory() {
   // const [patient, setPatient] = useState<PatientInterface | null>(null);
   // const { isLoading, setIsLoading, showDetailMedicalRecord } = useMedicalRecordStore();
   const { getAppointment, isLoading, setIsLoading } = useAppointmentStore();
+  const { addToast } = useToastStore();
+  const { download, isDownloading } = useDownloadFile();
+  const [isResending, setIsResending] = useState(false);
   // const { getPatientBasedOnAppointment } = usePatientStore();
   const params = useParams<{ id: string; medicalRecordId: string }>();
   const router = useRouter();
@@ -59,6 +64,27 @@ export default function MedicalHistory() {
     router.push(`/${user?.role}${routeNames.appointments}`);
   };
 
+  const handleDownloadPrescription = async () => {
+    if (!appointment?.id) return;
+    await download(async () => {
+      const blob = await AppointmentService.downloadPrescriptionPdf(appointment.id as number);
+      return { blob, filename: `receta_cita_${appointment.id}.pdf` };
+    });
+  };
+
+  const handleResendPrescription = async () => {
+    if (!appointment?.id) return;
+    setIsResending(true);
+    try {
+      const message = await AppointmentService.resendPrescriptionToPatient(appointment.id as number);
+      addToast(message, "success");
+    } catch {
+      addToast("No se pudo reenviar la receta al paciente.", "error");
+    } finally {
+      setIsResending(false);
+    }
+  };
+
   const medicalRecordFormData: MedicalRecordFormDataInterface = {
     fields: {
       id: appointment?.medical_record?.id,
@@ -86,6 +112,27 @@ export default function MedicalHistory() {
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-2xl font-bold">Cita médica atendida{titlePage !== TITLE_PAGE ? ` - ${titlePage}` : ""}</h1>
           </div>
+
+          {appointment?.prescription && (
+            <div className="flex flex-wrap gap-2 mb-4">
+              <button
+                type="button"
+                onClick={handleDownloadPrescription}
+                disabled={isDownloading}
+                className="btn-secondary disabled:opacity-50"
+              >
+                {isDownloading ? "Descargando receta..." : "Descargar receta"}
+              </button>
+              <button
+                type="button"
+                onClick={handleResendPrescription}
+                disabled={isResending}
+                className="btn-primary disabled:opacity-50"
+              >
+                {isResending ? "Reenviando..." : "Reenviar receta al paciente"}
+              </button>
+            </div>
+          )}
 
           {/* Datos de la cita */}
           {appointment && (

@@ -93,12 +93,20 @@ export const AppointmentService = {
     },
 
     /**
-     * Descarga el PDF de la prescripción de una cita (genera el PDF, dispara el evento de envío por correo y devuelve el archivo).
+     * Descarga el PDF de la prescripción de una cita (genera el PDF y devuelve el archivo).
      */
     downloadPrescriptionPdf: async (appointmentId: number): Promise<Blob> => {
         const response = await apiClient.get(`${AppointmentService.route}/${appointmentId}/prescription/download`, {
             responseType: "blob",
         });
         return response.data as Blob;
+    },
+
+    /**
+     * Reenvía la prescripción de una cita al paciente por los canales configurados.
+     */
+    resendPrescriptionToPatient: async (appointmentId: number): Promise<string> => {
+        const response = await apiClient.post(`${AppointmentService.route}/${appointmentId}/prescription/resend`);
+        return response.data?.message ?? "Receta reenviada.";
     },
 };
