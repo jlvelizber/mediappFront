@@ -20,7 +20,7 @@ export default function MedicalRecordForm({ initialData, handleCancel, handleSub
         const formData = new FormData(event.currentTarget);
         // Agregar los items de la receta al FormData
         formData.append("prescription.items", JSON.stringify(prescriptionItems));
-        handleSubmit(formData);
+        if(handleSubmit) handleSubmit(formData);
     };
 
     const handleAddItem = () => {

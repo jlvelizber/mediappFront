@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { createJSONStorage, devtools } from "zustand/middleware";
-import { createMedicalRecord } from "../actions/medicalRecordActions";
+import { createMedicalRecord, getMedicalRecordById } from "../actions/medicalRecordActions";
 import { MedicalRecordFormDataInterface, PrescriptionItemError } from "../components";
 import { MedicalRecordInterface } from "../intefaces";
 
@@ -10,6 +10,8 @@ export interface MedicalRecordStoreInterface {
     formManageMedicalRecord: MedicalRecordFormDataInterface;
     addMedicalRecord: (record: FormData) => Promise<number>;
     getMedicalRecord: (id: number) => Promise<MedicalRecordInterface | null>;
+    showMedicalRecod: (id: number) => Promise<MedicalRecordInterface | null>;
+    showDetailMedicalRecord: (medicalRecordId: string) => Promise<MedicalRecordInterface | null>;
     setIsLoading: (loading: boolean) => void;
     resetSlice: () => void;
 }
@@ -46,7 +48,7 @@ const initialState: MedicalRecordFormDataInterface = {
 
 
 // Slice for the medical record state
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const createMedicalRecordSlice = (set: any, get: any): MedicalRecordStoreInterface => ({
     medicalRecord: {
         id: undefined,
@@ -80,11 +82,39 @@ export const createMedicalRecordSlice = (set: any, get: any): MedicalRecordStore
         set({ isLoading: false }, false, "app:patient/loadingAddMedicalRecord");
         return medicalRecordId;
     },
-    // 
-    getMedicalRecord: async (id: number) => {
-        console.log("Fetching medical record with ID:", id);
-        // Implementation for fetching a medical record by ID
-        return null; // Placeholder return value
+    showMedicalRecod: async(id: number) : Promise<MedicalRecordInterface | null> => {
+        return get().getMedicalRecord(id);
+    },
+    showDetailMedicalRecord: async (medicalRecordId: string): Promise<MedicalRecordInterface | null> => {
+        const id = Number(medicalRecordId);
+        if (!id) return null;
+        const record = await getMedicalRecordById(id);
+        if (!record) return null;
+        set({
+            medicalRecord: record,
+            formManageMedicalRecord: {
+                ...initialState,
+                fields: {
+                    id: record.id,
+                    appointment_id: record.appointment_id,
+                    symptoms: record.symptoms ?? "",
+                    diagnosis: record.diagnosis ?? "",
+                    treatment: record.treatment ?? "",
+                    notes: record.notes ?? "",
+                    prescription: record.prescription ?? {
+                        appointment_id: record.appointment_id,
+                        notes: "",
+                        items: [],
+                    },
+                },
+            },
+        }, false, "app:medicalRecord/showDetailMedicalRecord");
+        return record;
+    },
+    getMedicalRecord: async (id: number): Promise<MedicalRecordInterface | null> => {
+        const record = await getMedicalRecordById(id);
+        if (record) set({ medicalRecord: record }, false, "app:medicalRecord/getMedicalRecord");
+        return record;
     },
     setIsLoading: (loading: boolean) => {
         set({ isLoading: loading });

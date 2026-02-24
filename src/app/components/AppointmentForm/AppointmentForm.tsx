@@ -23,6 +23,15 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
         }
     }, [fields]);
 
+    useEffect(() => {
+        if (fields?.patient_id || typeof fields?.patient !== "string" || !patients.length) return;
+        const fullName = fields.patient.trim().toLowerCase();
+        const matchedPatient = patients.find((patient) => `${patient.name} ${patient.lastname}`.trim().toLowerCase() === fullName);
+        if (matchedPatient?.id) {
+            setPatientId(String(matchedPatient.id));
+        }
+    }, [fields?.patient, fields?.patient_id, patients]);
+
 
     const onHandleSubmit = (e: FormEvent) => {
         e.preventDefault();
@@ -41,7 +50,7 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
                 {/* Paciente */}
                 <div className="col-span-1">
                     <label className="block text-sm font-medium text-gray-700">Paciente</label>
-                    <select name="patient_id" className={`input-field ${errors?.patient_id?.length ? '!border-red-500' : ''}`} defaultValue={fields?.patient_id ? fields?.patient_id : patientId} onChange={onHandleChangePatient}>
+                    <select name="patient_id" className={`input-field ${errors?.patient_id?.length ? '!border-red-500' : ''}`} defaultValue={fields?.patient_id ?? patientId ?? ""} onChange={onHandleChangePatient}>
                         <option value="">Seleccione un paciente</option>
                         {patients.map((patient) => (
                             <option key={patient.id} value={patient.id}>

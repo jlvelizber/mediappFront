@@ -6,7 +6,7 @@ export interface MedicalRecordFormInterface {
         patient: PatientInterface
     };
     handleCancel: () => void;
-    handleSubmit: (formData: FormData) => void;
+    handleSubmit?: (formData: FormData) => void;
     onlyViewMode?: boolean;
 }
 

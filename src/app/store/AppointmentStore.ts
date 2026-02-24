@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { createAppointment, getAppointment, removeAppointment, updateAppointment, updateAppointmentStatus } from "../actions";
 import { AppointmentFormDataInterface } from "../components";
-import { AppointmentInterface, AppointmentStatusInterface } from "../intefaces";
+import { AppointmentInterface, AppointmentStatusEnum } from "../intefaces";
 
 export interface AppointmentStoreInterface {
     appointment: AppointmentInterface;
@@ -13,11 +13,12 @@ export interface AppointmentStoreInterface {
     addAppointment: (appointment: FormData) => Promise<number>;
     resetFormDataAppointment: () => void;
     getAppointmentForEdit: (id: number) => Promise<AppointmentFormDataInterface | null>;
+    getAppointmentDetail: (id: number) => Promise<void>;
     updateAppointment: (id: number, appointment: FormData) => Promise<number>;
     getAppointment: (id: number) => Promise<AppointmentInterface | null>;
     resetSlice: () => void;
     removeAppointment: (id: number) => Promise<boolean>;
-    updateStateAppointment: (id: number, status: AppointmentStatusInterface, mustUpdateList?: boolean) => Promise<void>;
+    updateStateAppointment: (id: number, status: AppointmentStatusEnum, mustUpdateList?: boolean) => Promise<void>;
 }
 
 
@@ -95,6 +96,9 @@ export const createAppointmentSlice = (set: any, get: any): AppointmentStoreInte
         if (!response) return null;
         return response;
     },
+    getAppointmentDetail: async( id: number) : Promise<void> => {
+        console.log(id)
+    },
     updateAppointment: async (id: number, appointment: FormData): Promise<number> => {
         set({ isLoading: true }, false, "app:appointment/loadingUpdateAppointment");
         const response = await updateAppointment({} as AppointmentFormDataInterface, id, appointment);
@@ -127,7 +131,7 @@ export const createAppointmentSlice = (set: any, get: any): AppointmentStoreInte
     resetSlice: () => {
         set({ appointment: { ...formInitialState } }, false, "app:appointment/resetSlice");
     },
-    updateStateAppointment: async (id: number, status: AppointmentStatusInterface, mustUpdateList): Promise<void> => {
+    updateStateAppointment: async (id: number, status: AppointmentStatusEnum, mustUpdateList): Promise<void> => {
         set({ isLoading: true }, false, "app:appointment/loadingUpdateStateAppointment");
         try {
             const response = await updateAppointmentStatus(id, status);

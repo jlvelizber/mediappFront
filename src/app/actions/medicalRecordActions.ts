@@ -3,6 +3,15 @@ import { MedicalRecordFormDataInterface } from "../components";
 import { MedicalRecordInterface } from "../intefaces";
 import { MedicalRecordService } from "../services/MedicalRecordService";
 
+export async function getMedicalRecordById(id: number): Promise<MedicalRecordInterface | null> {
+    try {
+        return await MedicalRecordService.getMedicalRecord(id);
+    } catch (error) {
+        console.error("Error al obtener el expediente médico:", error);
+        return null;
+    }
+}
+
 export async function createMedicalRecord(prevState: MedicalRecordFormDataInterface, formData: FormData): Promise<MedicalRecordFormDataInterface | { success: boolean; medicalRecord: MedicalRecordInterface }> {
     // Convertir FormData a un objeto
     const entries = Object.fromEntries(formData.entries()) as unknown as MedicalRecordInterface;
