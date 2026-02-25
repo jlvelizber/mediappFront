@@ -15,7 +15,7 @@ export default function CreateAppointment() {
     const { user } = useAuth();
     const { setTitlePage } = useLayout();
     const { getPatientsByDoctorInSession } = usePatientStore();
-    const { isLoading, setIsLoading, resetFormDataAppointment, getAppointmentForEdit, updateAppointment, removeAppointment } = useAppointmentStore();
+    const { isLoading, resetFormDataAppointment, getAppointmentForEdit, updateAppointment, removeAppointment } = useAppointmentStore();
     const { addToast } = useToastStore();
     const [messageOnLoader, setMessageOnLoader] = useState<string>(fetching);
     const [flowDelete, setFlowDelete] = useState<{ isOpenDeleteConfirmation: boolean, appId: number }>({
@@ -62,10 +62,7 @@ export default function CreateAppointment() {
     }
 
     const handleCancel = () => {
-        setIsLoading(true);
         goToList();
-        resetFormDataAppointment();
-        setIsLoading(false);
     }
 
     const goEdit = (id: string) => {
