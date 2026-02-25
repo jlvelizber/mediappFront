@@ -53,7 +53,7 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
                     <select name="patient_id" className={`input-field ${errors?.patient_id?.length ? '!border-red-500' : ''}`} defaultValue={fields?.patient_id ?? patientId ?? ""} onChange={onHandleChangePatient}>
                         <option value="">Seleccione un paciente</option>
                         {patients.map((patient) => (
-                            <option key={patient.id} value={patient.id}>
+                            <option key={patient.id} value={patient.id} selected={patient.id === fields?.patient_id}>
                                 {`${patient.name} ${patient.lastname}`}
                             </option>
                         ))}

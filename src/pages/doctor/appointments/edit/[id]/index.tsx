@@ -29,17 +29,8 @@ export default function CreateAppointment() {
     });
     const params = useParams<{ id: string }>();
 
-    useEffect(() => {
-        if (params) {
-            // Aquí puedes realizar la lógica para obtener el paciente por ID
-            // Por ejemplo, podrías llamar a una función de tu store o hacer una solicitud a la API
-            getAppointmentForEdit(params.id as unknown as number);
-        }
-    }, [params])
-
-
+  
     const loadDependencies = async () => {
-        setIsLoading(true);
         Promise.all([
             getPatientsByDoctorInSession(),
         ]).then((res) => {
@@ -47,7 +38,6 @@ export default function CreateAppointment() {
                 patients: res[0] as unknown as PatientInterface[],
             });
 
-            setIsLoading(false);
         })
     }
 
@@ -59,14 +49,23 @@ export default function CreateAppointment() {
         };
     }, []);
 
+    useEffect(() => {
+        if (params) {
+            // Aquí puedes realizar la lógica para obtener el paciente por ID
+            // Por ejemplo, podrías llamar a una función de tu store o hacer una solicitud a la API
+            getAppointmentForEdit(params.id as unknown as number);
+        }
+    }, [params, getAppointmentForEdit])
+
     const goToList = () => {
-        setIsLoading(true)
         router.replace(`/${user?.role}${routeNames.appointments}`);
     }
 
     const handleCancel = () => {
+        setIsLoading(true);
         goToList();
         resetFormDataAppointment();
+        setIsLoading(false);
     }
 
     const goEdit = (id: string) => {
@@ -116,7 +115,7 @@ export default function CreateAppointment() {
         });
     }
 
-    if (isLoading || isLoading) return <Loader message={messageOnLoader} />
+    if (isLoading) return <Loader message={messageOnLoader} />
 
     return (
         <>

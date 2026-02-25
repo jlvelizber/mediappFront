@@ -82,11 +82,13 @@ export const createAppointmentSlice = (set: any, get: any): AppointmentStoreInte
         return appointmentId;
     },
     getAppointmentForEdit: async (id: number): Promise<AppointmentFormDataInterface | null> => {
+        set({ isLoading: true }, false, "app:appointment/loadingGetAppointmentForEdit");
         set({ formManageAppointment: { fields: {} } }, false, "app:appointment/getAppointmentForEdit");
         const appointment = await get().getAppointment(id);
         if (!appointment) return null;
         const formData = { ...formInitialState, fields: appointment };
         set({ formManageAppointment: formData }, false, "app:appointment/getAppointmentForEdit");
+        set({ isLoading: false }, false, "app:appointment/loadingGetAppointmentForEdit");
         return formData;
     },
     getAppointment: async (id: number): Promise<AppointmentInterface | null> => {
