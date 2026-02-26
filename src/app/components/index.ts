@@ -1,4 +1,3 @@
-export * from "./AdminDashboard";
 export * from "./AppointmentCalendar";
 export * from "./AppointmentChangeStatus";
 export * from "./AppointmentDateTimePicker";

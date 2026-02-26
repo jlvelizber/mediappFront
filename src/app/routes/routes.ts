@@ -5,7 +5,6 @@ import { Navigation } from "../intefaces";
 export const routeNames = {
     login: '/auth/login',
     logout: '/auth/logout',
-    admin: '/admin',
     doctors: '/doctor',
     dashboard: '/',
     profile: '/profile',
