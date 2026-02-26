@@ -1,34 +1,31 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { routeNames } from "./app/routes";
-import { UserRoleEnum } from "./app/Enums";
 
 export async function middleware(req: NextRequest) {
   const role = req.cookies.get("role");
   const url = req.nextUrl.clone();
+  const isLoginPath = url.pathname.startsWith(routeNames.login);
+  const isDoctorPath = url.pathname.startsWith(routeNames.doctors);
 
-  // Excluir la ruta de inicio de sesión del middleware
-  if (url.pathname.startsWith(`${routeNames.login}`) && !role) {
+  // Allow unauthenticated users to reach the login page.
+  if (isLoginPath && !role) {
     return NextResponse.next();
   }
-  
-  // Redirigir a /auth/login si no hay token
+
+  // Any protected route without role goes to login.
   if (!role) {
-    return NextResponse.redirect(new URL(`${routeNames.login}`, req.url));
+    return NextResponse.redirect(new URL(routeNames.login, req.url));
   }
 
-
-  // Redirigir según el rol del usuario
-  const { value } = role;
-  const basePath = `/${value}`;
-  if (!url.pathname.startsWith(basePath)) {
-    return NextResponse.redirect(new URL(basePath, req.url));
+  // This app is doctor-only: authenticated users always live under /doctor.
+  if (isLoginPath || url.pathname === "/" || !isDoctorPath) {
+    return NextResponse.redirect(new URL(routeNames.doctors, req.url));
   }
 
-  console.log(UserRoleEnum.Admin)
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/', '/doctor/:path*', '/admin/:path*'],
+  matcher: ["/", "/doctor/:path*", "/auth/login"],
 };
