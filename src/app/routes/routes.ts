@@ -6,7 +6,7 @@ export const routeNames = {
     login: '/auth/login',
     logout: '/auth/logout',
     doctors: '/doctor',
-    dashboard: '/',
+    dashboard: '/doctor',
     profile: '/profile',
     patients: '/patients',
     appointments: '/appointments',
