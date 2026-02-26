@@ -39,11 +39,13 @@ export default function CreateAppointment() {
     }
 
     useEffect(() => {
+        resetFormDataAppointment();
         setTitlePage(TITLE_PAGE);
         loadDependencies();
         return () => {
             setTitlePage("");
         };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- initialize page data once on mount
     }, []);
 
     const goToList = () => {
@@ -51,8 +53,8 @@ export default function CreateAppointment() {
     }
 
     const handleCancel = () => {
-        goToList();
         resetFormDataAppointment();
+        goToList();
     }
 
     const goEdit = (id: string) => {

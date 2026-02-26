@@ -15,7 +15,7 @@ export default function CreateAppointment() {
     const { user } = useAuth();
     const { setTitlePage } = useLayout();
     const { getPatientsByDoctorInSession } = usePatientStore();
-    const { isLoading, resetFormDataAppointment, getAppointmentForEdit, updateAppointment, removeAppointment } = useAppointmentStore();
+    const { isLoading, getAppointmentForEdit, updateAppointment, removeAppointment } = useAppointmentStore();
     const { addToast } = useToastStore();
     const [messageOnLoader, setMessageOnLoader] = useState<string>(fetching);
     const [flowDelete, setFlowDelete] = useState<{ isOpenDeleteConfirmation: boolean, appId: number }>({
@@ -47,6 +47,7 @@ export default function CreateAppointment() {
         return () => {
             setTitlePage("");
         };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- initialize page data once on mount
     }, []);
 
     useEffect(() => {

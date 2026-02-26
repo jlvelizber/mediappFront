@@ -13,7 +13,7 @@ export default function EditPatient() {
     const TITLE_PAGE = "Editar Paciente";
     const { user } = useAuth();
     const router = useRouter();
-    const { isLoading, getPatientForEdit, updatePatient, resetFormDataPatient, removePatient } = usePatientStore();
+    const { isLoading, getPatientForEdit, updatePatient, removePatient } = usePatientStore();
     const { addToast } = useToastStore();
     const { loading: { fetching, updating, deleting }, updated, deleted: deletedMessage } = messages.patient
     const params = useParams<{ id: string }>();
@@ -29,7 +29,7 @@ export default function EditPatient() {
             // Por ejemplo, podrías llamar a una función de tu store o hacer una solicitud a la API
             getPatientForEdit(params.id as unknown as number);
         }
-    }, [params])
+    }, [params, getPatientForEdit])
 
     const goToList = () => {
         router.replace(`/${user?.role}${routeNames.patients}`);
@@ -37,7 +37,6 @@ export default function EditPatient() {
 
     const handleCancel = () => {
         goToList();
-        resetFormDataPatient();
     }
 
 

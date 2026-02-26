@@ -4,6 +4,7 @@ import { useAuth } from "@/app/context";
 import { routeNames } from "@/app/routes";
 import { usePatientStore, useToastStore } from "@/app/store";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 export default function CreatePatient() {
     const { created, loading: { creating } } = messages.patient;
@@ -12,14 +13,20 @@ export default function CreatePatient() {
     const router = useRouter();
     const { addPatient, isLoading, resetFormDataPatient } = usePatientStore();
     const { addToast } = useToastStore();
+    const [isFormReady, setIsFormReady] = useState(false);
+
+    useEffect(() => {
+        resetFormDataPatient();
+        setIsFormReady(true);
+    }, [resetFormDataPatient]);
 
     const goToList = () => {
         router.replace(`/${user?.role}${routeNames.patients}`);
     }
 
     const handleCancel = () => {
-        goToList();
         resetFormDataPatient();
+        goToList();
     }
 
     const goEdit = (id: string) => {
@@ -34,7 +41,7 @@ export default function CreatePatient() {
         }
     }
 
-    if (isLoading) return <Loader message={creating} />
+    if (isLoading || !isFormReady) return <Loader message={creating} />
 
 
     return (
