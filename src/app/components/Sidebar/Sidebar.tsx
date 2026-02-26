@@ -2,7 +2,6 @@ import { useState } from "react";
 import { ListUnorderedIcon, PersonIcon, TabIcon, XCircleIcon } from '@primer/octicons-react'
 import { useAuth } from "@/app/context";
 import { Navigation } from "../Navigation";
-import { UserRoleEnum } from "@/app/Enums";
 
 export default function Sidebar() {
 
@@ -14,7 +13,7 @@ export default function Sidebar() {
 
 
     const renderMenu = () => {
-        return user?.role ? <Navigation role={user.role as UserRoleEnum} /> : null;
+        return user ? <Navigation /> : null;
     }
 
     return (
