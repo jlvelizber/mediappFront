@@ -26,13 +26,16 @@ export default function Login() {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
+        setIsLoading(true);
         try {
-            setIsLoading(true);
             const wasSuccess: boolean = await login(email, password);
-            if (wasSuccess) router.push("/")
+            if (wasSuccess) {
+                await router.replace("/");
+                return;
+            }
+            setIsLoading(false);
         } catch (error) {
             console.error("Error en el login:", error);
-        } finally {
             setIsLoading(false);
         }
     };
