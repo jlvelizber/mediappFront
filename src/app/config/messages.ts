@@ -43,6 +43,6 @@ export const messages = {
         }
     },
     dashboard: {
-        loading: "Cargando datos"
+        loading: "Cargando panel del consultorio..."
     }
 };

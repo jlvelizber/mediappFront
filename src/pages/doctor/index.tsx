@@ -12,7 +12,7 @@ const AppointmentsChart = dynamic(
 
 
 export default function Index() {
-  const TITLE_PAGE = "Dashboard";
+  const TITLE_PAGE = "Panel del consultorio";
   const { doctorDashboardInfo, getDoctorDashboard, isLoading } = useDoctorDashboardStore()
   const { loading: loadingDataMessage } = messages.dashboard
   const { user } = useAuth();
