@@ -2,7 +2,6 @@
 
 import { DashboardLayout, DeleteConfirmation, Loader, PageWrapper, PatientForm } from "@/app/components";
 import { messages } from "@/app/config";
-import { useAuth } from "@/app/context";
 import { routeNames } from "@/app/routes";
 import { usePatientStore, useToastStore } from "@/app/store";
 import { useParams } from "next/navigation";
@@ -11,8 +10,8 @@ import { MouseEvent, useEffect, useState } from "react";
 
 export default function EditPatient() {
     const TITLE_PAGE = "Editar Paciente";
-    const { user } = useAuth();
     const router = useRouter();
+    const patientsBaseRoute = `${routeNames.doctors}${routeNames.patients}`;
     const { isLoading, getPatientForEdit, updatePatient, removePatient } = usePatientStore();
     const { addToast } = useToastStore();
     const { loading: { fetching, updating, deleting }, updated, deleted: deletedMessage } = messages.patient
@@ -32,7 +31,7 @@ export default function EditPatient() {
     }, [params, getPatientForEdit])
 
     const goToList = () => {
-        router.replace(`/${user?.role}${routeNames.patients}`);
+        router.replace(patientsBaseRoute);
     }
 
     const handleCancel = () => {

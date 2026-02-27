@@ -1,6 +1,5 @@
 import { DashboardLayout, Loader, PageWrapper, PatientForm } from "@/app/components";
 import { messages } from "@/app/config";
-import { useAuth } from "@/app/context";
 import { routeNames } from "@/app/routes";
 import { usePatientStore, useToastStore } from "@/app/store";
 import { useRouter } from "next/router";
@@ -9,8 +8,8 @@ import { useEffect, useState } from "react";
 export default function CreatePatient() {
     const { created, loading: { creating } } = messages.patient;
     const TITLE_PAGE = "Crear Paciente";
-    const { user } = useAuth();
     const router = useRouter();
+    const patientsBaseRoute = `${routeNames.doctors}${routeNames.patients}`;
     const { addPatient, isLoading, resetFormDataPatient } = usePatientStore();
     const { addToast } = useToastStore();
     const [isFormReady, setIsFormReady] = useState(false);
@@ -21,7 +20,7 @@ export default function CreatePatient() {
     }, [resetFormDataPatient]);
 
     const goToList = () => {
-        router.replace(`/${user?.role}${routeNames.patients}`);
+        router.replace(patientsBaseRoute);
     }
 
     const handleCancel = () => {
@@ -30,7 +29,7 @@ export default function CreatePatient() {
     }
 
     const goEdit = (id: string) => {
-        router.replace(`/${user?.role}${routeNames.patients}/${id}/edit`);
+        router.replace(`${patientsBaseRoute}/${id}/edit`);
     }
 
     const handleSubmit = async (formData: FormData) => {

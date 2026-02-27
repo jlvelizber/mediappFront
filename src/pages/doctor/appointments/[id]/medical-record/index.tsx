@@ -1,6 +1,5 @@
 import { ConfirmationModal, DashboardLayout, Loader, MedicalRecordForm, PageWrapper, PatientCard } from "@/app/components";
 import { messages } from "@/app/config";
-import { useAuth } from "@/app/context";
 import { PatientInterface } from "@/app/intefaces";
 import { routeNames } from "@/app/routes";
 import { useAppointmentStore, useMedicalRecordStore, usePatientStore, useToastStore } from "@/app/store";
@@ -21,7 +20,7 @@ export default function MedicalHistory() {
   const { addToast } = useToastStore()
   const params = useParams<{ id: string }>();
   const router = useRouter();
-  const { user } = useAuth();
+  const appointmentsBaseRoute = `${routeNames.doctors}${routeNames.appointments}`;
 
 
   const loadDependencies = async () => {
@@ -50,7 +49,7 @@ export default function MedicalHistory() {
 
   const onHandleCancel = () => {
     // redirect to the appointments page
-    router.push(`/${user?.role}${routeNames.appointments}`);
+    router.push(appointmentsBaseRoute);
   };
 
   const onHandleSubmit = (formData: FormData) => {
@@ -67,7 +66,7 @@ export default function MedicalHistory() {
     setIsOpenAlert(false);
     const medicalRecordId = await addMedicalRecord(formDataOnState)
     if (medicalRecordId) {
-      router.push(`/${user?.role}${routeNames.appointments}`);
+      router.push(appointmentsBaseRoute);
       addToast(created, "success");
     }
   };

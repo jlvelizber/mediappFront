@@ -1,6 +1,6 @@
 import { AppointmentForm, DashboardLayout, DeleteConfirmation, Loader, PageWrapper } from "@/app/components";
 import { messages } from "@/app/config";
-import { useAuth, useLayout } from "@/app/context";
+import { useLayout } from "@/app/context";
 import { PatientInterface } from "@/app/intefaces";
 import { routeNames } from "@/app/routes";
 import { useAppointmentStore, usePatientStore, useToastStore } from "@/app/store";
@@ -12,7 +12,7 @@ export default function CreateAppointment() {
     const TITLE_PAGE = "Editar Cita";
     const { loading: { fetching, updating, deleting }, updated, deleted: deletedMessage } = messages.appointment;
     const router = useRouter();
-    const { user } = useAuth();
+    const appointmentsBaseRoute = `${routeNames.doctors}${routeNames.appointments}`;
     const { setTitlePage } = useLayout();
     const { getPatientsByDoctorInSession } = usePatientStore();
     const { isLoading, getAppointmentForEdit, updateAppointment, removeAppointment } = useAppointmentStore();
@@ -59,7 +59,7 @@ export default function CreateAppointment() {
     }, [params, getAppointmentForEdit])
 
     const goToList = () => {
-        router.replace(`/${user?.role}${routeNames.appointments}`);
+        router.replace(appointmentsBaseRoute);
     }
 
     const handleCancel = () => {
@@ -67,7 +67,7 @@ export default function CreateAppointment() {
     }
 
     const goEdit = (id: string) => {
-        router.replace(`/${user?.role}${routeNames.appointments}/edit/${id}`);
+        router.replace(`${appointmentsBaseRoute}/edit/${id}`);
     }
 
     const handleSubmit = async (formData: FormData) => {

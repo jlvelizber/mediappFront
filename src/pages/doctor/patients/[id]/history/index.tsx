@@ -1,6 +1,5 @@
 import { DashboardLayout, Loader, PageWrapper, PatientCard, PatientHistoryTabs } from "@/app/components";
 import { messages } from "@/app/config";
-import { useAuth } from "@/app/context";
 import { PatientHistoryInterface } from "@/app/intefaces";
 import { routeNames } from "@/app/routes";
 import { usePatientStore } from "@/app/store";
@@ -10,13 +9,13 @@ import { useEffect, useState } from "react";
 
 export default function PatientHistory() {
     const TITLE_PAGE = "Historial de";
-    const { user } = useAuth()
     const { getPatientHistory, isLoading, setIsLoading } = usePatientStore();
     const [patientName, setPatientName] = useState<string>("");
     const [patient, setPatient] = useState<PatientHistoryInterface | null>(null);
     const { loading: { fetching } } = messages.patient
     const params = useParams<{ id: string }>();
     const router = useRouter();
+    const patientsBaseRoute = `${routeNames.doctors}${routeNames.patients}`;
     useEffect(() => {
         setIsLoading(true);
         getPatientHistory(params?.id as unknown as number).then((patient) => {
@@ -27,7 +26,7 @@ export default function PatientHistory() {
     }, [params?.id, getPatientHistory, setIsLoading]);
 
     const handleGoBack = () => {
-        router.push(`/${user?.role}${routeNames.patients}`);
+        router.push(patientsBaseRoute);
     }
 
 

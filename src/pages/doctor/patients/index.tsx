@@ -1,6 +1,6 @@
 import { DashboardLayout, DeleteConfirmation, EmptyState, Loader, PageWrapper, Paginator, PatientList } from "@/app/components";
 import { messages } from "@/app/config";
-import { useAuth, useLayout } from "@/app/context";
+import { useLayout } from "@/app/context";
 import { PatientInterface } from "@/app/intefaces";
 import { Meta } from "@/app/intefaces/PaginatorInterface";
 import { routeNames } from "@/app/routes";
@@ -29,8 +29,8 @@ export default function Patients() {
   const [messageOnLoader, setMessageOnLoader] = useState<string>(fetchingList);
 
   const [meta, setMeta] = useState<Meta>();
-  const { user } = useAuth()
   const router = useRouter();
+  const patientsBaseRoute = `${routeNames.doctors}${routeNames.patients}`;
   const { removePatient, isLoading } = usePatientStore()
   const { addToast } = useToastStore();
 
@@ -105,12 +105,12 @@ export default function Patients() {
 
   const handleEdit = (e: MouseEvent<HTMLButtonElement>, patientId: number) => {
     e.preventDefault()
-    router.push(`/${user?.role}${routeNames.patients}/${patientId}/edit`)
+    router.push(`${patientsBaseRoute}/${patientId}/edit`)
   }
 
   const handleView = (e: MouseEvent<HTMLButtonElement>, patientId: number) => {
     e.preventDefault()
-    router.push(`/${user?.role}${routeNames.patients}/${patientId}/history`)
+    router.push(`${patientsBaseRoute}/${patientId}/history`)
   }
 
 
@@ -155,7 +155,7 @@ export default function Patients() {
               <h1 className="text-2xl font-bold mb-4">Pacientes</h1>
 
               {/* 🔹 Botón SIEMPRE visible */}
-              <Link href={`/${user?.role}/patients/create`}>
+              <Link href={`${patientsBaseRoute}/create`}>
                 <button className="btn-primary">
                   <PlusIcon className="w-5 h-5 mr-2" />
                   Agregar Paciente

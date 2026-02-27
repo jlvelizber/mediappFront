@@ -1,7 +1,6 @@
 import { AppointmentWithMedicalRecord } from "@/app/intefaces";
 import { CalendarIcon, FileIcon } from "@primer/octicons-react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/app/context";
 import { routeNames } from "@/app/routes";
 
 interface ClinicalHistoryProps {
@@ -10,7 +9,7 @@ interface ClinicalHistoryProps {
 
 export default function ClinicalHistory({ appointments = [] }: ClinicalHistoryProps) {
     const router = useRouter();
-    const { user } = useAuth();
+    const appointmentsBaseRoute = `${routeNames.doctors}${routeNames.appointments}`;
 
     const medicalRecords = appointments.filter(app => app.medicalRecord);
 
@@ -77,7 +76,7 @@ export default function ClinicalHistory({ appointments = [] }: ClinicalHistoryPr
                             </div>
 
                             <button
-                                onClick={() => router.push(`/${user?.role}${routeNames.appointments}/${appointment.id}/medical-record/${record.id}/show`)}
+                                onClick={() => router.push(`${appointmentsBaseRoute}/${appointment.id}/medical-record/${record.id}/show`)}
                                 className="btn-primary text-sm px-4 py-2 whitespace-nowrap self-start sm:self-center"
                             >
                                 Ver Completa

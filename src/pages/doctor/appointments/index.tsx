@@ -3,7 +3,6 @@ import AppointmentCalendar from "@/app/components/AppointmentCalendar/Appointmen
 import { DashboardLayout } from "@/app/components/Layouts";
 import { messages } from "@/app/config";
 import { useLayout } from "@/app/context";
-import { useAuth } from "@/app/context/AuthContext";
 import { AppointmentListItemInterface, Meta } from "@/app/intefaces";
 import { routeNames } from "@/app/routes";
 import { AppointmentService } from "@/app/services";
@@ -18,8 +17,8 @@ export default function AppointmentsPage() {
     const DEFAULT_NUM_PAGE = 1;
     const { loading: { fetchingList, deleting }, deleted: deletedMessage } = messages.appointment
     const { setTitlePage } = useLayout();
-    const { user } = useAuth();
     const router = useRouter();
+    const appointmentsBaseRoute = `${routeNames.doctors}${routeNames.appointments}`;
     const [loading, setLoading] = useState<boolean>(false);
     const [messageOnLoader, setMessageOnLoader] = useState<string>(fetchingList);
     const [hasDataInFirstFetch, setHasDataInFirstFetch] = useState<boolean>(true);
@@ -75,19 +74,19 @@ export default function AppointmentsPage() {
 
     const handleEdit = (e: MouseEvent<HTMLButtonElement>, appId: number) => {
         e.preventDefault()
-        router.push(`/${user?.role}${routeNames.appointments}/edit/${appId}`)
+        router.push(`${appointmentsBaseRoute}/edit/${appId}`)
     }
 
     // attend appointment
     const attendAppointment = (appointmenForAttendId: number) => {
         if (!appointmenForAttendId) return;
-        router.push(`/${user?.role}${routeNames.appointments}/${appointmenForAttendId}/medical-record`);
+        router.push(`${appointmentsBaseRoute}/${appointmenForAttendId}/medical-record`);
     }
 
 
     const onClickEvent = (event: AppointmentListItemInterface) => {
         console.log("Evento seleccionado:", event);
-        router.push(`/${user?.role}${routeNames.appointments}/edit/${event.id}`);
+        router.push(`${appointmentsBaseRoute}/edit/${event.id}`);
     }
 
     const loadAppointments = async (page?: number, onTable?: boolean) => {
@@ -160,7 +159,7 @@ export default function AppointmentsPage() {
 
     const handleView = (e: MouseEvent<HTMLButtonElement>, appId: number, medicalRecordId: number | null) => {
         e.preventDefault()
-        router.push(`/${user?.role}${routeNames.appointments}/${appId}/medical-record/${medicalRecordId}/show`);
+        router.push(`${appointmentsBaseRoute}/${appId}/medical-record/${medicalRecordId}/show`);
     }
 
 
@@ -175,7 +174,7 @@ export default function AppointmentsPage() {
                         <div className="flex justify-between items-center mb-4">
                             <h1 className="text-2xl font-bold mb-4">{TITLE_PAGE}</h1>
                             {/* 🔹 Botón SIEMPRE visible */}
-                            <Link href={`/${user?.role}/appointments/create`}>
+                            <Link href={`${appointmentsBaseRoute}/create`}>
                                 <button className="btn-primary">
                                     <PlusIcon className="w-5 h-5 mr-2" />
                                     Agregar Cita

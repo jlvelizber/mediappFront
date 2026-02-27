@@ -1,4 +1,3 @@
-import { useAuth } from "@/app/context";
 import { useDownloadFile } from "@/app/hooks";
 import { AppointmentStatusEnum, AppointmentWithMedicalRecord } from "@/app/intefaces";
 import { routeNames } from "@/app/routes";
@@ -13,7 +12,7 @@ interface AppointmentHistoryItemProps {
 
 export default function AppointmentHistoryItem({ appointment }: AppointmentHistoryItemProps) {
     const router = useRouter();
-    const { user } = useAuth();
+    const appointmentsBaseRoute = `${routeNames.doctors}${routeNames.appointments}`;
     const { download, isDownloading } = useDownloadFile();
     const hasPrescription = appointment.has_prescription;
 
@@ -85,7 +84,7 @@ export default function AppointmentHistoryItem({ appointment }: AppointmentHisto
                 <div className="flex gap-2 sm:flex-col sm:gap-2 shrink-0">
                     <button
                         type="button"
-                        onClick={() => router.push(`/${user?.role}${routeNames.appointments}/${appointment.id}/medical-record/${appointment.medicalRecord?.id}/show`)}
+                        onClick={() => router.push(`${appointmentsBaseRoute}/${appointment.id}/medical-record/${appointment.medicalRecord?.id}/show`)}
                         className="px-4 py-2 text-white bg-primary rounded-lg shadow-sm hover:bg-primary-dark disabled:opacity-50 text-xs"
                         aria-label="Ver Detalle de esta cita"
                     >

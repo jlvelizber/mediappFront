@@ -1,5 +1,4 @@
 import { DashboardLayout, Loader, MedicalRecordForm, MedicalRecordFormDataInterface, PageWrapper, PatientCard } from "@/app/components";
-import { useAuth } from "@/app/context";
 import { useDownloadFile } from "@/app/hooks";
 import { AppointmentInterface, PatientInterface } from "@/app/intefaces";
 import { routeNames } from "@/app/routes";
@@ -22,7 +21,7 @@ export default function MedicalHistory() {
   // const { getPatientBasedOnAppointment } = usePatientStore();
   const params = useParams<{ id: string; medicalRecordId: string }>();
   const router = useRouter();
-  const { user } = useAuth();
+  const appointmentsBaseRoute = `${routeNames.doctors}${routeNames.appointments}`;
 
   const loadDependencies = async () => {
     if (!params?.id || !params?.medicalRecordId) {
@@ -61,7 +60,7 @@ export default function MedicalHistory() {
   }, [params?.id, params?.medicalRecordId]);
 
   const onHandleCancel = () => {
-    router.push(`/${user?.role}${routeNames.appointments}`);
+    router.push(appointmentsBaseRoute);
   };
 
   const handleDownloadPrescription = async () => {

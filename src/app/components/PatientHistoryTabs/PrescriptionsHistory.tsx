@@ -1,4 +1,3 @@
-import { useAuth } from "@/app/context";
 import { AppointmentWithMedicalRecord } from "@/app/intefaces";
 import { routeNames } from "@/app/routes";
 import { CalendarIcon, LinkExternalIcon, PackageIcon } from "@primer/octicons-react";
@@ -10,7 +9,7 @@ interface PrescriptionsHistoryProps {
 
 export default function PrescriptionsHistory({ appointments = [] }: PrescriptionsHistoryProps) {
     const router = useRouter();
-    const { user } = useAuth();
+    const appointmentsBaseRoute = `${routeNames.doctors}${routeNames.appointments}`;
 
     const prescriptions = appointments
         .filter(app => app.medicalRecord?.prescription)
@@ -54,7 +53,7 @@ export default function PrescriptionsHistory({ appointments = [] }: Prescription
                             {recordId && (
                                 <button
                                     type="button"
-                                    onClick={() => router.push(`/${user?.role}${routeNames.appointments}/${appointment.id}/medical-record/${recordId}/show`)}
+                                    onClick={() => router.push(`${appointmentsBaseRoute}/${appointment.id}/medical-record/${recordId}/show`)}
                                     className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline shrink-0"
                                     aria-label="Ver historia clínica completa de esta cita"
                                 >
