@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { GearIcon, PersonIcon as Person, TabIcon } from '@primer/octicons-react'
 import { useAuth } from '@/app/context';
+import { routeNames } from '@/app/routes';
 
 export const UserMenu = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const { user, logout } = useAuth();
     const handleLogout = () => logout()
+    const profileRoute = `${routeNames.doctors}${routeNames.profile}`;
+    const settingsRoute = `${routeNames.doctors}${routeNames.availavility}`;
 
     if (!user) return null;
     return (
@@ -24,13 +27,13 @@ export const UserMenu = () => {
                 <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
                     <ul className="py-2 text-gray-700">
                         <li>
-                            <a href="/profile" className="flex items-center px-4 py-2 hover:bg-gray-100">
+                            <a href={profileRoute} className="flex items-center px-4 py-2 hover:bg-gray-100">
                                 <Person className="w-5 h-5 mr-2" />
                                 Ver Perfil
                             </a>
                         </li>
                         <li>
-                            <a href="/settings" className="flex items-center px-4 py-2 hover:bg-gray-100">
+                            <a href={settingsRoute} className="flex items-center px-4 py-2 hover:bg-gray-100">
                                 <GearIcon className="w-5 h-5 mr-2" />
                                 Configuración
                             </a>
