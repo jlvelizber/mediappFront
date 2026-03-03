@@ -6,13 +6,25 @@ import type { DoctorAvailabilityInterface } from "@/app/intefaces";
 import { AvailabilityService } from "@/app/services";
 import { DateUtil } from "@/app/utils";
 import { FormEvent, useEffect, useState } from "react";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/router";
+
+interface AvailabilityFormFields {
+    day_of_week: string;
+    start_time: string;
+    end_time: string;
+}
 
 export default function DoctorSettingsPage() {
     const TITLE_PAGE = "Configuración";
     const router = useRouter();
-    const { register, handleSubmit, reset } = useForm();
+    const { register, handleSubmit, reset, watch } = useForm<AvailabilityFormFields>({
+        defaultValues: {
+            day_of_week: "monday",
+            start_time: "09:00",
+            end_time: "13:00",
+        },
+    });
     const { setTitlePage } = useLayout();
     const { addToast } = useToastStore();
     const [activeTab, setActiveTab] = useState<"basic" | "availability">("basic");
@@ -21,6 +33,9 @@ export default function DoctorSettingsPage() {
     const [availabilities, setAvailabilities] = useState<DoctorAvailabilityInterface[]>([]);
     const [loadingAvailability, setLoadingAvailability] = useState<boolean>(false);
     const daysOfWeek = DateUtil.getDaysOfWeekAsObject();
+    const watchedStartTime = watch("start_time");
+    const watchedEndTime = watch("end_time");
+    const hasInvalidRange = Boolean(watchedStartTime && watchedEndTime && watchedEndTime <= watchedStartTime);
     const [settings, setSettings] = useState<DoctorSettingsData>({
         default_appointment_duration: 20,
         default_appointment_price: 0,
@@ -95,7 +110,12 @@ export default function DoctorSettingsPage() {
         }
     };
 
-    const onSubmitAvailability: SubmitHandler<FieldValues> = async (data) => {
+    const onSubmitAvailability: SubmitHandler<AvailabilityFormFields> = async (data) => {
+        if (data.end_time <= data.start_time) {
+            addToast("La hora de fin debe ser posterior a la hora de inicio.", "warning");
+            return;
+        }
+
         try {
             setLoadingAvailability(true);
             await AvailabilityService.saveMyAvailability(data as DoctorAvailabilityInterface);
@@ -270,32 +290,63 @@ export default function DoctorSettingsPage() {
                         <div className="space-y-6">
                             <section className="bg-white rounded-lg shadow-sm p-6">
                                 <h2 className="text-lg font-semibold text-primary mb-4">Horario de atención</h2>
-                                <form onSubmit={handleSubmit(onSubmitAvailability)} className="flex flex-col md:flex-row md:items-center gap-2">
-                                    <select {...register("day_of_week")} required className="border p-2 rounded">
-                                        {daysOfWeek.map((day) => (
-                                            <option key={day.id} value={day.value}>{day.label}</option>
-                                        ))}
-                                    </select>
-                                    <input type="time" {...register("start_time")} required className="border p-2 rounded" />
-                                    <input type="time" {...register("end_time")} required className="border p-2 rounded" />
+                                <p className="text-sm text-gray-600 mb-4">
+                                    Define aquí los bloques de tiempo en los que atiendes pacientes. Puedes agregar varios horarios por día.
+                                </p>
+
+                                <form onSubmit={handleSubmit(onSubmitAvailability)} className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Día de atención</label>
+                                        <select {...register("day_of_week")} required className="w-full border p-2 rounded">
+                                            {daysOfWeek.map((day) => (
+                                                <option key={day.id} value={day.value}>{day.label}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Hora inicio</label>
+                                        <input type="time" {...register("start_time")} required className="w-full border p-2 rounded" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Hora fin</label>
+                                        <input type="time" {...register("end_time")} required className="w-full border p-2 rounded" />
+                                    </div>
+                                    <div className="flex items-end">
                                     <button
                                         type="submit"
-                                        className="btn-primary disabled:opacity-50"
-                                        disabled={loadingAvailability}
+                                        className="btn-primary disabled:opacity-50 w-full"
+                                        disabled={loadingAvailability || hasInvalidRange}
                                     >
-                                        Guardar horario
+                                        Agregar horario
                                     </button>
+                                    </div>
                                 </form>
+
+                                {hasInvalidRange && (
+                                    <p className="text-sm text-red-600 mt-3">
+                                        La hora de fin debe ser posterior a la hora de inicio.
+                                    </p>
+                                )}
                             </section>
 
                             <section className="bg-white rounded-lg shadow-sm p-6">
-                                <h2 className="text-lg font-semibold text-primary mb-4">Disponibilidades registradas</h2>
+                                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+                                    <h2 className="text-lg font-semibold text-primary">Disponibilidades registradas</h2>
+                                    <span className="text-sm text-gray-500">
+                                        {availabilities.length} {availabilities.length === 1 ? "horario activo" : "horarios activos"}
+                                    </span>
+                                </div>
                                 {loadingAvailability ? (
                                     <Loader message="Actualizando horarios..." />
                                 ) : availabilities.length > 0 ? (
                                     <AvailabilityList items={availabilities} onRemove={handleRemoveAvailability} />
                                 ) : (
-                                    <EmptyState />
+                                    <div className="py-10">
+                                        <EmptyState />
+                                        <p className="text-center text-sm text-gray-500 mt-3">
+                                            Aun no tienes horarios configurados. Agrega tu primer bloque arriba.
+                                        </p>
+                                    </div>
                                 )}
                             </section>
                         </div>
