@@ -8,7 +8,7 @@ export const UserMenu = () => {
     const { user, logout } = useAuth();
     const handleLogout = () => logout()
     const profileRoute = `${routeNames.doctors}${routeNames.profile}`;
-    const settingsRoute = `${routeNames.doctors}${routeNames.availavility}`;
+    const settingsRoute = `${routeNames.doctors}${routeNames.settings}`;
 
     if (!user) return null;
     return (
