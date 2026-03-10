@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { createAppointment, getAppointment, removeAppointment, updateAppointment, updateAppointmentStatus } from "../actions";
 import { AppointmentFormDataInterface } from "../components";
-import { AppointmentInterface, AppointmentStatusEnum } from "../intefaces";
+import { AppointmentInterface, AppointmentStatusInterface } from "../intefaces";
 
 export interface AppointmentStoreInterface {
     appointment: AppointmentInterface;
@@ -18,7 +18,7 @@ export interface AppointmentStoreInterface {
     getAppointment: (id: number) => Promise<AppointmentInterface | null>;
     resetSlice: () => void;
     removeAppointment: (id: number) => Promise<boolean>;
-    updateStateAppointment: (id: number, status: AppointmentStatusEnum, mustUpdateList?: boolean) => Promise<void>;
+    updateStateAppointment: (id: number, status: AppointmentStatusInterface, mustUpdateList?: boolean) => Promise<void>;
 }
 
 
@@ -133,7 +133,7 @@ export const createAppointmentSlice = (set: any, get: any): AppointmentStoreInte
     resetSlice: () => {
         set({ appointment: { ...formInitialState } }, false, "app:appointment/resetSlice");
     },
-    updateStateAppointment: async (id: number, status: AppointmentStatusEnum, mustUpdateList): Promise<void> => {
+    updateStateAppointment: async (id: number, status: AppointmentStatusInterface, mustUpdateList): Promise<void> => {
         set({ isLoading: true }, false, "app:appointment/loadingUpdateStateAppointment");
         try {
             const response = await updateAppointmentStatus(id, status);

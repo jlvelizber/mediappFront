@@ -40,5 +40,7 @@ export enum AppointmentStatusEnum {
     CANCELLED = "cancelled",
 }
 
+export type AppointmentStatusInterface = `${AppointmentStatusEnum}`;
+
 
 export type AppointmentPaginationInterface = PaginatorInterface<AppointmentListItemInterface>

@@ -1,18 +1,12 @@
-# Usar la imagen oficial de Node.js
-FROM node:18-alpine
+FROM node:20-alpine
 
-# Establecer el directorio de trabajo
 WORKDIR /app
 
-# Copiar archivos necesarios
-COPY package.json package-lock.json ./
-RUN npm install
+COPY package.json package-lock.json* ./
+RUN npm ci
 
-# Copiar todo el código
 COPY . .
 
-# Exponer el puerto de desarrollo
 EXPOSE 3000
 
-# Comando para iniciar la aplicación
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "dev", "--", "--hostname", "0.0.0.0", "--port", "3000"]

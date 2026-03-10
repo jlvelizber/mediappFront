@@ -1,6 +1,6 @@
 import { AppointmentWithMedicalRecord } from "@/app/intefaces";
 import { routeNames } from "@/app/routes";
-import { CalendarIcon, LinkExternalIcon, PackageIcon } from "@primer/octicons-react";
+import { LinkExternalIcon, PackageIcon } from "@primer/octicons-react";
 import { useRouter } from "next/navigation";
 
 interface PrescriptionsHistoryProps {
@@ -30,7 +30,7 @@ export default function PrescriptionsHistory({ appointments = [] }: Prescription
         <div className="space-y-4">
             {prescriptions.map(({ appointment, prescription }) => {
                 const hasItems = prescription.items?.length > 0;
-                const recordId = appointment.medicalRecord?.id ?? appointment.medical_record_id;
+                const recordId = appointment.medicalRecord?.id ?? appointment.medical_record?.id;
 
                 return (
                     <article
