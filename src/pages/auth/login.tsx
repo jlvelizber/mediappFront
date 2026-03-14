@@ -2,6 +2,8 @@
 import { Loader } from "@/app/components";
 import { useAuth, useLayout } from "@/app/context";
 import { useCSFR } from "@/app/hooks";
+import { routeNames } from "@/app/routes";
+import { SetupService } from "@/app/services";
 import { EyeClosedIcon, EyeIcon } from '@primer/octicons-react';
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
@@ -17,11 +19,25 @@ export default function Login() {
     const [password, setPassword] = useState<string>("");
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isCheckingSetup, setIsCheckingSetup] = useState<boolean>(true);
 
     useEffect(() => {
         setTitlePage("");
-        getCSRFToken();
-    }, []);
+        const bootstrap = async () => {
+            try {
+                await getCSRFToken();
+                const response = await SetupService.getStatus();
+                if (!response?.data?.installed) {
+                    await router.replace(routeNames.setup);
+                    return;
+                }
+            } finally {
+                setIsCheckingSetup(false);
+            }
+        };
+
+        bootstrap();
+    }, [getCSRFToken, router, setTitlePage]);
 
 
     const handleSubmit = async (e: FormEvent) => {
@@ -40,7 +56,7 @@ export default function Login() {
         }
     };
 
-    if (isLoading) return <Loader message="Iniciando sesión" />
+    if (isCheckingSetup || isLoading) return <Loader message="Iniciando sesión" />
 
 
     return (

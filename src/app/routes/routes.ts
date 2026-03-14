@@ -3,6 +3,7 @@ import { NavigationOption } from "../intefaces";
 
 export const routeNames = {
     login: '/auth/login',
+    setup: '/setup',
     logout: '/auth/logout',
     doctors: '/doctor',
     dashboard: '/doctor',

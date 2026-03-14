@@ -5,4 +5,5 @@ export * from "./AvailabilityService"
 export * from "./DoctorProfileService"
 export * from "./DoctorSettingsService"
 export * from "./PatientService"
+export * from "./SetupService"
 

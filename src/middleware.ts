@@ -1,16 +1,21 @@
-import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { routeNames } from "./app/routes";
 
 export async function middleware(req: NextRequest) {
   const role = req.cookies.get("role");
   const url = req.nextUrl.clone();
   const isLoginPath = url.pathname.startsWith(routeNames.login);
+  const isSetupPath = url.pathname.startsWith(routeNames.setup);
   const isDoctorPath = url.pathname.startsWith(routeNames.doctors);
 
-  // Allow unauthenticated users to reach the login page.
-  if (isLoginPath && !role) {
+  // Allow unauthenticated users to reach login/setup.
+  if ((isLoginPath || isSetupPath) && !role) {
     return NextResponse.next();
+  }
+
+  if (isSetupPath && role) {
+    return NextResponse.redirect(new URL(routeNames.doctors, req.url));
   }
 
   // Any protected route without role goes to login.
@@ -27,5 +32,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/doctor/:path*", "/auth/login"],
+  matcher: ["/", "/doctor/:path*", "/auth/login", "/setup"],
 };
