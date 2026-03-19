@@ -34,7 +34,7 @@ export default function PrescriptionsHistory({ appointments = [] }: Prescription
 
                 return (
                     <article
-                        key={prescription.id ?? appointment.id}
+                        key={appointment.id ?? appointment.medicalRecord?.id}
                         className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow p-4 sm:p-6"
                     >
                         {/* Cabecera: contexto de la cita y enlace a historia */}

@@ -25,8 +25,10 @@ export const RecentAppointments: FC<RecentAppointmentsProps> = ({ appointments }
             <div key={a.id} className="flex justify-between py-2">
               <div>
                 <p className="font-medium text-gray-700">
-                  {a.patient?.name}
-                  {a.patient?.lastname && ` ${a.patient?.lastname}`}
+                  {typeof a.patient === "object" && a.patient !== null && "name" in a.patient ? a.patient.name : ""}
+                  {typeof a.patient === "object" && a.patient !== null && "lastname" in a.patient && a.patient.lastname
+                    ? ` ${a.patient.lastname}`
+                    : ""}
                 </p>
                 <p className="text-sm text-gray-500">
                   {a.date_time ? dateFormatter.format(new Date(`${a.date_time}Z`)) : ""}

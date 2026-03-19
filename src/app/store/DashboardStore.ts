@@ -25,8 +25,8 @@ export const createDashboardStoreSlice = (set: any, get: unknown): DashboarStore
     getDoctorDashboard: async () => {
         try {
             set({ isLoading: true }, false, "app:dashboard/setIsloading");
-            const response : DoctorDashboardInfoInterface  = await getDoctorDashboardInfo();
-            set({ doctorDashboardInfo: response?.response }, false, "app:dashboard/setDataDashboard")
+            const { response } : { response: DoctorDashboardInfoInterface | null } = await getDoctorDashboardInfo();
+            set({ doctorDashboardInfo: response ?? {} as DoctorDashboardInfoInterface }, false, "app:dashboard/setDataDashboard")
             
         } catch (error) {
             throw error;

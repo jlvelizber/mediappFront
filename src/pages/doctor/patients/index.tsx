@@ -65,10 +65,10 @@ export default function Patients() {
   const fitlerQueryPatients = async () => {
     const filtered = patients.filter(
       (patient) =>
-        patient.name.toLowerCase().includes(search.toLowerCase()) ||
-        patient.phone.includes(search) ||
-        patient.document.includes(search) ||
-        patient.email.includes(search)
+        patient.name?.toLowerCase().includes(search.toLowerCase()) ||
+        patient.phone?.includes(search) ||
+        patient.document?.includes(search) ||
+        patient.email?.includes(search)
     );
     setPatients(filtered);
 

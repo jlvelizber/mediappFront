@@ -6,7 +6,7 @@ export interface PatientHistoryInterface extends PatientInterface {
     appointments?: AppointmentWithMedicalRecord[];
 }
 
-export interface AppointmentWithMedicalRecord extends AppointmentInterface {
+export interface AppointmentWithMedicalRecord extends Omit<AppointmentInterface, 'duration_minutes'> {
     medicalRecord?: MedicalRecordInterface;
     date?: string;
     time?: string;

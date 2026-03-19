@@ -7,7 +7,7 @@ import { routeNames } from "@/app/routes";
 import { SetupInitializePayload, SetupService } from "@/app/services";
 import { AxiosError } from "axios";
 import { useRouter } from "next/router";
-import { FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
 const APP_NAME = process.env.NEXT_PUBLIC_TITLE || "Mediapp";
 
@@ -270,10 +270,10 @@ export default function SetupPage() {
               />
               <select
                 value={form.notification_way || "both"}
-                onChange={(e) =>
+                onChange={(e : ChangeEvent<HTMLSelectElement>) =>
                   onChange(
                     "notification_way",
-                    e.target.value as SetupInitializePayload["notification_way"]
+                    e.target.value || "both"
                   )
                 }
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
