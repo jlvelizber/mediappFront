@@ -6,7 +6,13 @@ COPY package.json package-lock.json* ./
 RUN npm ci
 
 COPY . .
-RUN npm run build
+ARG NEXT_PUBLIC_API_URL=""
+ARG NEXT_PUBLIC_PUBLIC_URL=""
+ARG NEXT_PUBLIC_TITLE=""
+RUN if [ -n "$NEXT_PUBLIC_API_URL" ]; then export NEXT_PUBLIC_API_URL="$NEXT_PUBLIC_API_URL"; fi; \
+    if [ -n "$NEXT_PUBLIC_PUBLIC_URL" ]; then export NEXT_PUBLIC_PUBLIC_URL="$NEXT_PUBLIC_PUBLIC_URL"; fi; \
+    if [ -n "$NEXT_PUBLIC_TITLE" ]; then export NEXT_PUBLIC_TITLE="$NEXT_PUBLIC_TITLE"; fi; \
+    npm run build
 
 FROM node:20-alpine AS runner
 
