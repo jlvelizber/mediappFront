@@ -132,62 +132,83 @@ export default function SetupPage() {
               {messages.setup.sections.doctorAdmin}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input
-                type="text"
-                value={form.admin_name}
-                onChange={(e) => onChange("admin_name", e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder={messages.setup.placeholders.adminName}
-                required
-              />
-              <input
-                type="text"
-                value={form.admin_lastname}
-                onChange={(e) => onChange("admin_lastname", e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder={messages.setup.placeholders.adminLastname}
-                required
-              />
-              <input
-                type="email"
-                value={form.admin_email}
-                onChange={(e) => onChange("admin_email", e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder={messages.setup.placeholders.adminEmail}
-                required
-              />
-              <input
-                type="text"
-                value={form.admin_phone || ""}
-                onChange={(e) => onChange("admin_phone", e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder={messages.setup.placeholders.adminPhone}
-              />
-              <input
-                type="password"
-                value={form.admin_password}
-                onChange={(e) => onChange("admin_password", e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder={messages.setup.placeholders.adminPassword}
-                required
-              />
-              <input
-                type="password"
-                value={form.admin_password_confirmation}
-                onChange={(e) =>
-                  onChange("admin_password_confirmation", e.target.value)
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder={messages.setup.placeholders.adminPasswordConfirm}
-                required
-              />
-              <input
-                type="text"
-                value={form.doctor_specialization || ""}
-                onChange={(e) => onChange("doctor_specialization", e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm md:col-span-2"
-                placeholder={messages.setup.placeholders.doctorSpecialization}
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700" htmlFor="admin_name">{messages.setup.placeholders.adminName}</label>
+                <input
+                  id="admin_name"
+                  type="text"
+                  value={form.admin_name}
+                  onChange={(e) => onChange("admin_name", e.target.value)}
+                  className="input-field"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700" htmlFor="admin_lastname">{messages.setup.placeholders.adminLastname}</label>
+                <input
+                  id="admin_lastname"
+                  type="text"
+                  value={form.admin_lastname}
+                  onChange={(e) => onChange("admin_lastname", e.target.value)}
+                  className="input-field"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700" htmlFor="admin_email">{messages.setup.placeholders.adminEmail}</label>
+                <input
+                  id="admin_email"
+                  type="email"
+                  value={form.admin_email}
+                  onChange={(e) => onChange("admin_email", e.target.value)}
+                  className="input-field"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700" htmlFor="admin_phone">{messages.setup.placeholders.adminPhone}</label>
+                <input
+                  id="admin_phone"
+                  type="text"
+                  value={form.admin_phone || ""}
+                  onChange={(e) => onChange("admin_phone", e.target.value)}
+                  className="input-field"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700" htmlFor="admin_password">{messages.setup.placeholders.adminPassword}</label>
+                <input
+                  id="admin_password"
+                  type="password"
+                  value={form.admin_password}
+                  onChange={(e) => onChange("admin_password", e.target.value)}
+                  className="input-field"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700" htmlFor="admin_password_confirmation">{messages.setup.placeholders.adminPasswordConfirm}</label>
+                <input
+                  id="admin_password_confirmation"
+                  type="password"
+                  value={form.admin_password_confirmation}
+                  onChange={(e) =>
+                    onChange("admin_password_confirmation", e.target.value)
+                  }
+                  className="input-field"
+                  required
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700" htmlFor="doctor_specialization">{messages.setup.placeholders.doctorSpecialization}</label>
+                <input
+                  id="doctor_specialization"
+                  type="text"
+                  value={form.doctor_specialization || ""}
+                  onChange={(e) => onChange("doctor_specialization", e.target.value)}
+                  className="input-field"
+                />
+              </div>
             </div>
           </section>
 
@@ -196,35 +217,47 @@ export default function SetupPage() {
               {messages.setup.sections.medicalCenter}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input
-                type="text"
-                value={form.medical_center_name}
-                onChange={(e) => onChange("medical_center_name", e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm md:col-span-2"
-                placeholder={messages.setup.placeholders.medicalCenterName}
-                required
-              />
-              <input
-                type="text"
-                value={form.medical_center_address || ""}
-                onChange={(e) => onChange("medical_center_address", e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm md:col-span-2"
-                placeholder={messages.setup.placeholders.medicalCenterAddress}
-              />
-              <input
-                type="text"
-                value={form.medical_center_phone || ""}
-                onChange={(e) => onChange("medical_center_phone", e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder={messages.setup.placeholders.medicalCenterPhone}
-              />
-              <input
-                type="email"
-                value={form.medical_center_email || ""}
-                onChange={(e) => onChange("medical_center_email", e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder={messages.setup.placeholders.medicalCenterEmail}
-              />
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700" htmlFor="medical_center_name">{messages.setup.placeholders.medicalCenterName}</label>
+                <input
+                  id="medical_center_name"
+                  type="text"
+                  value={form.medical_center_name}
+                  onChange={(e) => onChange("medical_center_name", e.target.value)}
+                  className="input-field"
+                  required
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700" htmlFor="medical_center_address">{messages.setup.placeholders.medicalCenterAddress}</label>
+                <input
+                  id="medical_center_address"
+                  type="text"
+                  value={form.medical_center_address || ""}
+                  onChange={(e) => onChange("medical_center_address", e.target.value)}
+                  className="input-field"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700" htmlFor="medical_center_phone">{messages.setup.placeholders.medicalCenterPhone}</label>
+                <input
+                  id="medical_center_phone"
+                  type="text"
+                  value={form.medical_center_phone || ""}
+                  onChange={(e) => onChange("medical_center_phone", e.target.value)}
+                  className="input-field"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700" htmlFor="medical_center_email">{messages.setup.placeholders.medicalCenterEmail}</label>
+                <input
+                  id="medical_center_email"
+                  type="email"
+                  value={form.medical_center_email || ""}
+                  onChange={(e) => onChange("medical_center_email", e.target.value)}
+                  className="input-field"
+                />
+              </div>
             </div>
           </section>
 
@@ -233,77 +266,96 @@ export default function SetupPage() {
               {messages.setup.sections.appointmentDefaults}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input
-                type="number"
-                min={5}
-                max={240}
-                value={form.default_appointment_duration || ""}
-                onChange={(e) =>
-                  onChange("default_appointment_duration", e.target.value)
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder={messages.setup.placeholders.defaultDuration}
-              />
-              <input
-                type="number"
-                min={0}
-                step="0.01"
-                value={form.default_appointment_price || ""}
-                onChange={(e) =>
-                  onChange("default_appointment_price", e.target.value)
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder={messages.setup.placeholders.defaultPrice}
-              />
-              <input
-                type="text"
-                value={form.default_appointment_currency || ""}
-                onChange={(e) =>
-                  onChange("default_appointment_currency", e.target.value)
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder={messages.setup.placeholders.currency}
-              />
-              <input
-                type="text"
-                value={form.default_appointment_currency_symbol || ""}
-                onChange={(e) =>
-                  onChange("default_appointment_currency_symbol", e.target.value)
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder={messages.setup.placeholders.currencySymbol}
-              />
-              <select
-                value={form.notification_way || "both"}
-                onChange={(e : ChangeEvent<HTMLSelectElement>) =>
-                  onChange(
-                    "notification_way",
-                    e.target.value || "both"
-                  )
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-              >
-                <option value="both">
-                  {messages.setup.notificationWay.both}
-                </option>
-                <option value="email">
-                  {messages.setup.notificationWay.email}
-                </option>
-                <option value="whatsapp">
-                  {messages.setup.notificationWay.whatsapp}
-                </option>
-              </select>
-              <input
-                type="number"
-                min={1}
-                max={168}
-                value={form.reminder_hour_appointment || ""}
-                onChange={(e) =>
-                  onChange("reminder_hour_appointment", e.target.value)
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder={messages.setup.placeholders.reminderHours}
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700" htmlFor="default_appointment_duration">{messages.setup.placeholders.defaultDuration}</label>
+                <input
+                  id="default_appointment_duration"
+                  type="number"
+                  min={5}
+                  max={240}
+                  value={form.default_appointment_duration || ""}
+                  onChange={(e) =>
+                    onChange("default_appointment_duration", e.target.value)
+                  }
+                  className="input-field"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700" htmlFor="default_appointment_price">{messages.setup.placeholders.defaultPrice}</label>
+                <input
+                  id="default_appointment_price"
+                  type="number"
+                  min={0}
+                  step="0.01"
+                  value={form.default_appointment_price || ""}
+                  onChange={(e) =>
+                    onChange("default_appointment_price", e.target.value)
+                  }
+                  className="input-field"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700" htmlFor="default_appointment_currency">{messages.setup.placeholders.currency}</label>
+                <input
+                  id="default_appointment_currency"
+                  type="text"
+                  value={form.default_appointment_currency || ""}
+                  onChange={(e) =>
+                    onChange("default_appointment_currency", e.target.value)
+                  }
+                  className="input-field"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700" htmlFor="default_appointment_currency_symbol">{messages.setup.placeholders.currencySymbol}</label>
+                <input
+                  id="default_appointment_currency_symbol"
+                  type="text"
+                  value={form.default_appointment_currency_symbol || ""}
+                  onChange={(e) =>
+                    onChange("default_appointment_currency_symbol", e.target.value)
+                  }
+                  className="input-field"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700" htmlFor="notification_way">Canal de notificacion</label>
+                <select
+                  id="notification_way"
+                  value={form.notification_way || "both"}
+                  onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                    onChange(
+                      "notification_way",
+                      e.target.value || "both"
+                    )
+                  }
+                  className="input-field"
+                >
+                  <option value="both">
+                    {messages.setup.notificationWay.both}
+                  </option>
+                  <option value="email">
+                    {messages.setup.notificationWay.email}
+                  </option>
+                  <option value="whatsapp">
+                    {messages.setup.notificationWay.whatsapp}
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700" htmlFor="reminder_hour_appointment">{messages.setup.placeholders.reminderHours}</label>
+                <input
+                  id="reminder_hour_appointment"
+                  type="number"
+                  min={1}
+                  max={168}
+                  value={form.reminder_hour_appointment || ""}
+                  onChange={(e) =>
+                    onChange("reminder_hour_appointment", e.target.value)
+                  }
+                  className="input-field"
+                />
+              </div>
             </div>
           </section>
 
