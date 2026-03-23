@@ -1,11 +1,14 @@
 import { DashboardLayout, Loader, PageWrapper } from "@/app/components";
+import { messages } from "@/app/config";
 import { useLayout } from "@/app/context";
 import { DoctorProfileData, DoctorProfileService } from "@/app/services";
 import { useToastStore } from "@/app/store";
 import { FormEvent, useEffect, useState } from "react";
 
+const p = messages.profile;
+
 export default function DoctorProfile() {
-  const TITLE_PAGE = "Mi perfil";
+  const TITLE_PAGE = p.pageTitle;
   const { setTitlePage } = useLayout();
   const { addToast } = useToastStore();
 
@@ -47,7 +50,7 @@ export default function DoctorProfile() {
       });
     } catch (error) {
       console.error("Error loading doctor profile:", error);
-      addToast("No se pudo cargar el perfil.", "error");
+      addToast(p.toast.loadError, "error");
     } finally {
       setLoading(false);
     }
@@ -73,10 +76,10 @@ export default function DoctorProfile() {
         phone: updated.phone ?? "",
         specialization: updated.specialization ?? "",
       });
-      addToast("Perfil actualizado correctamente.", "success");
+      addToast(p.toast.updateSuccess, "success");
     } catch (error) {
       console.error("Error updating doctor profile:", error);
-      addToast("No se pudo actualizar el perfil.", "error");
+      addToast(p.toast.updateError, "error");
     } finally {
       setSavingProfile(false);
     }
@@ -86,7 +89,7 @@ export default function DoctorProfile() {
     e.preventDefault();
 
     if (passwordForm.password !== passwordForm.password_confirmation) {
-      addToast("La confirmación de contraseña no coincide.", "error");
+      addToast(p.toast.passwordMismatch, "error");
       return;
     }
 
@@ -101,31 +104,43 @@ export default function DoctorProfile() {
       });
     } catch (error) {
       console.error("Error updating password:", error);
-      addToast("No se pudo actualizar la contraseña.", "error");
+      addToast(p.toast.passwordUpdateError, "error");
     } finally {
       setSavingPassword(false);
     }
   };
 
-  if (loading || savingProfile || savingPassword) return <Loader message={savingProfile ? "Guardando perfil..." : savingPassword ? "Actualizando contraseña..." : "Cargando perfil..."} />;
+  if (loading || savingProfile || savingPassword) {
+    return (
+      <Loader
+        message={
+          savingProfile
+            ? p.loading.savingProfile
+            : savingPassword
+              ? p.loading.savingPassword
+              : p.loading.profile
+        }
+      />
+    );
+  }
 
   return (
     <DashboardLayout>
       <PageWrapper>
         <div className="container mx-auto p-4 space-y-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Mi perfil profesional</h1>
+            <h1 className="text-2xl font-bold text-gray-900">{p.headings.professional}</h1>
             <p className="text-sm text-gray-600 mt-2">
-              Actualiza tus datos personales y profesionales del consultorio.
+              {p.headings.subtitle}
             </p>
           </div>
 
           <form onSubmit={handleSaveProfile} className="bg-white rounded-lg shadow-sm p-6 space-y-4">
-            <h2 className="text-lg font-semibold text-primary">Datos del perfil</h2>
+            <h2 className="text-lg font-semibold text-primary">{p.headings.profileData}</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{p.labels.name}</label>
                 <input
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
                   value={profile.name}
@@ -134,7 +149,7 @@ export default function DoctorProfile() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Apellido</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{p.labels.lastname}</label>
                 <input
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
                   value={profile.lastname}
@@ -142,7 +157,7 @@ export default function DoctorProfile() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{p.labels.email}</label>
                 <input
                   type="email"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
@@ -152,7 +167,7 @@ export default function DoctorProfile() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{p.labels.phone}</label>
                 <input
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
                   value={profile.phone}
@@ -160,7 +175,7 @@ export default function DoctorProfile() {
                 />
               </div>
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Especialidad</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{p.labels.specialization}</label>
                 <input
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
                   value={profile.specialization}
@@ -170,16 +185,16 @@ export default function DoctorProfile() {
             </div>
 
             <button type="submit" className="btn-primary disabled:opacity-50" disabled={savingProfile}>
-              {savingProfile ? "Guardando..." : "Guardar perfil"}
+              {savingProfile ? p.buttons.savingProfile : p.buttons.saveProfile}
             </button>
           </form>
 
           <form onSubmit={handleSavePassword} className="bg-white rounded-lg shadow-sm p-6 space-y-4">
-            <h2 className="text-lg font-semibold text-primary">Cambiar contraseña</h2>
+            <h2 className="text-lg font-semibold text-primary">{p.headings.changePassword}</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña actual</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{p.labels.currentPassword}</label>
                 <input
                   type="password"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
@@ -189,7 +204,7 @@ export default function DoctorProfile() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nueva contraseña</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{p.labels.newPassword}</label>
                 <input
                   type="password"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
@@ -199,7 +214,7 @@ export default function DoctorProfile() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Confirmar contraseña</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{p.labels.confirmPassword}</label>
                 <input
                   type="password"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
@@ -211,7 +226,7 @@ export default function DoctorProfile() {
             </div>
 
             <button type="submit" className="btn-primary disabled:opacity-50" disabled={savingPassword}>
-              {savingPassword ? "Actualizando..." : "Actualizar contraseña"}
+              {savingPassword ? p.buttons.updatingPassword : p.buttons.updatePassword}
             </button>
           </form>
         </div>

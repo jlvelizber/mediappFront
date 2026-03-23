@@ -1,8 +1,11 @@
+import { formFieldLabel, messages } from "@/app/config";
 import { PrescriptionItemInterface } from "@/app/intefaces";
 import { useMedicalRecordStore } from "@/app/store";
 import { ChangeEvent, useEffect, useState } from "react";
 import { RecipeTable } from "../RecipeTable";
 import { MedicalRecordFormInterface } from "./MedicalRecordFormInterface";
+
+const mr = messages.medicalRecord;
 
 export default function MedicalRecordForm({ initialData, handleCancel, handleSubmit, onlyViewMode = false }: MedicalRecordFormInterface) {
 
@@ -62,13 +65,15 @@ export default function MedicalRecordForm({ initialData, handleCancel, handleSub
             <form onSubmit={onHandleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Síntomas */}
                 <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700">Síntomas</label>
+                    <label className="block text-sm font-medium text-gray-700">
+                        {formFieldLabel(mr.labels.symptoms, Boolean(errors?.symptoms?.length))}
+                    </label>
                     <textarea
                         name="symptoms"
                         rows={3}
                         defaultValue={fields?.symptoms}
                         className={`input-field resize-none ${errors?.symptoms?.length ? '!border-red-500' : ''}`}
-                        placeholder="Describa los síntomas del paciente..."
+                        placeholder={mr.placeholders.symptoms}
                         disabled={onlyViewMode}
                     />
                     {errors?.symptoms && <p className="text-red-500 text-sm">{errors.symptoms}</p>}
@@ -76,13 +81,15 @@ export default function MedicalRecordForm({ initialData, handleCancel, handleSub
 
                 {/* Diagnóstico */}
                 <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700">Diagnóstico</label>
+                    <label className="block text-sm font-medium text-gray-700">
+                        {formFieldLabel(mr.labels.diagnosis, Boolean(errors?.diagnosis?.length))}
+                    </label>
                     <textarea
                         name="diagnosis"
                         rows={3}
                         defaultValue={fields?.diagnosis}
                         className={`input-field resize-none ${errors?.diagnosis?.length ? '!border-red-500' : ''}`}
-                        placeholder="Ingrese el diagnóstico clínico..."
+                        placeholder={mr.placeholders.diagnosis}
                         disabled={onlyViewMode}
                     />
                     {errors?.diagnosis && <p className="text-red-500 text-sm">{errors.diagnosis}</p>}
@@ -90,13 +97,15 @@ export default function MedicalRecordForm({ initialData, handleCancel, handleSub
 
                 {/* Tratamiento */}
                 <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700">Tratamiento</label>
+                    <label className="block text-sm font-medium text-gray-700">
+                        {formFieldLabel(mr.labels.treatment, Boolean(errors?.treatment?.length))}
+                    </label>
                     <textarea
                         name="treatment"
                         rows={3}
                         defaultValue={fields?.treatment}
                         className={`input-field resize-none ${errors?.treatment?.length ? '!border-red-500' : ''}`}
-                        placeholder="Describa el tratamiento indicado..."
+                        placeholder={mr.placeholders.treatment}
                         disabled={onlyViewMode}
                     />
                     {errors?.treatment && <p className="text-red-500 text-sm">{errors.treatment}</p>}
@@ -104,13 +113,15 @@ export default function MedicalRecordForm({ initialData, handleCancel, handleSub
 
                 {/* Notas */}
                 <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700">Notas adicionales</label>
+                    <label className="block text-sm font-medium text-gray-700">
+                        {formFieldLabel(mr.labels.notes, Boolean(errors?.notes?.length))}
+                    </label>
                     <textarea
                         name="notes"
                         rows={2}
                         defaultValue={fields?.notes}
                         className={`input-field resize-none ${errors?.notes?.length ? '!border-red-500' : ''}`}
-                        placeholder="Ingrese notas adicionales..."
+                        placeholder={mr.placeholders.notes}
                         onChange={(e) => fields.notes = e.target.value}
                         disabled={onlyViewMode}
                     />
@@ -119,14 +130,16 @@ export default function MedicalRecordForm({ initialData, handleCancel, handleSub
 
                 {/* Sección de Receta */}
                 <div className="md:col-span-2 mt-6">
-                    <h3 className="text-lg font-semibold mb-2">Receta Médica</h3>
+                    <h3 className="text-lg font-semibold mb-2">{mr.labels.prescriptionSection}</h3>
 
-                    <label className="block text-sm font-medium text-gray-700">Notas de la receta</label>
+                    <label className="block text-sm font-medium text-gray-700">
+                        {formFieldLabel(mr.labels.prescriptionNotes, Boolean(errors?.prescription?.notes?.length))}
+                    </label>
                     <textarea
                         name="prescription.notes"
                         rows={2}
                         defaultValue={fields?.prescription.notes}
-                        className="input-field resize-none mb-4"
+                        className={`input-field resize-none mb-4 ${errors?.prescription?.notes?.length ? '!border-red-500' : ''}`}
                         disabled={onlyViewMode}
                     />
                     {errors?.prescription?.notes && <p className="text-red-500 text-sm">{errors.prescription.notes}</p>}
@@ -139,19 +152,19 @@ export default function MedicalRecordForm({ initialData, handleCancel, handleSub
                         onClick={handleAddItem}
                         className="btn-secondary mt-2"
                     >
-                        + Añadir Medicamento
+                        {mr.actions.addMedication}
                     </button>
                     )}
                 </div>
 
                 {/* Acciones */}
-                < div className="md:col-span-2 flex justify-between mt-6" >
-                    <button type="button" onClick={onHandleCancel} className="btn-secondary"    >
-                        Cancelar
+                <div className="md:col-span-2 flex justify-between mt-6">
+                    <button type="button" onClick={onHandleCancel} className="btn-secondary">
+                        {mr.actions.cancel}
                     </button>
                     {!onlyViewMode && (         
                         <button type="submit" className="btn-primary">
-                            Guardar
+                            {mr.actions.save}
                         </button>
                     )}
                 </div>

@@ -1,5 +1,5 @@
 import { DashboardLayout, Loader, PageWrapper, PatientForm } from "@/app/components";
-import { messages } from "@/app/config";
+import { messages, formatMessage } from "@/app/config";
 import { routeNames } from "@/app/routes";
 import { usePatientStore, useToastStore } from "@/app/store";
 import { useRouter } from "next/router";
@@ -48,7 +48,9 @@ export default function CreatePatient() {
             <PageWrapper>
                 <div className="container mx-auto p-4">
                     <div className="flex justify-between items-center mb-4">
-                        <h1 className="text-2xl font-bold mb-4">Pacientes - {TITLE_PAGE}</h1>
+                        <h1 className="text-2xl font-bold mb-4">
+                            {formatMessage(messages.patient.pages.listWithAction, { action: TITLE_PAGE })}
+                        </h1>
                     </div>
                     <PatientForm handleSubmit={handleSubmit} handleCancel={handleCancel} />
                 </div>

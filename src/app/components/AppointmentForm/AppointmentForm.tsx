@@ -1,7 +1,13 @@
+import { formFieldLabel, messages } from "@/app/config";
 import { useAppointmentStore } from "@/app/store";
 import { FormEvent, MouseEvent, useEffect, useState } from "react";
 import { AppointmentDateTimePicker } from "../AppointmentDateTimePicker";
 import { AppointmentFormComponentInterface } from "./AppointmentFormComponentInterface";
+
+const aptLabels = messages.appointment.labels;
+const aptActions = messages.appointment.actions;
+const aptStatusLabels = messages.appointment.status;
+const common = messages.common;
 
 export default function AppointmentForm({ initialData, handleCancel, handleSubmit, handleDelete, deps }: AppointmentFormComponentInterface) {
 
@@ -48,9 +54,11 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
             <form onSubmit={onHandleSubmit} className={`grid ${fields?.id ? 'md:grid-cols-3' : 'md:grid-cols-2'} grid-cols-1 gap-4`}>
                 {/* Paciente */}
                 <div className="col-span-1">
-                    <label className="block text-sm font-medium text-gray-700">Paciente</label>
+                    <label className="block text-sm font-medium text-gray-700">
+                        {formFieldLabel(aptLabels.patient, Boolean(errors?.patient_id?.length))}
+                    </label>
                     <select name="patient_id" className={`input-field ${errors?.patient_id?.length ? '!border-red-500' : ''}`} defaultValue={fields?.patient_id ?? patientId ?? ""} onChange={onHandleChangePatient}>
-                        <option value="">Seleccione un paciente</option>
+                        <option value="">{common.form.selectPatient}</option>
                         {patients.map((patient) => (
                             <option key={patient.id} value={patient.id}>
                                 {`${patient.name} ${patient.lastname}`}
@@ -62,7 +70,9 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
 
                 {/* Fecha y hora */}
                 <div className="col-span-1">
-                    <label className="block text-sm font-medium text-gray-700">Fecha y Hora</label>
+                    <label className="block text-sm font-medium text-gray-700">
+                        {formFieldLabel(aptLabels.dateTime, Boolean(errors?.date_time?.length))}
+                    </label>
                     <AppointmentDateTimePicker
                         name="date_time"
                         value={dateTime}
@@ -75,15 +85,17 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
                 {/* Estado — solo en edición */}
                 {fields?.id && (
                     <div className="col-span-1">
-                        <label className="block text-sm font-medium text-gray-700">Estado</label>
+                        <label className="block text-sm font-medium text-gray-700">
+                            {formFieldLabel(aptLabels.status, Boolean(errors?.status?.length))}
+                        </label>
                         <select
                             name="status"
                             defaultValue={fields?.status}
                             className={`input-field capitalize ${errors?.status?.length ? '!border-red-500' : ''}`}
                         >
-                            <option value="pending">Pendiente</option>
-                            <option value="confirmed">Confirmada</option>
-                            <option value="cancelled">Cancelada</option>
+                            <option value="pending">{aptStatusLabels.pending}</option>
+                            <option value="confirmed">{aptStatusLabels.confirmed}</option>
+                            <option value="cancelled">{aptStatusLabels.cancelled}</option>
                         </select>
                         {errors?.status && <p className="text-red-500 text-sm">{errors.status}</p>}
                     </div>
@@ -92,7 +104,9 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
 
                 {/* Motivo */}
                 <div className={`${fields?.id ? 'md:col-span-3' : 'md:col-span-2'}`}>
-                    <label className="block text-sm font-medium text-gray-700">Motivo de la Cita</label>
+                    <label className="block text-sm font-medium text-gray-700">
+                        {formFieldLabel(aptLabels.reason, Boolean(errors?.reason?.length))}
+                    </label>
                     <textarea name="reason" rows={3} className={`input-field ${errors?.reason?.length ? '!border-red-500' : ''}`} defaultValue={fields?.reason} />
                     {errors?.reason && <p className="text-red-500 text-sm">{errors.reason}</p>}
                 </div>
@@ -101,7 +115,7 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
                 <div className={`${fields?.id ? 'md:col-span-3' : 'md:col-span-2'} flex justify-between items-center mt-4`}>
                     <div className="flex gap-2">
                         <button type="button" onClick={handleCancel} className="btn-secondary">
-                            {fields?.id ? "Regresar" : "Cancelar"}
+                            {fields?.id ? common.actions.back : common.actions.cancel}
                         </button>
                         {/* Botón de eliminar SOLO si la cita ya existe */}
                         {fields?.id && (
@@ -110,13 +124,15 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
                                 onClick={(e: MouseEvent<HTMLButtonElement>) => fields?.id !== undefined && handleDelete?.(e, fields.id)}
                                 className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md shadow-md"
                             >
-                                Eliminar Cita
+                                {aptActions.deleteAppointment}
                             </button>
 
                         )}
                     </div>
                     <button type="submit" className="btn-primary">
-                        {fields?.id ? "Actualizar" : "Crear"} Cita
+                        {fields?.id
+                            ? aptActions.submitUpdate
+                            : aptActions.submitCreate}
                     </button>
 
                 </div>

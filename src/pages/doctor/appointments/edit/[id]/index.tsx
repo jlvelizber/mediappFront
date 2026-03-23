@@ -1,5 +1,5 @@
 import { AppointmentForm, DashboardLayout, DeleteConfirmation, Loader, PageWrapper } from "@/app/components";
-import { messages } from "@/app/config";
+import { formatMessage, messages } from "@/app/config";
 import { useLayout } from "@/app/context";
 import { PatientInterface } from "@/app/intefaces";
 import { routeNames } from "@/app/routes";
@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 import { MouseEvent, useEffect, useState } from "react";
 
 export default function CreateAppointment() {
-    const TITLE_PAGE = "Editar Cita";
+    const TITLE_PAGE = messages.appointment.pages.editTitle;
     const { loading: { fetching, updating, deleting }, updated, deleted: deletedMessage } = messages.appointment;
     const router = useRouter();
     const appointmentsBaseRoute = `${routeNames.doctors}${routeNames.appointments}`;
@@ -117,12 +117,14 @@ export default function CreateAppointment() {
 
     return (
         <>
-            <DeleteConfirmation entityName="Cita" isOpen={flowDelete.isOpenDeleteConfirmation} onClose={handleCloseDeleteConfirmation} onConfirm={handleConfirmDelete} />
+            <DeleteConfirmation entityName={messages.appointment.entityName} isOpen={flowDelete.isOpenDeleteConfirmation} onClose={handleCloseDeleteConfirmation} onConfirm={handleConfirmDelete} />
             <DashboardLayout>
                 <PageWrapper>
                     <div className="container mx-auto p-4">
                         <div className="flex justify-between items-center mb-4">
-                            <h1 className="text-2xl font-bold mb-4">Citas médicas - {TITLE_PAGE}</h1>
+                            <h1 className="text-2xl font-bold mb-4">
+                                {formatMessage(messages.appointment.pages.listWithAction, { action: TITLE_PAGE })}
+                            </h1>
                         </div>
                         {!isLoading && <AppointmentForm handleCancel={handleCancel} handleSubmit={handleSubmit} handleDelete={handleRemove} deps={deps} />}
 

@@ -1,4 +1,5 @@
 import { AvailabilityList, DashboardLayout, EmptyState, Loader, PageWrapper, Tabs } from "@/app/components";
+import { formFieldLabel, messages } from "@/app/config";
 import { useLayout } from "@/app/context";
 import { DoctorSettingsData, DoctorSettingsService } from "@/app/services";
 import { useToastStore } from "@/app/store";
@@ -15,8 +16,10 @@ interface AvailabilityFormFields {
     end_time: string;
 }
 
+const s = messages.settings;
+
 export default function DoctorSettingsPage() {
-    const TITLE_PAGE = "Configuración";
+    const TITLE_PAGE = s.pageTitle;
     const router = useRouter();
     const { register, handleSubmit, reset, watch } = useForm<AvailabilityFormFields>({
         defaultValues: {
@@ -72,7 +75,7 @@ export default function DoctorSettingsPage() {
             setSettings((prev) => ({ ...prev, ...data }));
         } catch (error) {
             console.error("Error loading doctor settings:", error);
-            addToast("No se pudo cargar la configuración.", "error");
+            addToast(s.toast.loadSettingsError, "error");
         } finally {
             setLoading(false);
         }
@@ -85,7 +88,7 @@ export default function DoctorSettingsPage() {
             setAvailabilities(response);
         } catch (error) {
             console.error("Error loading doctor availabilities:", error);
-            addToast("No se pudo cargar el horario.", "error");
+            addToast(s.toast.loadAvailabilityError, "error");
         } finally {
             setLoadingAvailability(false);
         }
@@ -101,10 +104,10 @@ export default function DoctorSettingsPage() {
             setSaving(true);
             const updated = await DoctorSettingsService.updateSettings(settings);
             setSettings((prev) => ({ ...prev, ...updated }));
-            addToast("Configuración actualizada correctamente.", "success");
+            addToast(s.toast.updateSuccess, "success");
         } catch (error) {
             console.error("Error updating doctor settings:", error);
-            addToast("No se pudo actualizar la configuración.", "error");
+            addToast(s.toast.updateError, "error");
         } finally {
             setSaving(false);
         }
@@ -112,7 +115,7 @@ export default function DoctorSettingsPage() {
 
     const onSubmitAvailability: SubmitHandler<AvailabilityFormFields> = async (data) => {
         if (data.end_time <= data.start_time) {
-            addToast("La hora de fin debe ser posterior a la hora de inicio.", "warning");
+            addToast(s.hints.endAfterStart, "warning");
             return;
         }
 
@@ -121,10 +124,10 @@ export default function DoctorSettingsPage() {
             await AvailabilityService.saveMyAvailability(data as DoctorAvailabilityInterface);
             reset();
             await loadAvailabilities();
-            addToast("Horario guardado correctamente.", "success");
+            addToast(s.toast.availabilitySaved, "success");
         } catch (error) {
             console.error("Error saving availability:", error);
-            addToast("No se pudo guardar el horario.", "error");
+            addToast(s.toast.availabilitySaveError, "error");
         } finally {
             setLoadingAvailability(false);
         }
@@ -135,10 +138,10 @@ export default function DoctorSettingsPage() {
             setLoadingAvailability(true);
             await AvailabilityService.removeAvailability(itemId);
             await loadAvailabilities();
-            addToast("Horario eliminado correctamente.", "success");
+            addToast(s.toast.availabilityDeleted, "success");
         } catch (error) {
             console.error("Error removing availability:", error);
-            addToast("No se pudo eliminar el horario.", "error");
+            addToast(s.toast.availabilityDeleteError, "error");
         } finally {
             setLoadingAvailability(false);
         }
@@ -157,7 +160,7 @@ export default function DoctorSettingsPage() {
         );
     };
 
-    if (loading) return <Loader message="Cargando configuración..." />;
+    if (loading) return <Loader message={s.loading} />;
 
     return (
         <DashboardLayout>
@@ -165,8 +168,8 @@ export default function DoctorSettingsPage() {
                 <div className="container mx-auto p-4">
                     <Tabs
                         tabs={[
-                            { label: "Configuración básica", value: "basic" },
-                            { label: "Disponibilidad y horario", value: "availability" },
+                            { label: s.tabs.basic, value: "basic" },
+                            { label: s.tabs.availability, value: "availability" },
                         ]}
                         active={activeTab}
                         onChange={handleChangeTab}
@@ -175,9 +178,9 @@ export default function DoctorSettingsPage() {
                     {activeTab === "basic" && (
                         <form onSubmit={handleSaveSettings} className="space-y-6">
                             <section className="bg-white rounded-lg shadow-sm p-6">
-                                <h2 className="text-lg font-semibold text-primary mb-4">Agenda</h2>
+                                <h2 className="text-lg font-semibold text-primary mb-4">{s.sections.agenda}</h2>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Duración por cita (minutos)</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">{s.labels.durationPerAppointment}</label>
                                     <input
                                         type="number"
                                         min={5}
@@ -189,10 +192,10 @@ export default function DoctorSettingsPage() {
                             </section>
 
                             <section className="bg-white rounded-lg shadow-sm p-6">
-                                <h2 className="text-lg font-semibold text-primary mb-4">Consulta</h2>
+                                <h2 className="text-lg font-semibold text-primary mb-4">{s.sections.consultation}</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Precio base</label>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">{s.labels.basePrice}</label>
                                         <input
                                             type="number"
                                             min={0}
@@ -203,7 +206,7 @@ export default function DoctorSettingsPage() {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Moneda</label>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">{s.labels.currency}</label>
                                         <input
                                             className="w-full border border-gray-300 rounded-md px-3 py-2"
                                             value={settings.currency_default_appointment}
@@ -211,7 +214,7 @@ export default function DoctorSettingsPage() {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Símbolo de moneda</label>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">{s.labels.currencySymbol}</label>
                                         <input
                                             className="w-full border border-gray-300 rounded-md px-3 py-2"
                                             value={settings.currency_symbol_default_appointment}
@@ -222,22 +225,22 @@ export default function DoctorSettingsPage() {
                             </section>
 
                             <section className="bg-white rounded-lg shadow-sm p-6">
-                                <h2 className="text-lg font-semibold text-primary mb-4">Notificaciones</h2>
+                                <h2 className="text-lg font-semibold text-primary mb-4">{s.sections.notifications}</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Canal de envío</label>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">{s.labels.notificationChannel}</label>
                                         <select
                                             className="w-full border border-gray-300 rounded-md px-3 py-2"
                                             value={settings.way_notify_appointment}
                                             onChange={(e) => handleChange("way_notify_appointment", e.target.value as DoctorSettingsData["way_notify_appointment"])}
                                         >
-                                            <option value="both">Email + WhatsApp</option>
-                                            <option value="email">Solo Email</option>
-                                            <option value="whatsapp">Solo WhatsApp</option>
+                                            <option value="both">{s.notificationChannel.both}</option>
+                                            <option value="email">{s.notificationChannel.email}</option>
+                                            <option value="whatsapp">{s.notificationChannel.whatsapp}</option>
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Recordatorio (horas antes)</label>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">{s.labels.reminderHoursBefore}</label>
                                         <input
                                             type="number"
                                             min={1}
@@ -251,10 +254,10 @@ export default function DoctorSettingsPage() {
                             </section>
 
                             <section className="bg-white rounded-lg shadow-sm p-6">
-                                <h2 className="text-lg font-semibold text-primary mb-4">Consultorio</h2>
+                                <h2 className="text-lg font-semibold text-primary mb-4">{s.sections.office}</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Nombre del consultorio</label>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">{s.labels.officeName}</label>
                                         <input
                                             className="w-full border border-gray-300 rounded-md px-3 py-2"
                                             value={settings.medical_center_name ?? ""}
@@ -262,7 +265,7 @@ export default function DoctorSettingsPage() {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Teléfono del consultorio</label>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">{s.labels.officePhone}</label>
                                         <input
                                             className="w-full border border-gray-300 rounded-md px-3 py-2"
                                             value={settings.medical_center_phone ?? ""}
@@ -270,7 +273,7 @@ export default function DoctorSettingsPage() {
                                         />
                                     </div>
                                     <div className="md:col-span-2">
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Dirección del consultorio</label>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">{s.labels.officeAddress}</label>
                                         <input
                                             className="w-full border border-gray-300 rounded-md px-3 py-2"
                                             value={settings.medical_center_address ?? ""}
@@ -281,7 +284,7 @@ export default function DoctorSettingsPage() {
                             </section>
 
                             <button type="submit" className="btn-primary disabled:opacity-50" disabled={saving}>
-                                {saving ? "Guardando..." : "Guardar configuración"}
+                                {saving ? s.buttons.savingSettings : s.buttons.saveSettings}
                             </button>
                         </form>
                     )}
@@ -289,14 +292,14 @@ export default function DoctorSettingsPage() {
                     {activeTab === "availability" && (
                         <div className="space-y-6">
                             <section className="bg-white rounded-lg shadow-sm p-6">
-                                <h2 className="text-lg font-semibold text-primary mb-4">Horario de atención</h2>
+                                <h2 className="text-lg font-semibold text-primary mb-4">{s.sections.schedule}</h2>
                                 <p className="text-sm text-gray-600 mb-4">
-                                    Define aquí los bloques de tiempo en los que atiendes pacientes. Puedes agregar varios horarios por día.
+                                    {s.hints.scheduleIntro}
                                 </p>
 
                                 <form onSubmit={handleSubmit(onSubmitAvailability)} className="grid grid-cols-1 md:grid-cols-4 gap-3">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Día de atención</label>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">{s.labels.dayOfCare}</label>
                                         <select {...register("day_of_week")} required className="w-full border p-2 rounded">
                                             {daysOfWeek.map((day) => (
                                                 <option key={day.id} value={day.value}>{day.label}</option>
@@ -304,11 +307,15 @@ export default function DoctorSettingsPage() {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Hora inicio</label>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                                            {formFieldLabel(s.labels.startTime, hasInvalidRange)}
+                                        </label>
                                         <input type="time" {...register("start_time")} required className="w-full border p-2 rounded" />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Hora fin</label>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                                            {formFieldLabel(s.labels.endTime, hasInvalidRange)}
+                                        </label>
                                         <input type="time" {...register("end_time")} required className="w-full border p-2 rounded" />
                                     </div>
                                     <div className="flex items-end">
@@ -317,34 +324,37 @@ export default function DoctorSettingsPage() {
                                         className="btn-primary disabled:opacity-50 w-full"
                                         disabled={loadingAvailability || hasInvalidRange}
                                     >
-                                        Agregar horario
+                                        {s.buttons.addSchedule}
                                     </button>
                                     </div>
                                 </form>
 
                                 {hasInvalidRange && (
                                     <p className="text-sm text-red-600 mt-3">
-                                        La hora de fin debe ser posterior a la hora de inicio.
+                                        {s.hints.endAfterStart}
                                     </p>
                                 )}
                             </section>
 
                             <section className="bg-white rounded-lg shadow-sm p-6">
                                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
-                                    <h2 className="text-lg font-semibold text-primary">Disponibilidades registradas</h2>
+                                    <h2 className="text-lg font-semibold text-primary">{s.sections.registeredAvailability}</h2>
                                     <span className="text-sm text-gray-500">
-                                        {availabilities.length} {availabilities.length === 1 ? "horario activo" : "horarios activos"}
+                                        {availabilities.length}{" "}
+                                        {availabilities.length === 1
+                                            ? s.availabilityCount.one
+                                            : s.availabilityCount.many}
                                     </span>
                                 </div>
                                 {loadingAvailability ? (
-                                    <Loader message="Actualizando horarios..." />
+                                    <Loader message={s.loadingAvailabilities} />
                                 ) : availabilities.length > 0 ? (
                                     <AvailabilityList items={availabilities} onRemove={handleRemoveAvailability} />
                                 ) : (
                                     <div className="py-10">
                                         <EmptyState />
                                         <p className="text-center text-sm text-gray-500 mt-3">
-                                            Aun no tienes horarios configurados. Agrega tu primer bloque arriba.
+                                            {s.hints.noSchedulesYet}
                                         </p>
                                     </div>
                                 )}

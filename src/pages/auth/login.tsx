@@ -1,5 +1,6 @@
 'use client'
 import { Loader } from "@/app/components";
+import { messages } from "@/app/config/messages";
 import { useAuth, useLayout } from "@/app/context";
 import { useCSFR } from "@/app/hooks";
 import { routeNames } from "@/app/routes";
@@ -7,7 +8,9 @@ import { SetupService } from "@/app/services";
 import { EyeClosedIcon, EyeIcon } from '@primer/octicons-react';
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
-const APP_NAME = process.env.NEXT_PUBLIC_TITLE || "Mediapp"; // Ajusta según tu backend.
+
+const APP_NAME =
+    process.env.NEXT_PUBLIC_TITLE || messages.setup.appNameFallback;
 
 
 export default function Login() {
@@ -56,37 +59,47 @@ export default function Login() {
         }
     };
 
-    if (isCheckingSetup || isLoading) return <Loader message="Iniciando sesión" />
+    if (isCheckingSetup || isLoading) {
+        return (
+            <Loader
+                message={
+                    isCheckingSetup
+                        ? messages.setup.loading.verifyingInstallation
+                        : messages.login.loading.signingIn
+                }
+            />
+        );
+    }
 
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
                 <h1 className="text-3xl font-semibold text-primary text-center mb-6">{APP_NAME}</h1>
-                <h2 className="text-l font-bold text-gray-800 text-center mb-6">Iniciar sesión</h2>
+                <h2 className="text-l font-bold text-gray-800 text-center mb-6">{messages.login.title}</h2>
                 <form
                     onSubmit={handleSubmit}
                 >
                     <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700">Email</label>
+                        <label className="block text-sm font-medium text-gray-700">{messages.login.labels.email}</label>
                         <input
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary"
                             required
-                            placeholder="Ingresa tu correo"
+                            placeholder={messages.login.placeholders.email}
                         />
                     </div>
                     <div className="mb-4 relative">
-                        <label className="block text-sm font-medium text-gray-700">Contraseña</label>
+                        <label className="block text-sm font-medium text-gray-700">{messages.login.labels.password}</label>
                         <input
                             type={showPassword ? "text" : "password"}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary"
                             required
-                            placeholder="••••••••"
+                            placeholder={messages.login.placeholders.password}
                         />
                         <button
                             type="button"
@@ -100,13 +113,13 @@ export default function Login() {
                         type="submit"
                         className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-2 rounded-lg shadow-md transition"
                     >
-                        Iniciar sesión
+                        {messages.login.submit}
                     </button>
                 </form>
                 {/* Link de "Olvidaste tu contraseña?" */}
                 <p className="text-sm text-gray-600 text-center mt-4 hidden">
                     <a href="#" className="text-primary hover:underline">
-                        ¿Olvidaste tu contraseña?
+                        {messages.login.forgotPassword}
                     </a>
                 </p>
             </div>

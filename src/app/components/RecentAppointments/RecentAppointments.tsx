@@ -1,4 +1,5 @@
 import { AppointmentInterface, AppointmentStatusEnum } from "@/app/intefaces";
+import { messages } from "@/app/config/messages";
 import { FC, useMemo } from "react";
 import { RecentAppointmentsProps } from "./RecentAppointmentsInterface";
 
@@ -18,7 +19,7 @@ export const RecentAppointments: FC<RecentAppointmentsProps> = ({ appointments }
 
   return (
     <div className="bg-white rounded-2xl shadow-sm p-4 mt-6">
-      <h2 className="text-lg font-semibold mb-4 text-gray-800">Citas recientes</h2>
+      <h2 className="text-lg font-semibold mb-4 text-gray-800">{messages.dashboard.recentAppointments}</h2>
       <div className="divide-y">
         {appointments && appointments.length > 0 ? (
           appointments.map((a: AppointmentInterface) => (

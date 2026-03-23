@@ -1,6 +1,7 @@
 'use client'
 
 import { Loader } from "@/app/components";
+import { messages } from "@/app/config/messages";
 import { useLayout } from "@/app/context";
 import { useCSFR } from "@/app/hooks";
 import { routeNames } from "@/app/routes";
@@ -9,7 +10,8 @@ import { AxiosError } from "axios";
 import { useRouter } from "next/router";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
-const APP_NAME = process.env.NEXT_PUBLIC_TITLE || "Mediapp";
+const APP_NAME =
+  process.env.NEXT_PUBLIC_TITLE || messages.setup.appNameFallback;
 
 const INITIAL_FORM: SetupInitializePayload = {
   admin_name: "",
@@ -83,21 +85,24 @@ export default function SetupPage() {
 
     try {
       await SetupService.initialize(form);
-      setSuccessMessage("Instalacion completada. Redirigiendo al login...");
+      setSuccessMessage(messages.setup.success.completedRedirect);
       await router.replace(routeNames.login);
     } catch (error: unknown) {
       const apiError = error as AxiosError<{ message?: string }>;
       const message =
-        apiError.response?.data?.message ||
-        "No se pudo completar la instalacion inicial.";
+        apiError.response?.data?.message || messages.setup.error.generic;
       setErrorMessage(message);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (isCheckingSetup || isSubmitting) {
-    return <Loader message="Configurando instalacion inicial" />;
+  if (isCheckingSetup) {
+    return <Loader message={messages.setup.loading.configuring} />;
+  }
+
+  if (isSubmitting) {
+    return <Loader message={messages.setup.loading.completing} />;
   }
 
   return (
@@ -107,7 +112,7 @@ export default function SetupPage() {
           {APP_NAME}
         </h1>
         <h2 className="text-lg font-bold text-gray-800 text-center mb-6">
-          Configuracion inicial
+          {messages.setup.title}
         </h2>
 
         {errorMessage ? (
@@ -124,7 +129,7 @@ export default function SetupPage() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <section>
             <h3 className="text-base font-semibold text-gray-700 mb-3">
-              Doctor administrador
+              {messages.setup.sections.doctorAdmin}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <input
@@ -132,7 +137,7 @@ export default function SetupPage() {
                 value={form.admin_name}
                 onChange={(e) => onChange("admin_name", e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder="Nombre"
+                placeholder={messages.setup.placeholders.adminName}
                 required
               />
               <input
@@ -140,7 +145,7 @@ export default function SetupPage() {
                 value={form.admin_lastname}
                 onChange={(e) => onChange("admin_lastname", e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder="Apellido"
+                placeholder={messages.setup.placeholders.adminLastname}
                 required
               />
               <input
@@ -148,7 +153,7 @@ export default function SetupPage() {
                 value={form.admin_email}
                 onChange={(e) => onChange("admin_email", e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder="Correo"
+                placeholder={messages.setup.placeholders.adminEmail}
                 required
               />
               <input
@@ -156,14 +161,14 @@ export default function SetupPage() {
                 value={form.admin_phone || ""}
                 onChange={(e) => onChange("admin_phone", e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder="Telefono (opcional)"
+                placeholder={messages.setup.placeholders.adminPhone}
               />
               <input
                 type="password"
                 value={form.admin_password}
                 onChange={(e) => onChange("admin_password", e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder="Contrasena"
+                placeholder={messages.setup.placeholders.adminPassword}
                 required
               />
               <input
@@ -173,7 +178,7 @@ export default function SetupPage() {
                   onChange("admin_password_confirmation", e.target.value)
                 }
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder="Confirmar contrasena"
+                placeholder={messages.setup.placeholders.adminPasswordConfirm}
                 required
               />
               <input
@@ -181,14 +186,14 @@ export default function SetupPage() {
                 value={form.doctor_specialization || ""}
                 onChange={(e) => onChange("doctor_specialization", e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm md:col-span-2"
-                placeholder="Especialidad (opcional)"
+                placeholder={messages.setup.placeholders.doctorSpecialization}
               />
             </div>
           </section>
 
           <section>
             <h3 className="text-base font-semibold text-gray-700 mb-3">
-              Centro medico
+              {messages.setup.sections.medicalCenter}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <input
@@ -196,7 +201,7 @@ export default function SetupPage() {
                 value={form.medical_center_name}
                 onChange={(e) => onChange("medical_center_name", e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm md:col-span-2"
-                placeholder="Nombre del centro medico"
+                placeholder={messages.setup.placeholders.medicalCenterName}
                 required
               />
               <input
@@ -204,28 +209,28 @@ export default function SetupPage() {
                 value={form.medical_center_address || ""}
                 onChange={(e) => onChange("medical_center_address", e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm md:col-span-2"
-                placeholder="Direccion (opcional)"
+                placeholder={messages.setup.placeholders.medicalCenterAddress}
               />
               <input
                 type="text"
                 value={form.medical_center_phone || ""}
                 onChange={(e) => onChange("medical_center_phone", e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder="Telefono (opcional)"
+                placeholder={messages.setup.placeholders.medicalCenterPhone}
               />
               <input
                 type="email"
                 value={form.medical_center_email || ""}
                 onChange={(e) => onChange("medical_center_email", e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder="Correo (opcional)"
+                placeholder={messages.setup.placeholders.medicalCenterEmail}
               />
             </div>
           </section>
 
           <section>
             <h3 className="text-base font-semibold text-gray-700 mb-3">
-              Configuracion inicial de consulta
+              {messages.setup.sections.appointmentDefaults}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <input
@@ -237,7 +242,7 @@ export default function SetupPage() {
                   onChange("default_appointment_duration", e.target.value)
                 }
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder="Duracion por defecto (min)"
+                placeholder={messages.setup.placeholders.defaultDuration}
               />
               <input
                 type="number"
@@ -248,7 +253,7 @@ export default function SetupPage() {
                   onChange("default_appointment_price", e.target.value)
                 }
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder="Precio por defecto"
+                placeholder={messages.setup.placeholders.defaultPrice}
               />
               <input
                 type="text"
@@ -257,7 +262,7 @@ export default function SetupPage() {
                   onChange("default_appointment_currency", e.target.value)
                 }
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder="Moneda (ej. USD)"
+                placeholder={messages.setup.placeholders.currency}
               />
               <input
                 type="text"
@@ -266,7 +271,7 @@ export default function SetupPage() {
                   onChange("default_appointment_currency_symbol", e.target.value)
                 }
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder="Simbolo de moneda (ej. $)"
+                placeholder={messages.setup.placeholders.currencySymbol}
               />
               <select
                 value={form.notification_way || "both"}
@@ -278,9 +283,15 @@ export default function SetupPage() {
                 }
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
               >
-                <option value="both">Correo y WhatsApp</option>
-                <option value="email">Solo correo</option>
-                <option value="whatsapp">Solo WhatsApp</option>
+                <option value="both">
+                  {messages.setup.notificationWay.both}
+                </option>
+                <option value="email">
+                  {messages.setup.notificationWay.email}
+                </option>
+                <option value="whatsapp">
+                  {messages.setup.notificationWay.whatsapp}
+                </option>
               </select>
               <input
                 type="number"
@@ -291,7 +302,7 @@ export default function SetupPage() {
                   onChange("reminder_hour_appointment", e.target.value)
                 }
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
-                placeholder="Recordatorio en horas"
+                placeholder={messages.setup.placeholders.reminderHours}
               />
             </div>
           </section>
@@ -300,7 +311,7 @@ export default function SetupPage() {
             type="submit"
             className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-2 rounded-lg shadow-md transition"
           >
-            Completar instalacion
+            {messages.setup.submit}
           </button>
         </form>
       </div>

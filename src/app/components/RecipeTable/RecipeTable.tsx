@@ -1,7 +1,10 @@
+import { messages } from "@/app/config/messages"
 import { PrescriptionItemInterface } from "@/app/intefaces"
 import { TrashIcon } from "@primer/octicons-react"
 import { FC } from "react"
 import { RecipeTableInterface } from "./RecipeTableInterface"
+
+const ph = messages.prescription.placeholders
 
 export const RecipeTable: FC<RecipeTableInterface> = ({ items, onHandleChantePrescriptionItem, onHandleRemoveItem, onlyViewMode, errors }) => {
     return (
@@ -11,7 +14,7 @@ export const RecipeTable: FC<RecipeTableInterface> = ({ items, onHandleChantePre
                     <div className="lg:col-span-3">
                         <input
                             type="text"
-                            placeholder="Medicamento"
+                            placeholder={ph.medication}
                             name="medication_name"
                             defaultValue={_item.medication_name}
                             onChange={(e) => onHandleChantePrescriptionItem(e, index)}
@@ -23,7 +26,7 @@ export const RecipeTable: FC<RecipeTableInterface> = ({ items, onHandleChantePre
                     <div className="lg:col-span-2">
                         <input
                             type="text"
-                            placeholder="Dosis"
+                            placeholder={ph.dosage}
                             name="dosage"
                             defaultValue={_item.dosage}
                             className="input-field w-full"
@@ -35,7 +38,7 @@ export const RecipeTable: FC<RecipeTableInterface> = ({ items, onHandleChantePre
                     <div className="lg:col-span-2">
                         <input
                             type="text"
-                            placeholder="Frecuencia"
+                            placeholder={ph.frequency}
                             name="frequency"
                             defaultValue={_item.frequency}
                             className="input-field w-full"
@@ -47,7 +50,7 @@ export const RecipeTable: FC<RecipeTableInterface> = ({ items, onHandleChantePre
                     <div className="lg:col-span-2">
                         <input
                             type="text"
-                            placeholder="Duración"
+                            placeholder={ph.duration}
                             name="duration"
                             defaultValue={_item.duration}
                             className="input-field w-full"
@@ -59,7 +62,7 @@ export const RecipeTable: FC<RecipeTableInterface> = ({ items, onHandleChantePre
                     <div className="lg:col-span-2">
                         <input
                             type="text"
-                            placeholder="Notas"
+                            placeholder={ph.notes}
                             name="notes"
                             defaultValue={_item.notes}
                             className="input-field w-full"
