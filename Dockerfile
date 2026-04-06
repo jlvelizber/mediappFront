@@ -6,13 +6,16 @@ COPY package.json package-lock.json* ./
 RUN npm ci
 
 COPY . .
-ARG NEXT_PUBLIC_API_URL=""
-ARG NEXT_PUBLIC_PUBLIC_URL=""
-ARG NEXT_PUBLIC_TITLE=""
-RUN if [ -n "$NEXT_PUBLIC_API_URL" ]; then export NEXT_PUBLIC_API_URL="$NEXT_PUBLIC_API_URL"; fi; \
-    if [ -n "$NEXT_PUBLIC_PUBLIC_URL" ]; then export NEXT_PUBLIC_PUBLIC_URL="$NEXT_PUBLIC_PUBLIC_URL"; fi; \
-    if [ -n "$NEXT_PUBLIC_TITLE" ]; then export NEXT_PUBLIC_TITLE="$NEXT_PUBLIC_TITLE"; fi; \
-    npm run build
+# Build-time only: Next inlines NEXT_PUBLIC_* into the client bundle.
+# Pass --build-arg from .env de prod (no uses localhost). En .dockerignore se excluye .env del
+# contexto para que no pisen estos valores al hacer npm run build.
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_PUBLIC_URL
+ARG NEXT_PUBLIC_TITLE
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+ENV NEXT_PUBLIC_PUBLIC_URL=${NEXT_PUBLIC_PUBLIC_URL}
+ENV NEXT_PUBLIC_TITLE=${NEXT_PUBLIC_TITLE}
+RUN npm run build
 
 FROM node:20-alpine AS runner
 
