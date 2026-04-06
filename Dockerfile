@@ -6,9 +6,9 @@ COPY package.json package-lock.json* ./
 RUN npm ci
 
 COPY . .
-# Build-time only: Next inlines NEXT_PUBLIC_* into the client bundle.
-# Pass --build-arg from .env de prod (no uses localhost). En .dockerignore se excluye .env del
-# contexto para que no pisen estos valores al hacer npm run build.
+# Build: Next inlines NEXT_PUBLIC_* en el bundle. En runtime, `_document` inyecta
+# window.__MEDIAPP_ENV__ desde MEDIAPP_PUBLIC_* (compose); el cliente usa eso en api.ts / CSRF.
+# Pasar --build-arg desde el .env de prod (no localhost). .dockerignore excluye .env local.
 ARG NEXT_PUBLIC_API_URL
 ARG NEXT_PUBLIC_PUBLIC_URL
 ARG NEXT_PUBLIC_TITLE

@@ -1,21 +1,22 @@
 import axios from "axios";
+import { getPublicApiUrl } from "@/lib/runtimePublicEnv";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL; // Ajusta según tu backend.
+const API_URL = getPublicApiUrl();
 
 export const apiClient = axios.create({
   baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
     credentials: "include",
-    Accept: "application/json"
+    Accept: "application/json",
   },
   withCredentials: true,
   withXSRFToken: true,
 });
 
-
 apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
