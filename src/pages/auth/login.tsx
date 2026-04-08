@@ -49,7 +49,9 @@ export default function Login() {
         try {
             const wasSuccess: boolean = await login(email, password);
             if (wasSuccess) {
-                await router.replace("/");
+                // `router.replace` a veces no resuelve la promesa en produccion (spinner infinito).
+                // Navegacion directa al panel; `.finally` asegura quitar el loader.
+                void router.replace(routeNames.doctors).finally(() => setIsLoading(false));
                 return;
             }
             setIsLoading(false);
