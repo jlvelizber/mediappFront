@@ -51,6 +51,13 @@ export const AuthProvider = ({ children }: AuthProviderProps): ReactNode => {
                 localStorage.setItem('token', data.token);
             }
             localStorage.setItem('user', JSON.stringify(data.user));
+            // El middleware (`src/middleware.ts`) usa la cookie `role`; sin ella las rutas /doctor redirigen a login.
+            const roleValue = data.user?.role || (data.doctor ? "doctor" : "");
+            if (roleValue) {
+                const secure = typeof window !== "undefined" && window.location.protocol === "https:";
+                const maxAge = 60 * 60 * 24 * 365;
+                document.cookie = `role=${encodeURIComponent(roleValue)}; path=/; max-age=${maxAge}; SameSite=Lax${secure ? "; Secure" : ""}`;
+            }
             // guardamos el rol en el store
             if (data.doctor) setDoctor(data.doctor);
 

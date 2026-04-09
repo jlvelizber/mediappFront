@@ -3,6 +3,12 @@ import { NextResponse } from "next/server";
 import { routeNames } from "./app/routes";
 
 export async function middleware(req: NextRequest) {
+  // Peticiones internas de Next (RSC / `/_next/data` para client navigation).
+  // Si el middleware redirige aquí, el cliente recibe 307/HTML en lugar de JSON y la transición falla.
+  if (req.nextUrl.pathname.startsWith("/_next")) {
+    return NextResponse.next();
+  }
+
   const role = req.cookies.get("role");
   const url = req.nextUrl.clone();
   const isLoginPath = url.pathname.startsWith(routeNames.login);
