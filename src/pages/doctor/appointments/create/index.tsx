@@ -73,6 +73,15 @@ export default function CreateAppointment() {
         }
     }
 
+    const handleRefreshPatients = async () => {
+        const patients = await getPatientsByDoctorInSession();
+        setDeps((prev) => ({
+            ...prev,
+            patients: patients as unknown as PatientInterface[],
+        }));
+        return patients;
+    };
+
     if (isLoading) return <Loader message={messageOnLoader} />
 
     return (
@@ -84,7 +93,13 @@ export default function CreateAppointment() {
                             {formatMessage(messages.appointment.pages.listWithAction, { action: TITLE_PAGE })}
                         </h1>
                     </div>
-                    <AppointmentForm handleCancel={handleCancel} handleSubmit={handleSubmit} deps={deps} />
+                    <AppointmentForm
+                        handleCancel={handleCancel}
+                        handleSubmit={handleSubmit}
+                        deps={deps}
+                        enableCreatePatient
+                        onRefreshPatients={handleRefreshPatients}
+                    />
                 </div>
             </PageWrapper>
         </DashboardLayout>

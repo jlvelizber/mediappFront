@@ -132,6 +132,10 @@ export const messages = {
             deleteAppointment: "Eliminar cita",
             submitCreate: "Crear cita",
             submitUpdate: "Actualizar cita",
+            newPatient: "Nuevo paciente",
+        },
+        createPatientModal: {
+            title: "Crear paciente",
         },
         pages: {
             createTitle: "Crear cita",

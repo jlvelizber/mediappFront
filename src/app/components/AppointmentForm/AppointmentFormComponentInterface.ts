@@ -7,6 +7,8 @@ export interface AppointmentFormComponentInterface {
         patients: PatientInterface[];
         defaultAppointmentDuration?: number;
     };
+    enableCreatePatient?: boolean;
+    onRefreshPatients?: () => Promise<PatientInterface[]>;
 
     handleSubmit: (data: FormData) => void,
     handleCancel: (e: MouseEvent<HTMLButtonElement>) => void;

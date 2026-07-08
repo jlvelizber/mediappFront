@@ -1,7 +1,8 @@
 import { formFieldLabel, messages } from "@/app/config";
-import { useAppointmentStore } from "@/app/store";
+import { useAppointmentStore, usePatientStore } from "@/app/store";
 import { FormEvent, MouseEvent, useEffect, useState } from "react";
 import { AppointmentDateTimePicker } from "../AppointmentDateTimePicker";
+import { CreatePatientInAppointmentModal } from "./CreatePatientInAppointmentModal";
 import { AppointmentFormComponentInterface } from "./AppointmentFormComponentInterface";
 
 const aptLabels = messages.appointment.labels;
@@ -9,17 +10,36 @@ const aptActions = messages.appointment.actions;
 const aptStatusLabels = messages.appointment.status;
 const common = messages.common;
 
-export default function AppointmentForm({ initialData, handleCancel, handleSubmit, handleDelete, deps }: AppointmentFormComponentInterface) {
+export default function AppointmentForm({ initialData, handleCancel, handleSubmit, handleDelete, deps, enableCreatePatient, onRefreshPatients }: AppointmentFormComponentInterface) {
 
     const { formManageAppointment } = useAppointmentStore();
+    const { resetFormDataPatient } = usePatientStore();
     const { patients, defaultAppointmentDuration } = deps || { patients: [] };
     const { errors, fields, error } = initialData ? initialData : formManageAppointment;
     const [dateTime, setDateTime] = useState<string>("");
     const [patientId, setPatientId] = useState<string>("");
+    const [isPatientModalOpen, setIsPatientModalOpen] = useState(false);
+
     const onHandleChangePatient = (e: FormEvent<HTMLSelectElement>) => {
         const { value } = e.currentTarget;
         setPatientId(value);
     }
+
+    const handleOpenPatientModal = () => {
+        resetFormDataPatient();
+        setIsPatientModalOpen(true);
+    };
+
+    const handleClosePatientModal = () => {
+        setIsPatientModalOpen(false);
+    };
+
+    const handlePatientCreated = async (newPatientId: number) => {
+        if (onRefreshPatients) {
+            await onRefreshPatients();
+        }
+        setPatientId(String(newPatientId));
+    };
 
 
 
@@ -51,13 +71,37 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
             {/* 📌 Mensaje de error global */}
             {error && <p className="text-red-500 mb-4">{error}</p>}
 
+            {enableCreatePatient && (
+                <CreatePatientInAppointmentModal
+                    isOpen={isPatientModalOpen}
+                    onClose={handleClosePatientModal}
+                    onPatientCreated={handlePatientCreated}
+                />
+            )}
+
             <form onSubmit={onHandleSubmit} className={`grid ${fields?.id ? 'md:grid-cols-3' : 'md:grid-cols-2'} grid-cols-1 gap-4`}>
                 {/* Paciente */}
                 <div className="col-span-1">
-                    <label className="block text-sm font-medium text-gray-700">
-                        {formFieldLabel(aptLabels.patient, Boolean(errors?.patient_id?.length))}
-                    </label>
-                    <select name="patient_id" className={`input-field ${errors?.patient_id?.length ? '!border-red-500' : ''}`} defaultValue={fields?.patient_id ?? patientId ?? ""} onChange={onHandleChangePatient}>
+                    <div className="flex justify-between items-center">
+                        <label className="block text-sm font-medium text-gray-700">
+                            {formFieldLabel(aptLabels.patient, Boolean(errors?.patient_id?.length))}
+                        </label>
+                        {enableCreatePatient && !fields?.id && (
+                            <button
+                                type="button"
+                                onClick={handleOpenPatientModal}
+                                className="text-sm font-medium text-blue-600 hover:text-blue-800"
+                            >
+                                {aptActions.newPatient}
+                            </button>
+                        )}
+                    </div>
+                    <select
+                        name="patient_id"
+                        className={`input-field mt-1 ${errors?.patient_id?.length ? '!border-red-500' : ''}`}
+                        value={patientId}
+                        onChange={onHandleChangePatient}
+                    >
                         <option value="">{common.form.selectPatient}</option>
                         {patients.map((patient) => (
                             <option key={patient.id} value={patient.id}>
