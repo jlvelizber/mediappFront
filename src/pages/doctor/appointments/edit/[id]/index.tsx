@@ -3,6 +3,7 @@ import { formatMessage, messages } from "@/app/config";
 import { useLayout } from "@/app/context";
 import { PatientInterface } from "@/app/intefaces";
 import { routeNames } from "@/app/routes";
+import { DoctorSettingsService } from "@/app/services";
 import { useAppointmentStore, usePatientStore, useToastStore } from "@/app/store";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/router";
@@ -24,6 +25,7 @@ export default function CreateAppointment() {
     });
     const [deps, setDeps] = useState<{
         patients: PatientInterface[];
+        defaultAppointmentDuration?: number;
     }>({
         patients: [],
     });
@@ -33,9 +35,11 @@ export default function CreateAppointment() {
     const loadDependencies = async () => {
         Promise.all([
             getPatientsByDoctorInSession(),
+            DoctorSettingsService.getSettings(),
         ]).then((res) => {
             setDeps({
                 patients: res[0] as unknown as PatientInterface[],
+                defaultAppointmentDuration: res[1].default_appointment_duration,
             });
 
         })

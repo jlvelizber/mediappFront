@@ -25,13 +25,18 @@ interface AppointmentDateTimePickerProps {
     onChange: (value: string) => void;
     name?: string;
     className?: string;
+    /** Intervalo entre horarios disponibles (minutos). Debe coincidir con default_appointment_duration del doctor. */
+    timeIntervals?: number;
 }
+
+const DEFAULT_TIME_INTERVAL_MINUTES = 20;
 
 export default function AppointmentDateTimePicker({
     value,
     onChange,
     name,
     className,
+    timeIntervals = DEFAULT_TIME_INTERVAL_MINUTES,
 }: AppointmentDateTimePickerProps) {
     // Convierte el string a Date para el picker
     const [selectedDate, setSelectedDate] = useState<Date | null>(
@@ -60,7 +65,7 @@ export default function AppointmentDateTimePicker({
             className={`${className}`}
             wrapperClassName="input-field"
             timeFormat="HH:mm"
-            timeIntervals={20}
+            timeIntervals={timeIntervals}
             autoComplete="off"
         />
     );

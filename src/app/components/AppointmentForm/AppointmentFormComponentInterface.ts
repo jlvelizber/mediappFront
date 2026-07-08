@@ -5,6 +5,7 @@ export interface AppointmentFormComponentInterface {
     initialData?: AppointmentFormDataInterface;
     deps?: {
         patients: PatientInterface[];
+        defaultAppointmentDuration?: number;
     };
 
     handleSubmit: (data: FormData) => void,

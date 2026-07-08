@@ -12,7 +12,7 @@ const common = messages.common;
 export default function AppointmentForm({ initialData, handleCancel, handleSubmit, handleDelete, deps }: AppointmentFormComponentInterface) {
 
     const { formManageAppointment } = useAppointmentStore();
-    const { patients } = deps || { patients: [] };
+    const { patients, defaultAppointmentDuration } = deps || { patients: [] };
     const { errors, fields, error } = initialData ? initialData : formManageAppointment;
     const [dateTime, setDateTime] = useState<string>("");
     const [patientId, setPatientId] = useState<string>("");
@@ -77,6 +77,7 @@ export default function AppointmentForm({ initialData, handleCancel, handleSubmi
                         name="date_time"
                         value={dateTime}
                         onChange={setDateTime}
+                        timeIntervals={defaultAppointmentDuration}
                         className={`input-field ${errors?.date_time?.length ? '!border-red-500' : ''}`}
                     />
                     {errors?.date_time && <p className="text-red-500 text-sm">{errors.date_time.join(', ')}</p>}
